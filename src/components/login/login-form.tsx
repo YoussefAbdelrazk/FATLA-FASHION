@@ -15,8 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import useAuthQuery from '@/hooks/useAuthhook';
-import { toast } from 'sonner';
+
 
 const formSchema = z.object({
   email: email('Invalid email address'),
@@ -30,23 +29,13 @@ const defaultValues = {
 type FormValues = z.infer<typeof formSchema>;
 
 export function LoginForm() {
-  const { loginMutation } = useAuthQuery();
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues,
-  });
+      resolver: zodResolver(formSchema),
+      defaultValues,
+    });
 
   const onSubmit = async (data: FormValues) => {
-    await toast.promise(
-      loginMutation.mutateAsync({
-        ...data,
-      }),
-      {
-        loading: 'Logging in...',
-        success: 'Logged in successfully',
-        error: 'Failed to login',
-      },
-    );
+    console.log(data);
   };
 
   return (

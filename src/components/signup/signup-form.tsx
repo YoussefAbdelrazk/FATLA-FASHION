@@ -10,10 +10,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import useAuthQuery from '@/hooks/useAuthhook';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import { email, z } from 'zod';
 
 const formSchema = z
@@ -40,23 +39,13 @@ const defaultValues: FormValues = {
 type FormValues = z.infer<typeof formSchema>;
 
 export function SignupForm() {
-  const { signupMutation } = useAuthQuery();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
   const onSubmit = async (data: FormValues) => {
-    await toast.promise(
-      signupMutation.mutateAsync({
-        ...data,
-      }),
-      {
-        loading: 'Signing up...',
-        success: 'Signed up successfully',
-        error: 'Failed to sign up',
-      },
-    );
+    console.log(data);
   };
 
   return (
