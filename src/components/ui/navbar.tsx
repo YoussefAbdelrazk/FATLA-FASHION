@@ -11,56 +11,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useSidebar } from '@/context/sidebar';
-import {
-  Bell,
-  Crown,
-  Heart,
-  LogOut,
-  Menu,
-  Search,
-  Settings,
-  Shield,
-  ShoppingBag,
-  User,
-  X,
-} from 'lucide-react';
+import { Bell, Crown, LogOut, Menu, Settings, Shield, ShoppingBag, User } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
   const [notificationCount, setNotificationCount] = useState(8);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const { openMobileSidebar } = useSidebar();
 
   return (
     <nav className='sticky top-0 z-50 backdrop-blur-xl bg-white/95 dark:bg-black/95 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm'>
       <div className='max-w-7xl mx-auto px-3 sm:px-4 lg:px-6'>
-        {/* Mobile Search Bar - Full Width */}
-        {isMobileSearchOpen && (
-          <div className='py-3 border-b border-gray-200/50 dark:border-gray-700/50 lg:hidden'>
-            <div className='relative w-full'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4' />
-              <input
-                type='text'
-                placeholder='Search orders, products, customers...'
-                className='w-full pl-10 pr-10 py-2.5 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black dark:focus:ring-white/20 dark:focus:border-white transition-all duration-200 bg-white/50 dark:bg-black/50 backdrop-blur-sm dark:text-white text-sm'
-                autoFocus
-              />
-              <Button
-                variant='ghost'
-                size='sm'
-                className='absolute right-1 top-1/2 transform -translate-y-1/2 hover:bg-gray-100 dark:hover:bg-gray-800 p-1'
-                onClick={() => setIsMobileSearchOpen(false)}
-              >
-                <X className='w-4 h-4 text-gray-500 dark:text-gray-400' />
-              </Button>
-            </div>
-          </div>
-        )}
-
         <div className='flex justify-between items-center h-14 lg:h-16'>
           {/* Left Section */}
           <div className='flex items-center space-x-2 lg:space-x-4'>
@@ -69,7 +30,6 @@ export function Navbar() {
               variant='ghost'
               size='sm'
               className='lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 p-2'
-              onClick={openMobileSidebar}
             >
               <Menu className='h-5 w-5 text-gray-700 dark:text-gray-300' />
             </Button>
@@ -109,18 +69,6 @@ export function Navbar() {
               <ShoppingBag className='w-4 h-4 lg:w-5 lg:h-5 text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors duration-200' />
               <Badge className='absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 rounded-full p-0 flex items-center justify-center text-xs bg-black dark:bg-white text-white dark:text-black border-2 border-white dark:border-black shadow-sm'>
                 12
-              </Badge>
-            </Button>
-
-            {/* Products - Hidden on very small screens */}
-            <Button
-              variant='ghost'
-              size='sm'
-              className='relative hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 group p-2 hidden sm:flex'
-            >
-              <Heart className='w-4 h-4 lg:w-5 lg:h-5 text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors duration-200' />
-              <Badge className='absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 rounded-full p-0 flex items-center justify-center text-xs bg-black dark:bg-white text-white dark:text-black border-2 border-white dark:border-black shadow-sm'>
-                45
               </Badge>
             </Button>
 
