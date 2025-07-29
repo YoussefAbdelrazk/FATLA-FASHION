@@ -1,7 +1,9 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { dailyOrdersData } from '@/data';
 import { MoreHorizontal } from 'lucide-react';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export default function DailyOrdersChart() {
   return (
@@ -27,21 +29,42 @@ export default function DailyOrdersChart() {
             <span>Orders Count</span>
             <span>Max: {dailyOrdersData.maxOrders} orders</span>
           </div>
-          <div className='flex items-end justify-between h-48 space-x-2'>
-            {dailyOrdersData.data.map((item, index) => (
-              <div key={index} className='flex flex-col items-center flex-1'>
-                <div
-                  className='relative w-full bg-gray-100 dark:bg-gray-800 rounded-t-lg'
-                  style={{ height: `${(item.orders / dailyOrdersData.maxOrders) * 100}%` }}
-                >
-                  <div className='absolute inset-0 bg-black dark:bg-white rounded-t-lg'></div>
-                </div>
-                <div className='text-xs font-medium text-gray-600 dark:text-gray-400 mt-2'>
-                  {item.day}
-                </div>
-                <div className='text-xs text-gray-500 dark:text-gray-500'>{item.orders}</div>
-              </div>
-            ))}
+          <div className='h-64'>
+            <ResponsiveContainer width='100%' height='100%'>
+              <BarChart data={dailyOrdersData.data}>
+                <CartesianGrid strokeDasharray='3 3' stroke='#374151' opacity={0.1} />
+                <XAxis
+                  dataKey='day'
+                  stroke='#6B7280'
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke='#6B7280'
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={value => `${value}`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  }}
+                  labelStyle={{ color: '#374151', fontWeight: '600' }}
+                  formatter={(value: number) => [`${value} orders`, 'Orders']}
+                />
+                <Bar
+                  dataKey='orders'
+                  fill='#000000'
+                  radius={[4, 4, 0, 0]}
+                  className='dark:fill-white'
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </CardContent>

@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   Tag,
   Users,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -97,7 +98,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
   return (
     <div className='flex flex-col h-full bg-white dark:bg-black'>
       {/* Logo */}
-      <div className='flex items-center justify-center h-14 lg:h-16 px-4 border-b border-gray-200 dark:border-gray-700'>
+      <div className='flex items-center justify-between h-14 lg:h-16 px-4 border-b border-gray-200 dark:border-gray-700'>
         {isExpanded ? (
           <div className='flex items-center space-x-3'>
             <div className='w-8 h-8 lg:w-10 lg:h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center'>
@@ -109,6 +110,18 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
           <div className='w-8 h-8 lg:w-10 lg:h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center'>
             <Shield className='w-4 h-4 lg:w-5 lg:h-5 text-white dark:text-black' />
           </div>
+        )}
+
+        {/* Close button for mobile */}
+        {isExpanded && onLinkClick && (
+          <Button
+            variant='ghost'
+            size='sm'
+            onClick={onLinkClick}
+            className='lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 p-2'
+          >
+            <X className='h-5 w-5 text-gray-700 dark:text-gray-300' />
+          </Button>
         )}
       </div>
 
@@ -143,14 +156,6 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                     <div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-white dark:bg-black rounded-r-full'></div>
                   )}
                 </Link>
-
-                {/* Modern Tooltip for collapsed sidebar */}
-                {!isExpanded && (
-                  <div className='absolute left-full ml-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap'>
-                    {item.name}
-                    <div className='absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rotate-45'></div>
-                  </div>
-                )}
               </div>
             );
           } else if (isNavigationGroup(item)) {

@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useSidebar } from '@/context/sidebar';
 import { Bell, Crown, LogOut, Menu, Settings, Shield, ShoppingBag, User } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
   const [notificationCount, setNotificationCount] = useState(8);
+  const { openMobileSidebar } = useSidebar();
 
   return (
     <nav className='sticky top-0 z-50 backdrop-blur-xl bg-white/95 dark:bg-black/95 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm'>
@@ -29,6 +31,7 @@ export function Navbar() {
             <Button
               variant='ghost'
               size='sm'
+              onClick={openMobileSidebar}
               className='lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 p-2'
             >
               <Menu className='h-5 w-5 text-gray-700 dark:text-gray-300' />
