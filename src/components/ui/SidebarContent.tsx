@@ -54,6 +54,7 @@ const navigation: NavigationItemType[] = [
     name: 'Orders',
     icon: ShoppingBag,
     children: [
+      { name: 'All Orders', href: '/orders', count: 10 },
       { name: 'Pending', href: '/orders/pending', count: 1 },
       { name: 'Done', href: '/orders/done', count: 4 },
       { name: 'Cancelled', href: '/orders/cancelled', count: 300 },
@@ -65,7 +66,7 @@ const navigation: NavigationItemType[] = [
     name: 'Products',
     icon: Package,
     children: [
-      { name: 'Products List', href: '/products/list' },
+      { name: 'Products List', href: '/products' },
       { name: 'New Product', href: '/products/new' },
       { name: 'Categories', href: '/products/categories' },
       { name: 'Sizes', href: '/products/sizes' },
@@ -226,6 +227,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                           onClick={onLinkClick}
                         >
                           <div className='flex items-center space-x-3'>
+                            {child.name === 'All Orders' && <ShoppingBag className='w-4 h-4' />}
                             {child.name === 'Products List' && <List className='w-4 h-4' />}
                             {child.name === 'New Product' && <Plus className='w-4 h-4' />}
                             {child.name === 'Categories' && <Tag className='w-4 h-4' />}
