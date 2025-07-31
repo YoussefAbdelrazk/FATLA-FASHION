@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { email, z } from 'zod';
 
@@ -39,6 +40,7 @@ const defaultValues: FormValues = {
 type FormValues = z.infer<typeof formSchema>;
 
 export function SignupForm() {
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -46,6 +48,17 @@ export function SignupForm() {
 
   const onSubmit = async (data: FormValues) => {
     console.log(data);
+    // Here you would typically make an API call to register the user
+    // For now, we'll simulate a successful registration
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Navigate to dashboard after successful registration
+      router.push('/clients');
+    } catch (error) {
+      console.error('Registration failed:', error);
+    }
   };
 
   return (
@@ -56,11 +69,10 @@ export function SignupForm() {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder='Enter your name' {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -74,7 +86,6 @@ export function SignupForm() {
               <FormControl>
                 <Input placeholder='Email address' {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -89,7 +100,6 @@ export function SignupForm() {
               <FormControl>
                 <Input placeholder='Enter your Password' type='password' {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -104,7 +114,6 @@ export function SignupForm() {
               <FormControl>
                 <Input placeholder='Confirm your Password' type='password' {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -124,7 +133,9 @@ export function SignupForm() {
           )}
         />
 
-        <Button type='submit'>Sign Up</Button>
+        <Button type='submit' className='w-full'>
+          Create Account
+        </Button>
       </form>
     </Form>
   );
