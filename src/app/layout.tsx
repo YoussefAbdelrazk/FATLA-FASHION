@@ -1,10 +1,8 @@
-import { Navbar } from '@/components/ui/navbar';
-import Sidebar from '@/components/ui/sidebar';
-import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import Providers from './providers';
+import { Toaster } from 'sonner';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -18,9 +16,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'FATLA Admin - Fashion Management Dashboard',
+  title: 'FATLA - Fashion Management Platform',
   description:
-    'Admin panel for FATLA fashion e-commerce platform. Manage products, orders, customers, and analytics.',
+    'Fashion e-commerce platform for managing products, orders, customers, and analytics.',
 };
 
 export default function RootLayout({
@@ -31,18 +29,8 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <div className='flex h-screen bg-gray-50'>
-            <Sidebar />
-            <div className='flex-1 flex flex-col min-w-0'>
-              <Navbar />
-              <main className='flex-1 overflow-x-hidden overflow-y-auto p-4 lg:p-6 pt-4'>
-                {children}
-              </main>
-            </div>
-          </div>
-          <Toaster />
-        </Providers>
+        <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

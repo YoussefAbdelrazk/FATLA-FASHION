@@ -1,13 +1,13 @@
 import { LoginForm } from '@/components/login/login-form';
 
-export default function page() {
+export default function LoginPage() {
   return (
-    <div className='flex items-center justify-center w-full h-full mt-24 '>
-      <div className='bg-white w-96 shadow-2xl rounded p-8'>
-        <h1 className='text-2xl font-bold'>Login Page</h1>
-        <p className='text-gray-700'>Please enter your credentials to login.</p>
-        <LoginForm />
+    <div className='bg-white shadow-2xl rounded-lg p-8'>
+      <div className='text-center mb-6'>
+        <h1 className='text-3xl font-bold text-gray-900 mb-2'>Welcome Back</h1>
+        <p className='text-gray-600'>Please enter your credentials to login.</p>
       </div>
+      <LoginForm />
     </div>
   );
 }

@@ -14,3 +14,6 @@ export { topProductsData, type TopProduct, type TopProductsData } from './produc
 
 // Users Data
 export { topClientsData, type TopClient, type TopClientsData } from './users/top-clients';
+
+// Clients Data
+export { clientsData } from './clients';
