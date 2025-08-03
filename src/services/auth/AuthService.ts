@@ -4,10 +4,7 @@ import api, { removeRefreshToken, removeToken, setRefreshToken, setToken } from 
 interface LoginResponse {
   token: string;
   refreshToken: string;
-  user?: {
-    mobileNumber: string;
-    [key: string]: unknown;
-  };
+
 }
 
 export const login = async (mobileNumber: string, password: string): Promise<LoginResponse> => {

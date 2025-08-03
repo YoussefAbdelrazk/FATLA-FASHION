@@ -38,17 +38,16 @@ export function LoginForm() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
-    console.log('Login attempt with:', data.mobileNumber);
+
     try {
       await toast.promise(
         loginMutation({ mobileNumber: data.mobileNumber, password: data.password }),
         {
           loading: 'Logging in...',
           success: 'Logged in successfully',
-          error: 'Failed to login',
+          error: 'incorrect mobile number or password',
         },
       );
-      console.log('Login successful, should redirect to /');
     } catch (error) {
       console.error('Login error:', error);
     }
