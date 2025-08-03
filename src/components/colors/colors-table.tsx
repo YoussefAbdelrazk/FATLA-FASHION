@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Product } from '@/types/product';
+import { Color } from '@/types/color';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -34,141 +34,113 @@ import {
 import { format } from 'date-fns';
 import {
   Ban,
-  Barcode,
   ChevronDown,
   ChevronUp,
   Clock,
-  DollarSign,
   Edit,
   Eye,
-  Image as ImageIcon,
   MoreHorizontal,
   Package,
-  Percent,
   Search,
-  ShoppingCart,
   Trash2,
-  TrendingUp,
   User,
 } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
-interface ProductsTableProps {
-  products: Product[];
+interface ColorsTableProps {
+  colors: Color[];
 }
 
-export default function ProductsTable({ products }: ProductsTableProps) {
+export default function ColorsTable({ colors }: ColorsTableProps) {
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedColor, setSelectedColor] = useState<Color | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [colorToDelete, setColorToDelete] = useState<Color | null>(null);
 
-  const handleDeleteProduct = (product: Product) => {
-    setProductToDelete(product);
+  const handleDeleteColor = (color: Color) => {
+    setColorToDelete(color);
     setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
-    // Here you would typically make an API call to delete the product
-    console.log('Deleting product:', productToDelete);
+    // Here you would typically make an API call to delete the color
+    console.log('Deleting color:', colorToDelete);
     // For now, we'll just close the modal
     setIsDeleteModalOpen(false);
-    setProductToDelete(null);
+    setColorToDelete(null);
   };
 
-  const handleDeactivateProduct = (product: Product) => {
-    // Here you would typically make an API call to deactivate the product
-    console.log('Deactivating product:', product);
-    // You could update the product status to inactive
+  const handleDeactivateColor = (color: Color) => {
+    // Here you would typically make an API call to deactivate the color
+    console.log('Deactivating color:', color);
+    // You could update the color status to inactive
   };
 
-  const columns: ColumnDef<Product>[] = useMemo(
+  const columns: ColumnDef<Color>[] = useMemo(
     () => [
       {
-        accessorKey: 'name',
-        header: 'Product',
+        accessorKey: 'id',
+        header: 'ID',
+        cell: ({ row }) => (
+          <div className='font-mono text-sm text-gray-600 dark:text-gray-400'>
+            {row.getValue('id')}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'arName',
+        header: 'Arabic Name',
+        cell: ({ row }) => (
+          <div className='max-w-[150px] truncate' title={row.getValue('arName')}>
+            <div className='font-medium text-gray-900 dark:text-white'>
+              {row.getValue('arName')}
+            </div>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'enName',
+        header: 'English Name',
+        cell: ({ row }) => (
+          <div className='max-w-[150px] truncate' title={row.getValue('enName')}>
+            <div className='font-medium text-gray-900 dark:text-white'>
+              {row.getValue('enName')}
+            </div>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'color',
+        header: 'Color',
         cell: ({ row }) => {
-          const product = row.original;
+          const color = row.getValue('color') as string;
           return (
             <div className='flex items-center space-x-3'>
-              <div className='w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden'>
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    width={48}
-                    height={48}
-                    className='object-cover w-full h-full'
-                  />
-                ) : (
-                  <ImageIcon className='w-6 h-6 text-gray-400' />
-                )}
-              </div>
-              <div>
-                <div className='font-medium text-gray-900 dark:text-white'>{product.name}</div>
-                <div className='text-sm text-gray-500 dark:text-gray-400'>ID: {product.id}</div>
-              </div>
+              <div
+                className='w-8 h-8 rounded-full border-2 border-gray-200 dark:border-gray-700'
+                style={{ backgroundColor: color }}
+              />
+              <span className='font-mono text-sm text-gray-600 dark:text-gray-400'>{color}</span>
             </div>
           );
         },
       },
       {
-        accessorKey: 'availableQty',
-        header: 'Available Qty',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <Package className='w-4 h-4 text-gray-500' />
-            <span className='font-medium'>{row.getValue('availableQty')}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'price',
-        header: 'Price',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <DollarSign className='w-4 h-4 text-gray-500' />
-            <span className='font-medium'>${(row.getValue('price') as number).toFixed(2)}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'discount',
-        header: 'Discount',
+        accessorKey: 'productsCount',
+        header: 'Products Count',
         cell: ({ row }) => {
-          const discount = row.getValue('discount') as number;
+          const count = row.getValue('productsCount') as number;
           return (
             <div className='flex items-center space-x-2'>
-              <Percent className='w-4 h-4 text-gray-500' />
-              <span className='font-medium'>{discount}%</span>
+              <Package className='w-4 h-4 text-gray-500' />
+              <span className='font-medium text-gray-900 dark:text-white'>{count}</span>
             </div>
           );
         },
-      },
-      {
-        accessorKey: 'barcode',
-        header: 'Barcode',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <Barcode className='w-4 h-4 text-gray-500' />
-            <span className='text-sm font-mono'>{row.getValue('barcode')}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'soldCount',
-        header: 'Sold Count',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <TrendingUp className='w-4 h-4 text-gray-500' />
-            <span className='font-medium'>{row.getValue('soldCount')}</span>
-          </div>
-        ),
       },
       {
         accessorKey: 'isActive',
@@ -176,7 +148,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         cell: ({ row }) => {
           const isActive = row.getValue('isActive') as boolean;
           return (
-            <Badge variant={isActive ? 'default' : 'destructive'} className='capitalize'>
+            <Badge variant={isActive ? 'default' : 'secondary'}>
               {isActive ? 'Active' : 'Inactive'}
             </Badge>
           );
@@ -203,7 +175,9 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <User className='w-4 h-4 text-gray-500' />
-            <span className='text-sm'>{row.getValue('createdBy')}</span>
+            <span className='text-sm text-gray-600 dark:text-gray-400'>
+              {row.getValue('createdBy')}
+            </span>
           </div>
         ),
       },
@@ -211,7 +185,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         id: 'actions',
         header: 'Actions',
         cell: ({ row }) => {
-          const product = row.original;
+          const color = row.original;
+
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -221,31 +196,25 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end'>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedProduct(product);
-                    setIsModalOpen(true);
-                  }}
-                >
+                <DropdownMenuItem onClick={() => setSelectedColor(color)}>
                   <Eye className='mr-2 h-4 w-4' />
                   View Details
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Edit className='mr-2 h-4 w-4' />
-                  Edit Product
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleDeactivateProduct(product)}>
-                  <Ban className='mr-2 h-4 w-4' />
-                  {product.isActive ? 'Deactivate' : 'Activate'}
+                  Edit Color
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => handleDeleteProduct(product)}
+                  onClick={() => handleDeactivateColor(color)}
                   className='text-red-600'
                 >
+                  <Ban className='mr-2 h-4 w-4' />
+                  {color.isActive ? 'Deactivate' : 'Activate'}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleDeleteColor(color)} className='text-red-600'>
                   <Trash2 className='mr-2 h-4 w-4' />
-                  Delete Product
+                  Delete Color
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -257,7 +226,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
   );
 
   const table = useReactTable({
-    data: products,
+    data: colors,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -281,32 +250,32 @@ export default function ProductsTable({ products }: ProductsTableProps) {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Products Management</span>
+            <span>Colors Management</span>
             <div className='flex items-center space-x-2'>
               <div className='relative'>
                 <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400' />
                 <Input
-                  placeholder='Search products...'
-                  value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-                  onChange={event => table.getColumn('name')?.setFilterValue(event.target.value)}
+                  placeholder='Search colors...'
+                  value={(table.getColumn('enName')?.getFilterValue() as string) ?? ''}
+                  onChange={event => table.getColumn('enName')?.setFilterValue(event.target.value)}
                   className='pl-10 w-64'
                 />
               </div>
-              <Button onClick={() => router.push('/products/add')}>Add Product</Button>
+              <Button onClick={() => router.push('/colors/add')}>Add Color</Button>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className='rounded-md border'>
-            <div className='max-h-[600px] overflow-auto'>
-              <table className='w-full'>
+            <div className='max-h-[600px] overflow-x-auto'>
+              <table className='w-full min-w-full'>
                 <thead className='bg-gray-50 dark:bg-gray-800 sticky top-0 z-10'>
                   {table.getHeaderGroups().map(headerGroup => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map(header => (
                         <th
                           key={header.id}
-                          className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
+                          className='px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
                         >
                           {header.isPlaceholder ? null : (
                             <div
@@ -334,7 +303,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                       className='hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
                     >
                       {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className='px-6 py-4 whitespace-nowrap'>
+                        <td key={cell.id} className='px-3 py-4 whitespace-nowrap'>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
@@ -420,91 +389,75 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         </CardContent>
       </Card>
 
-      {/* Product Details Modal */}
+      {/* Color Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle>Product Details</DialogTitle>
-            <DialogDescription>Detailed information about the selected product</DialogDescription>
+            <DialogTitle>Color Details</DialogTitle>
+            <DialogDescription>
+              View detailed information about the selected color.
+            </DialogDescription>
           </DialogHeader>
-          {selectedProduct && (
-            <div className='space-y-6'>
-              <div className='flex items-center space-x-4'>
-                <div className='w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden'>
-                  {selectedProduct.image ? (
-                    <Image
-                      src={selectedProduct.image}
-                      alt={selectedProduct.name}
-                      width={96}
-                      height={96}
-                      className='object-cover w-full h-full'
-                    />
-                  ) : (
-                    <ImageIcon className='w-12 h-12 text-gray-400' />
-                  )}
+          {selectedColor && (
+            <div className='space-y-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='text-sm font-medium'>Arabic Name</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>{selectedColor.arName}</p>
                 </div>
                 <div>
-                  <h3 className='text-xl font-semibold'>{selectedProduct.name}</h3>
-                  <p className='text-sm text-gray-500'>ID: {selectedProduct.id}</p>
+                  <label className='text-sm font-medium'>English Name</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>{selectedColor.enName}</p>
                 </div>
               </div>
-
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Available Quantity</label>
-                  <p className='text-lg font-semibold'>{selectedProduct.availableQty}</p>
+              <div>
+                <label className='text-sm font-medium'>Color</label>
+                <div className='flex items-center space-x-3 mt-2'>
+                  <div
+                    className='w-16 h-16 rounded-lg border-2 border-gray-200 dark:border-gray-700'
+                    style={{ backgroundColor: selectedColor.color }}
+                  />
+                  <span className='font-mono text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedColor.color}
+                  </span>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Price</label>
-                  <p className='text-lg font-semibold text-green-600'>
-                    ${selectedProduct.price.toFixed(2)}
+              </div>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='text-sm font-medium'>Products Count</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedColor.productsCount}
                   </p>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Discount</label>
-                  <p className='text-lg font-semibold'>{selectedProduct.discount}%</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Sold Count</label>
-                  <p className='text-lg font-semibold'>{selectedProduct.soldCount}</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Status</label>
-                  <Badge
-                    variant={selectedProduct.isActive ? 'default' : 'destructive'}
-                    className='capitalize'
-                  >
-                    {selectedProduct.isActive ? 'Active' : 'Inactive'}
+                <div>
+                  <label className='text-sm font-medium'>Status</label>
+                  <Badge variant={selectedColor.isActive ? 'default' : 'secondary'}>
+                    {selectedColor.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Barcode</label>
-                  <p className='text-sm font-mono'>{selectedProduct.barcode}</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Created At</label>
-                  <p className='text-lg'>
-                    {format(new Date(selectedProduct.createdAt), 'MMM dd, yyyy HH:mm')}
+              </div>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='text-sm font-medium'>Created At</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {format(new Date(selectedColor.createdAt), 'MMM dd, yyyy HH:mm')}
                   </p>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Created By</label>
-                  <p className='text-lg'>{selectedProduct.createdBy}</p>
+                <div>
+                  <label className='text-sm font-medium'>Created By</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedColor.createdBy}
+                  </p>
                 </div>
-              </div>
-
-              <div className='flex space-x-2 pt-4'>
-                <Button className='flex-1'>
-                  <Edit className='w-4 h-4 mr-2' />
-                  Edit Product
-                </Button>
-                <Button variant='outline' className='flex-1'>
-                  <ShoppingCart className='w-4 h-4 mr-2' />
-                  View Orders
-                </Button>
               </div>
             </div>
           )}
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setIsModalOpen(false)}>
+              Close
+            </Button>
+            <Button onClick={() => setIsModalOpen(false)}>Edit Color</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -512,10 +465,9 @@ export default function ProductsTable({ products }: ProductsTableProps) {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>Delete Color</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete product <strong>{productToDelete?.name}</strong>? This
-              action cannot be undone.
+              Are you sure you want to delete this color? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

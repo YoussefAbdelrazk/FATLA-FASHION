@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Product } from '@/types/product';
+import { Category } from '@/types/category';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -34,141 +34,121 @@ import {
 import { format } from 'date-fns';
 import {
   Ban,
-  Barcode,
   ChevronDown,
   ChevronUp,
   Clock,
-  DollarSign,
   Edit,
   Eye,
   Image as ImageIcon,
   MoreHorizontal,
   Package,
-  Percent,
   Search,
-  ShoppingCart,
   Trash2,
-  TrendingUp,
   User,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
-interface ProductsTableProps {
-  products: Product[];
+interface CategoriesTableProps {
+  categories: Category[];
 }
 
-export default function ProductsTable({ products }: ProductsTableProps) {
+export default function CategoriesTable({ categories }: CategoriesTableProps) {
   const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
-  const handleDeleteProduct = (product: Product) => {
-    setProductToDelete(product);
+  const handleDeleteCategory = (category: Category) => {
+    setCategoryToDelete(category);
     setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
-    // Here you would typically make an API call to delete the product
-    console.log('Deleting product:', productToDelete);
+    // Here you would typically make an API call to delete the category
+    console.log('Deleting category:', categoryToDelete);
     // For now, we'll just close the modal
     setIsDeleteModalOpen(false);
-    setProductToDelete(null);
+    setCategoryToDelete(null);
   };
 
-  const handleDeactivateProduct = (product: Product) => {
-    // Here you would typically make an API call to deactivate the product
-    console.log('Deactivating product:', product);
-    // You could update the product status to inactive
+  const handleDeactivateCategory = (category: Category) => {
+    // Here you would typically make an API call to deactivate the category
+    console.log('Deactivating category:', category);
+    // You could update the category status to inactive
   };
 
-  const columns: ColumnDef<Product>[] = useMemo(
+  const columns: ColumnDef<Category>[] = useMemo(
     () => [
       {
-        accessorKey: 'name',
-        header: 'Product',
+        accessorKey: 'id',
+        header: 'ID',
+        cell: ({ row }) => (
+          <div className='font-mono text-sm text-gray-600 dark:text-gray-400'>
+            {row.getValue('id')}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'arName',
+        header: 'Arabic Name',
+        cell: ({ row }) => (
+          <div className='max-w-[150px] truncate' title={row.getValue('arName')}>
+            <div className='font-medium text-gray-900 dark:text-white'>
+              {row.getValue('arName')}
+            </div>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'enName',
+        header: 'English Name',
+        cell: ({ row }) => (
+          <div className='max-w-[150px] truncate' title={row.getValue('enName')}>
+            <div className='font-medium text-gray-900 dark:text-white'>
+              {row.getValue('enName')}
+            </div>
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'image',
+        header: 'Image',
         cell: ({ row }) => {
-          const product = row.original;
+          const image = row.getValue('image') as string;
           return (
-            <div className='flex items-center space-x-3'>
-              <div className='w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden'>
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    width={48}
-                    height={48}
-                    className='object-cover w-full h-full'
-                  />
-                ) : (
-                  <ImageIcon className='w-6 h-6 text-gray-400' />
-                )}
-              </div>
-              <div>
-                <div className='font-medium text-gray-900 dark:text-white'>{product.name}</div>
-                <div className='text-sm text-gray-500 dark:text-gray-400'>ID: {product.id}</div>
-              </div>
+            <div className='w-12 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden'>
+              {image ? (
+                <Image
+                  src={image}
+                  alt='Category Image'
+                  width={48}
+                  height={32}
+                  className='object-cover w-full h-full'
+                />
+              ) : (
+                <ImageIcon className='w-4 h-4 text-gray-400' />
+              )}
             </div>
           );
         },
       },
       {
-        accessorKey: 'availableQty',
-        header: 'Available Qty',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <Package className='w-4 h-4 text-gray-500' />
-            <span className='font-medium'>{row.getValue('availableQty')}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'price',
-        header: 'Price',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <DollarSign className='w-4 h-4 text-gray-500' />
-            <span className='font-medium'>${(row.getValue('price') as number).toFixed(2)}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'discount',
-        header: 'Discount',
+        accessorKey: 'productsCount',
+        header: 'Products Count',
         cell: ({ row }) => {
-          const discount = row.getValue('discount') as number;
+          const count = row.getValue('productsCount') as number;
           return (
             <div className='flex items-center space-x-2'>
-              <Percent className='w-4 h-4 text-gray-500' />
-              <span className='font-medium'>{discount}%</span>
+              <Package className='w-4 h-4 text-gray-500' />
+              <span className='font-medium text-gray-900 dark:text-white'>{count}</span>
             </div>
           );
         },
-      },
-      {
-        accessorKey: 'barcode',
-        header: 'Barcode',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <Barcode className='w-4 h-4 text-gray-500' />
-            <span className='text-sm font-mono'>{row.getValue('barcode')}</span>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'soldCount',
-        header: 'Sold Count',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <TrendingUp className='w-4 h-4 text-gray-500' />
-            <span className='font-medium'>{row.getValue('soldCount')}</span>
-          </div>
-        ),
       },
       {
         accessorKey: 'isActive',
@@ -176,7 +156,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         cell: ({ row }) => {
           const isActive = row.getValue('isActive') as boolean;
           return (
-            <Badge variant={isActive ? 'default' : 'destructive'} className='capitalize'>
+            <Badge variant={isActive ? 'default' : 'secondary'}>
               {isActive ? 'Active' : 'Inactive'}
             </Badge>
           );
@@ -203,7 +183,9 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <User className='w-4 h-4 text-gray-500' />
-            <span className='text-sm'>{row.getValue('createdBy')}</span>
+            <span className='text-sm text-gray-600 dark:text-gray-400'>
+              {row.getValue('createdBy')}
+            </span>
           </div>
         ),
       },
@@ -211,7 +193,8 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         id: 'actions',
         header: 'Actions',
         cell: ({ row }) => {
-          const product = row.original;
+          const category = row.original;
+
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -221,31 +204,28 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end'>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedProduct(product);
-                    setIsModalOpen(true);
-                  }}
-                >
+                <DropdownMenuItem onClick={() => setSelectedCategory(category)}>
                   <Eye className='mr-2 h-4 w-4' />
                   View Details
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Edit className='mr-2 h-4 w-4' />
-                  Edit Product
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => handleDeactivateProduct(product)}>
-                  <Ban className='mr-2 h-4 w-4' />
-                  {product.isActive ? 'Deactivate' : 'Activate'}
+                  Edit Category
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => handleDeleteProduct(product)}
+                  onClick={() => handleDeactivateCategory(category)}
+                  className='text-red-600'
+                >
+                  <Ban className='mr-2 h-4 w-4' />
+                  {category.isActive ? 'Deactivate' : 'Activate'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleDeleteCategory(category)}
                   className='text-red-600'
                 >
                   <Trash2 className='mr-2 h-4 w-4' />
-                  Delete Product
+                  Delete Category
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -257,7 +237,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
   );
 
   const table = useReactTable({
-    data: products,
+    data: categories,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -281,32 +261,32 @@ export default function ProductsTable({ products }: ProductsTableProps) {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Products Management</span>
+            <span>Categories Management</span>
             <div className='flex items-center space-x-2'>
               <div className='relative'>
                 <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400' />
                 <Input
-                  placeholder='Search products...'
-                  value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-                  onChange={event => table.getColumn('name')?.setFilterValue(event.target.value)}
+                  placeholder='Search categories...'
+                  value={(table.getColumn('enName')?.getFilterValue() as string) ?? ''}
+                  onChange={event => table.getColumn('enName')?.setFilterValue(event.target.value)}
                   className='pl-10 w-64'
                 />
               </div>
-              <Button onClick={() => router.push('/products/add')}>Add Product</Button>
+              <Button onClick={() => router.push('/categories/add')}>Add Category</Button>
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className='rounded-md border'>
-            <div className='max-h-[600px] overflow-auto'>
-              <table className='w-full'>
+            <div className='max-h-[600px] overflow-x-auto'>
+              <table className='w-full min-w-full'>
                 <thead className='bg-gray-50 dark:bg-gray-800 sticky top-0 z-10'>
                   {table.getHeaderGroups().map(headerGroup => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map(header => (
                         <th
                           key={header.id}
-                          className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
+                          className='px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
                         >
                           {header.isPlaceholder ? null : (
                             <div
@@ -334,7 +314,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                       className='hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
                     >
                       {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className='px-6 py-4 whitespace-nowrap'>
+                        <td key={cell.id} className='px-3 py-4 whitespace-nowrap'>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
@@ -420,91 +400,85 @@ export default function ProductsTable({ products }: ProductsTableProps) {
         </CardContent>
       </Card>
 
-      {/* Product Details Modal */}
+      {/* Category Details Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle>Product Details</DialogTitle>
-            <DialogDescription>Detailed information about the selected product</DialogDescription>
+            <DialogTitle>Category Details</DialogTitle>
+            <DialogDescription>
+              View detailed information about the selected category.
+            </DialogDescription>
           </DialogHeader>
-          {selectedProduct && (
-            <div className='space-y-6'>
-              <div className='flex items-center space-x-4'>
-                <div className='w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden'>
-                  {selectedProduct.image ? (
-                    <Image
-                      src={selectedProduct.image}
-                      alt={selectedProduct.name}
-                      width={96}
-                      height={96}
-                      className='object-cover w-full h-full'
-                    />
-                  ) : (
-                    <ImageIcon className='w-12 h-12 text-gray-400' />
-                  )}
+          {selectedCategory && (
+            <div className='space-y-4'>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='text-sm font-medium'>Arabic Name</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedCategory.arName}
+                  </p>
                 </div>
                 <div>
-                  <h3 className='text-xl font-semibold'>{selectedProduct.name}</h3>
-                  <p className='text-sm text-gray-500'>ID: {selectedProduct.id}</p>
-                </div>
-              </div>
-
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Available Quantity</label>
-                  <p className='text-lg font-semibold'>{selectedProduct.availableQty}</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Price</label>
-                  <p className='text-lg font-semibold text-green-600'>
-                    ${selectedProduct.price.toFixed(2)}
+                  <label className='text-sm font-medium'>English Name</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedCategory.enName}
                   </p>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Discount</label>
-                  <p className='text-lg font-semibold'>{selectedProduct.discount}%</p>
+              </div>
+              <div>
+                <label className='text-sm font-medium'>Image</label>
+                <div className='mt-2 w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
+                  {selectedCategory.image ? (
+                    <Image
+                      src={selectedCategory.image}
+                      alt={selectedCategory.enName}
+                      width={128}
+                      height={96}
+                      className='w-full h-full object-cover'
+                    />
+                  ) : (
+                    <div className='w-full h-full flex items-center justify-center'>
+                      <ImageIcon className='w-8 h-8 text-gray-400' />
+                    </div>
+                  )}
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Sold Count</label>
-                  <p className='text-lg font-semibold'>{selectedProduct.soldCount}</p>
+              </div>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='text-sm font-medium'>Products Count</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedCategory.productsCount}
+                  </p>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Status</label>
-                  <Badge
-                    variant={selectedProduct.isActive ? 'default' : 'destructive'}
-                    className='capitalize'
-                  >
-                    {selectedProduct.isActive ? 'Active' : 'Inactive'}
+                <div>
+                  <label className='text-sm font-medium'>Status</label>
+                  <Badge variant={selectedCategory.isActive ? 'default' : 'secondary'}>
+                    {selectedCategory.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Barcode</label>
-                  <p className='text-sm font-mono'>{selectedProduct.barcode}</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Created At</label>
-                  <p className='text-lg'>
-                    {format(new Date(selectedProduct.createdAt), 'MMM dd, yyyy HH:mm')}
+              </div>
+              <div className='grid grid-cols-2 gap-4'>
+                <div>
+                  <label className='text-sm font-medium'>Created At</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {format(new Date(selectedCategory.createdAt), 'MMM dd, yyyy HH:mm')}
                   </p>
                 </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-gray-500'>Created By</label>
-                  <p className='text-lg'>{selectedProduct.createdBy}</p>
+                <div>
+                  <label className='text-sm font-medium'>Created By</label>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    {selectedCategory.createdBy}
+                  </p>
                 </div>
-              </div>
-
-              <div className='flex space-x-2 pt-4'>
-                <Button className='flex-1'>
-                  <Edit className='w-4 h-4 mr-2' />
-                  Edit Product
-                </Button>
-                <Button variant='outline' className='flex-1'>
-                  <ShoppingCart className='w-4 h-4 mr-2' />
-                  View Orders
-                </Button>
               </div>
             </div>
           )}
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setIsModalOpen(false)}>
+              Close
+            </Button>
+            <Button onClick={() => setIsModalOpen(false)}>Edit Category</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -512,10 +486,9 @@ export default function ProductsTable({ products }: ProductsTableProps) {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>Delete Category</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete product <strong>{productToDelete?.name}</strong>? This
-              action cannot be undone.
+              Are you sure you want to delete this category? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

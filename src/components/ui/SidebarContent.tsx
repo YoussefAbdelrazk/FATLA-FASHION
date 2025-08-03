@@ -67,10 +67,9 @@ const navigation: NavigationItemType[] = [
     icon: Package,
     children: [
       { name: 'Products List', href: '/products' },
-      { name: 'New Product', href: '/products/new' },
-      { name: 'Categories', href: '/products/categories' },
+      { name: 'Categories', href: '/categories' },
       { name: 'Sizes', href: '/products/sizes' },
-      { name: 'Colors', href: '/products/colors' },
+      { name: 'Colors', href: '/colors' },
       { name: 'Brands', href: '/products/brands' },
     ],
   },
