@@ -5,7 +5,13 @@ export default function middleware(req: NextRequest) {
   const token = cookies().get('token')?.value;
   const isAuthenticated = !!token;
 
-  if (!isAuthenticated && !req.nextUrl.pathname.startsWith('/login')) {
+  if (
+    !isAuthenticated &&
+    !req.nextUrl.pathname.startsWith('/login') &&
+    !req.nextUrl.pathname.startsWith('/request-otp') &&
+    !req.nextUrl.pathname.startsWith('/verify-otp') &&
+    !req.nextUrl.pathname.startsWith('/reset-password')
+  ) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 

@@ -20,7 +20,7 @@ import { requestOtp } from '@/services/auth/AuthService';
 import { toast } from 'sonner';
 
 const formSchema = z.object({
-  mobileNumber: z.string().min(10, 'Phone number must be at least 10 characters long'),
+  mobileNumber: z.string().nonempty('Phone number is required'),
 });
 
 const defaultValues = {

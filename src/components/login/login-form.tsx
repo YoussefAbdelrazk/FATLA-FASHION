@@ -19,8 +19,11 @@ import { useAuthHook } from '@/hooks/useAuthHook';
 import { toast } from 'sonner';
 
 const formSchema = z.object({
-  mobileNumber: z.string().min(10, 'Phone number must be at least 10 characters long'),
-  password: z.string(),
+  mobileNumber: z
+    .string()
+
+    .nonempty('Phone number is required'),
+  password: z.string().nonempty('Password is required'),
 });
 const defaultValues = {
   mobileNumber: '',

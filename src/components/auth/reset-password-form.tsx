@@ -22,9 +22,9 @@ import { toast } from 'sonner';
 
 const formSchema = z
   .object({
-    mobileNumber: z.string().min(10, 'Phone number must be at least 10 characters long'),
-    newPassword: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string(),
+    mobileNumber: z.string().nonempty('Phone number is required'),
+    newPassword: z.string().nonempty('Password is required'),
+    confirmPassword: z.string().nonempty('Confirm password is required'),
   })
   .refine(data => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
