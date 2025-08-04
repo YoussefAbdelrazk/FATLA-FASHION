@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Cookies from 'universal-cookie';
+import { cookies } from 'next/headers';
 
 export const API_BASE_URL = process.env.API_URL;
 export const api = axios.create({
@@ -10,37 +10,37 @@ export const api = axios.create({
 });
 
 // Initialize cookies instance
-const cookies = new Cookies();
 
 // Cookie configuration
 const COOKIE_CONFIG = {
   path: '/',
   secure: true,
+  sameSite: 'strict' as const,
 };
 
 // Token management utilities using cookies
 export const getToken = (): string | null => {
-  return cookies.get('token') || null;
+  return cookies().get('token')?.value || null;
 };
 
 export const setToken = (token: string): void => {
-  cookies.set('token', token, COOKIE_CONFIG);
+  cookies().set('token', token, COOKIE_CONFIG);
 };
 
 export const removeToken = (): void => {
-  cookies.remove('token', { path: '/' });
+  cookies().delete('token');
 };
 
 export const getRefreshToken = (): string | null => {
-  return cookies.get('refreshToken') || null;
+  return cookies().get('refreshToken')?.value || null;
 };
 
 export const setRefreshToken = (refreshToken: string): void => {
-  cookies.set('refreshToken', refreshToken, COOKIE_CONFIG);
+  cookies().set('refreshToken', refreshToken, COOKIE_CONFIG);
 };
 
 export const removeRefreshToken = (): void => {
-  cookies.remove('refreshToken', { path: '/' });
+  cookies().delete('refreshToken');
 };
 
 export const isAuthenticated = (): boolean => {
