@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
-  const [notificationCount, setNotificationCount] = useState(8);
+  const [notificationCount] = useState(8);
   const { openMobileSidebar } = useSidebar();
 
   return (

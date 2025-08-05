@@ -116,6 +116,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'orderNo',
         header: 'Order No',
+        size: 120,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <Package className='w-4 h-4 text-gray-500' />
@@ -126,6 +127,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'clientName',
         header: 'Client Name',
+        size: 150,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <User className='w-4 h-4 text-gray-500' />
@@ -136,6 +138,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'clientMobile',
         header: 'Client Mobile',
+        size: 130,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <Phone className='w-4 h-4 text-gray-500' />
@@ -146,6 +149,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'orderDate',
         header: 'Order Date',
+        size: 120,
         cell: ({ row }) => {
           const date = new Date(row.getValue('orderDate') as string);
           return (
@@ -161,6 +165,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'subTotal',
         header: 'Sub Total',
+        size: 100,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <DollarSign className='w-4 h-4 text-gray-500' />
@@ -171,6 +176,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'deliveryTotal',
         header: 'Delivery Total',
+        size: 120,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <Truck className='w-4 h-4 text-gray-500' />
@@ -183,6 +189,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'discountTotal',
         header: 'Discount Total',
+        size: 120,
         cell: ({ row }) => {
           const discount = row.getValue('discountTotal') as number;
           return (
@@ -196,6 +203,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'finalTotal',
         header: 'Final Total',
+        size: 120,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <DollarSign className='w-4 h-4 text-gray-500' />
@@ -208,6 +216,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'paymentMethod',
         header: 'Payment Method',
+        size: 120,
         cell: ({ row }) => {
           const method = row.getValue('paymentMethod') as string;
           return (
@@ -221,6 +230,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'orderStatus',
         header: 'Order Status',
+        size: 120,
         cell: ({ row }) => {
           const status = row.getValue('orderStatus') as string;
           return <Badge className={`capitalize ${getStatusColor(status)}`}>{status}</Badge>;
@@ -229,6 +239,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'driverName',
         header: 'Driver Name',
+        size: 120,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <User className='w-4 h-4 text-gray-500' />
@@ -239,6 +250,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'driverMobile',
         header: 'Driver Mobile',
+        size: 120,
         cell: ({ row }) => (
           <div className='flex items-center space-x-2'>
             <Phone className='w-4 h-4 text-gray-500' />
@@ -249,6 +261,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'codCollected',
         header: 'COD Collected',
+        size: 120,
         cell: ({ row }) => {
           const codCollected = row.getValue('codCollected') as number;
           return (
@@ -262,6 +275,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         accessorKey: 'deliveryDateTime',
         header: 'Delivery Date-time',
+        size: 150,
         cell: ({ row }) => {
           const date = new Date(row.getValue('deliveryDateTime') as string);
           return (
@@ -277,6 +291,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       {
         id: 'actions',
         header: 'Actions',
+        size: 100,
         cell: ({ row }) => {
           const order = row.original;
           return (
@@ -339,7 +354,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 5,
       },
     },
   });
@@ -374,7 +389,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                       {headerGroup.headers.map(header => (
                         <th
                           key={header.id}
-                          className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
+                          className='px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
                         >
                           {header.isPlaceholder ? null : (
                             <div
@@ -402,7 +417,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                       className='hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
                     >
                       {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className='px-6 py-4 whitespace-nowrap'>
+                        <td key={cell.id} className='px-2 py-4 whitespace-nowrap'>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
@@ -425,7 +440,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
               of {table.getFilteredRowModel().rows.length} results
             </div>
             <div className='flex items-center space-x-4'>
-              <div className='flex items-center space-x-2'>
+              {/* <div className='flex items-center space-x-2'>
                 <span className='text-sm text-gray-700 dark:text-gray-300'>Rows per page:</span>
                 <select
                   value={table.getState().pagination.pageSize}
@@ -440,7 +455,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className='flex items-center space-x-2'>
                 <Button
                   variant='outline'

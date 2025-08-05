@@ -154,21 +154,5 @@ export const orders: Order[] = [
     codCollected: 0.0,
     deliveryDateTime: '2024-01-24T14:15:00Z',
   },
-  {
-    id: '10',
-    orderNo: 'ORD-2024-010',
-    clientName: 'Sara Mohamed',
-    clientMobile: '+20 777 888 9999',
-    orderDate: '2024-01-24T13:15:00Z',
-    subTotal: 179.99,
-    deliveryTotal: 20.0,
-    discountTotal: 20.0,
-    finalTotal: 179.99,
-    paymentMethod: 'Card',
-    orderStatus: 'Pending',
-    driverName: 'Hassan Karim',
-    driverMobile: '+20 222 333 4444',
-    codCollected: 0.0,
-    deliveryDateTime: '2024-01-25T16:00:00Z',
-  },
+
 ];

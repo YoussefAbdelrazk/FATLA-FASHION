@@ -24,6 +24,7 @@ import { sliderFormSchema, type SliderFormData } from '@/lib/schemas/slider-sche
 import { validateImage } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Save } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -170,7 +171,7 @@ export default function SingleSliderForm() {
                   <FormField
                     control={form.control}
                     name='arImage'
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>
                           Arabic Image <span className='text-red-500'>*</span>
@@ -190,9 +191,11 @@ export default function SingleSliderForm() {
                             {arImageError && <p className='text-sm text-red-500'>{arImageError}</p>}
                             {arImagePreview && (
                               <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
-                                <img
+                                <Image
                                   src={arImagePreview}
                                   alt='Arabic Image Preview'
+                                  width={128}
+                                  height={96}
                                   className='w-full h-full object-cover'
                                 />
                               </div>
@@ -229,7 +232,7 @@ export default function SingleSliderForm() {
                   <FormField
                     control={form.control}
                     name='enImage'
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem>
                         <FormLabel>
                           English Image <span className='text-red-500'>*</span>
@@ -249,9 +252,11 @@ export default function SingleSliderForm() {
                             {enImageError && <p className='text-sm text-red-500'>{enImageError}</p>}
                             {enImagePreview && (
                               <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
-                                <img
+                                <Image
                                   src={enImagePreview}
                                   alt='English Image Preview'
+                                  width={128}
+                                  height={96}
                                   className='w-full h-full object-cover'
                                 />
                               </div>

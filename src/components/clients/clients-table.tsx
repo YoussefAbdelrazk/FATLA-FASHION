@@ -229,7 +229,7 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 5,
       },
     },
   });
@@ -258,7 +258,7 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
         </CardHeader>
         <CardContent>
           <div className='rounded-md border'>
-            <div className='max-h-[600px] overflow-auto'>
+            <div className='max-h-[800px] overflow-auto'>
               <table className='w-full'>
                 <thead className='bg-gray-50 dark:bg-gray-800 sticky top-0 z-10'>
                   {table.getHeaderGroups().map(headerGroup => (
@@ -317,7 +317,7 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
               of {table.getFilteredRowModel().rows.length} results
             </div>
             <div className='flex items-center space-x-4'>
-              <div className='flex items-center space-x-2'>
+              {/* <div className='flex items-center space-x-2'>
                 <span className='text-sm text-gray-700 dark:text-gray-300'>Rows per page:</span>
                 <select
                   value={table.getState().pagination.pageSize}
@@ -326,13 +326,13 @@ export default function ClientsTable({ clients }: ClientsTableProps) {
                   }}
                   className='border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
                 >
-                  {[10, 20, 30, 40, 50].map(pageSize => (
+                  {[5, 10, 20, 30, 40, 50].map(pageSize => (
                     <option key={pageSize} value={pageSize}>
                       {pageSize}
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className='flex items-center space-x-2'>
                 <Button
                   variant='outline'

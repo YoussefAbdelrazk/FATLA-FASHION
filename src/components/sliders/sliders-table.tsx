@@ -74,7 +74,7 @@ import {
 import Image from 'next/image';
 
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Sample data for dropdowns - in real app, these would come from API
@@ -202,7 +202,7 @@ function EditSliderForm({ slider, onClose }: EditSliderFormProps) {
             <FormField
               control={form.control}
               name='arImage'
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>
                     Arabic Image <span className='text-red-500'>*</span>
@@ -222,9 +222,11 @@ function EditSliderForm({ slider, onClose }: EditSliderFormProps) {
                       {arImageError && <p className='text-sm text-red-500'>{arImageError}</p>}
                       {arImagePreview && (
                         <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
-                          <img
+                          <Image
                             src={arImagePreview}
                             alt='Arabic Image Preview'
+                            width={128}
+                            height={96}
                             className='w-full h-full object-cover'
                           />
                         </div>
@@ -261,7 +263,7 @@ function EditSliderForm({ slider, onClose }: EditSliderFormProps) {
             <FormField
               control={form.control}
               name='enImage'
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>
                     English Image <span className='text-red-500'>*</span>
@@ -281,9 +283,11 @@ function EditSliderForm({ slider, onClose }: EditSliderFormProps) {
                       {enImageError && <p className='text-sm text-red-500'>{enImageError}</p>}
                       {enImagePreview && (
                         <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
-                          <img
+                          <Image
                             src={enImagePreview}
                             alt='English Image Preview'
+                            width={128}
+                            height={96}
                             className='w-full h-full object-cover'
                           />
                         </div>
@@ -457,7 +461,6 @@ export default function SlidersTable() {
   const { data: sliders = [], isLoading, error } = useGetAllSliders('en');
   const deleteSliderMutation = useDeleteSlider();
   const toggleVisibilityMutation = useToggleSliderVisibility();
-  const updateSliderMutation = useUpdateSlider();
 
   const handleDeleteSlider = (slider: Slider) => {
     setSliderToDelete(slider);
@@ -478,13 +481,16 @@ export default function SlidersTable() {
     }
   };
 
-  const handleToggleVisibility = (slider: Slider) => {
-    toggleVisibilityMutation.mutate({
-      id: slider.id,
-      isVisible: !slider.isVisible,
-      lang: 'en',
-    });
-  };
+  const handleToggleVisibility = useCallback(
+    (slider: Slider) => {
+      toggleVisibilityMutation.mutate({
+        id: slider.id,
+        isVisible: !slider.isVisible,
+        lang: 'en',
+      });
+    },
+    [toggleVisibilityMutation],
+  );
 
   const handleEditSlider = (slider: Slider) => {
     setSliderToEdit(slider);
@@ -690,7 +696,7 @@ export default function SlidersTable() {
         },
       },
     ],
-    [],
+    [handleToggleVisibility],
   );
 
   const table = useReactTable({
@@ -708,7 +714,7 @@ export default function SlidersTable() {
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 5,
       },
     },
   });
@@ -826,7 +832,7 @@ export default function SlidersTable() {
               of {table.getFilteredRowModel().rows.length} results
             </div>
             <div className='flex items-center space-x-4'>
-              <div className='flex items-center space-x-2'>
+              {/* <div className='flex items-center space-x-2'>
                 <span className='text-sm text-gray-700 dark:text-gray-300'>Rows per page:</span>
                 <select
                   value={table.getState().pagination.pageSize}
@@ -841,7 +847,7 @@ export default function SlidersTable() {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className='flex items-center space-x-2'>
                 <Button
                   variant='outline'

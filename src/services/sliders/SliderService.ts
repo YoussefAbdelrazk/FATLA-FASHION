@@ -1,5 +1,5 @@
-'use server';
-import api, { getToken } from '@/lib/config';
+import baseAPI from '@/lib/config';
+
 import { Slider } from '@/types/slider';
 
 export interface CreateSliderData {
@@ -12,8 +12,6 @@ export interface CreateSliderData {
   categoryName?: string;
   isVisible: boolean;
 }
-const token = getToken();
-console.log(token);
 
 export interface GetSlidersResponse {
   brandId: null;
@@ -51,7 +49,7 @@ export interface UpdateSliderData extends Partial<CreateSliderData> {
 // Get all sliders
 export const getAllSliders = async (lang: string = 'en'): Promise<GetSlidersResponse[]> => {
   try {
-    const response = await api.get(`/api/${lang}/Sliders/GetSliders`);
+    const response = await baseAPI.get(`/api/${lang}/Sliders/GetSliders`);
     console.log('GetSliders response:', response.data);
     return response.data;
   } catch (error) {
@@ -63,7 +61,7 @@ export const getAllSliders = async (lang: string = 'en'): Promise<GetSlidersResp
 // Get single slider by ID
 export const getSliderById = async (id: string, lang: string = 'en'): Promise<Slider> => {
   try {
-    const response = await api.get(`/api/${lang}/Sliders/GetSingleSlider?id=${id}`);
+    const response = await baseAPI.get(`/api/${lang}/Sliders/GetSingleSlider?id=${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching slider:', error);
@@ -77,11 +75,7 @@ export const createSlider = async (
   lang: string = 'en',
 ): Promise<CreateSliderResponse> => {
   try {
-    const response = await api.post(`/api/${lang}/Sliders/CreateSlider`, data, {
-      headers: {
-        token: getToken(),
-      },
-    });
+    const response = await baseAPI.post(`/api/${lang}/Sliders/CreateSlider`, data);
     return response.data;
   } catch (error) {
     console.error('Error creating slider:', error);
@@ -96,7 +90,7 @@ export const updateSlider = async (
 ): Promise<Slider> => {
   try {
     const { id, ...updateData } = data;
-    const response = await api.put(`/api/${lang}/Sliders/EditSlider?id=${id}`, updateData);
+    const response = await baseAPI.put(`/api/${lang}/Sliders/EditSlider?id=${id}`, updateData);
     return response.data;
   } catch (error) {
     console.error('Error updating slider:', error);
@@ -107,7 +101,7 @@ export const updateSlider = async (
 // Delete slider
 export const deleteSlider = async (id: string, lang: string = 'en'): Promise<void> => {
   try {
-    await api.delete(`/api/${lang}/Sliders/DeleteSlider?id=${id}`);
+    await baseAPI.delete(`/api/${lang}/Sliders/DeleteSlider?id=${id}`);
   } catch (error) {
     console.error('Error deleting slider:', error);
     throw error;
@@ -121,7 +115,7 @@ export const toggleSliderVisibility = async (
   lang: string = 'en',
 ): Promise<Slider> => {
   try {
-    const response = await api.patch(`/api/${lang}/Sliders/ToggleVisibility?id=${id}`, {
+    const response = await baseAPI.patch(`/api/${lang}/Sliders/ToggleVisibility?id=${id}`, {
       isVisible,
     });
     return response.data;

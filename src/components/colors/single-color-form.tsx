@@ -103,7 +103,7 @@ export default function SingleColorForm() {
                 <FormField
                   control={form.control}
                   name='color'
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem>
                       <FormLabel>
                         Color <span className='text-red-500'>*</span>

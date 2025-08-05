@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import {
   Building,
   ChevronDown,
+  Globe,
   Home,
   Image,
   List,
@@ -62,6 +63,7 @@ const navigation: NavigationItemType[] = [
   },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Sliders', href: '/sliders', icon: Image },
+  { name: 'Brands', href: '/brands', icon: Globe },
   {
     name: 'Products',
     icon: Package,
@@ -70,7 +72,6 @@ const navigation: NavigationItemType[] = [
       { name: 'Categories', href: '/categories' },
       { name: 'Sizes', href: '/products/sizes' },
       { name: 'Colors', href: '/colors' },
-      { name: 'Brands', href: '/products/brands' },
     ],
   },
 ];

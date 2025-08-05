@@ -240,7 +240,7 @@ export default function ColorsTable({ colors }: ColorsTableProps) {
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 5,
       },
     },
   });
@@ -326,7 +326,7 @@ export default function ColorsTable({ colors }: ColorsTableProps) {
               of {table.getFilteredRowModel().rows.length} results
             </div>
             <div className='flex items-center space-x-4'>
-              <div className='flex items-center space-x-2'>
+              {/* <div className='flex items-center space-x-2'>
                 <span className='text-sm text-gray-700 dark:text-gray-300'>Rows per page:</span>
                 <select
                   value={table.getState().pagination.pageSize}
@@ -341,7 +341,7 @@ export default function ColorsTable({ colors }: ColorsTableProps) {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className='flex items-center space-x-2'>
                 <Button
                   variant='outline'

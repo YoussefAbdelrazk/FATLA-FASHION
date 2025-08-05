@@ -1,87 +1,58 @@
 import axios from 'axios';
-import { cookies } from 'next/headers';
 
-export const API_BASE_URL = process.env.API_URL;
-export const api = axios.create({
+import { getToken } from './utils';
+
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+
+// export const api = axios.create({
+//   baseURL: API_BASE_URL,
+//   headers: {
+//     'Content-Type': 'application/json',
+//     Authorization: `Bearer ${getToken()}`,
+//   },
+// });
+
+// Initialize cookies instance
+
+// create an instance of the axios server
+export const baseAPI = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Initialize cookies instance
+// use this baseAPI form only if you are visiting a form data or uploading a document
+export const baseAPIForm = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
 
 // Cookie configuration
-const COOKIE_CONFIG = {
-  path: '/',
-  secure: true,
-  sameSite: 'strict' as const,
-};
 
 // Token management utilities using cookies
-export const getToken = (): string | null => {
-  return cookies().get('token')?.value || null;
-};
 
-export const setToken = (token: string): void => {
-  cookies().set('token', token, COOKIE_CONFIG);
-};
+// // Request interceptor to add auth header and handle CORS
+baseAPI.interceptors.request.use(config => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
+  }
+  return config;
+});
 
-export const removeToken = (): void => {
-  cookies().delete('token');
-};
+baseAPIForm.interceptors.request.use(config => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
+  }
+  return config;
+});
 
-export const getRefreshToken = (): string | null => {
-  return cookies().get('refreshToken')?.value || null;
-};
-
-export const setRefreshToken = (refreshToken: string): void => {
-  cookies().set('refreshToken', refreshToken, COOKIE_CONFIG);
-};
-
-export const removeRefreshToken = (): void => {
-  cookies().delete('refreshToken');
-};
-
-export const isAuthenticated = (): boolean => {
-  return getToken() !== null;
-};
-
-// Request interceptor to add auth header and handle CORS
-api.interceptors.request.use(
-  config => {
-    // Add token if available
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    // Note: CORS headers should be set by the server, not the client
-
-    console.log('Making request to:', config.url);
-    console.log('Request headers:', config.headers);
-
-    return config;
-  },
-  error => {
-    console.error('Request error:', error);
-    return Promise.reject(error);
-  },
-);
-
-// Response interceptor for debugging
-api.interceptors.response.use(
-  response => {
-    console.log('Response received:', response.status, response.data);
-    console.log('Response headers:', response.headers);
-    return response;
-  },
-  error => {
-    console.error('Response error:', error.response?.status, error.response?.data);
-    console.error('Error details:', error.message);
-    console.error('Error response headers:', error.response?.headers);
-    return Promise.reject(error);
-  },
-);
-
-export default api;
+export default baseAPI;

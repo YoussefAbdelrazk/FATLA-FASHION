@@ -271,7 +271,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 5,
       },
     },
   });
@@ -306,7 +306,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                       {headerGroup.headers.map(header => (
                         <th
                           key={header.id}
-                          className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
+                          className='px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
                         >
                           {header.isPlaceholder ? null : (
                             <div
@@ -334,7 +334,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                       className='hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
                     >
                       {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className='px-6 py-4 whitespace-nowrap'>
+                        <td key={cell.id} className='px-2 py-4 whitespace-nowrap'>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}
@@ -357,7 +357,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
               of {table.getFilteredRowModel().rows.length} results
             </div>
             <div className='flex items-center space-x-4'>
-              <div className='flex items-center space-x-2'>
+              {/* <div className='flex items-center space-x-2'>
                 <span className='text-sm text-gray-700 dark:text-gray-300'>Rows per page:</span>
                 <select
                   value={table.getState().pagination.pageSize}
@@ -372,7 +372,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className='flex items-center space-x-2'>
                 <Button
                   variant='outline'
