@@ -1,5 +1,5 @@
 import { baseAPI } from '@/lib/config';
-import { removeToken, setRefreshToken, setToken } from '@/lib/utils';
+import { removeToken, setRefreshToken, setToken } from '@/lib/Cookie';
 
 interface LoginResponse {
   token: string;

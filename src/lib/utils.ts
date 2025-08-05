@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
-import Cookies from 'js-cookie';
+
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -63,32 +63,3 @@ export function validateImage(file: File): { isValid: boolean; error?: string } 
 
   return { isValid: true };
 }
-
-
-
-export const COOKIE_CONFIG = {
-  expires: 1,
-  path: '/',
-  secure: true,
-  sameSite: 'strict' as const,
-};
-
-export const setToken = (token: string): void => {
-  Cookies.set('token', token, COOKIE_CONFIG);
-};
-
-export const setRefreshToken = (refreshToken: string): void => {
-  Cookies.set('refreshToken', refreshToken, COOKIE_CONFIG);
-};
-
-export const getRefreshToken = (): string | null => {
-  return Cookies.get('refreshToken') || null;
-};
-
-export const getToken = (): string | null => {
-  return Cookies.get('token') || null;
-};
-
-export const removeToken = (): void => {
-  Cookies.remove('token');
-};

@@ -1,8 +1,8 @@
-import { cookies } from 'next/headers';
+import { getToken } from '@/lib/Cookie';
 import { NextRequest, NextResponse } from 'next/server';
 
 export default function middleware(req: NextRequest) {
-  const token = cookies().get('token')?.value;
+  const token = getToken();
   const isAuthenticated = !!token;
 
   if (
