@@ -4,9 +4,14 @@ export interface Category {
   enName: string;
   image: string;
   productsCount: number;
-  isActive: boolean;
   createdAt: string;
   createdBy: string;
+}
+
+export interface CategoryFormData {
+  arName: string;
+  enName: string;
+  image: string;
 }
 
 export interface CategoryTableProps {

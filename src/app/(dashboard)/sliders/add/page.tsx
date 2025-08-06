@@ -1,4 +1,4 @@
-import SingleSliderForm from '@/components/sliders/sliders-table';
+import AddSliderForm from '@/components/sliders/add-slider-form';
 
 export default function AddSliderPage() {
   return (
@@ -12,7 +12,7 @@ export default function AddSliderPage() {
         </div>
       </div>
 
-      <SingleSliderForm />
+      <AddSliderForm />
     </div>
   );
 }

@@ -51,7 +51,23 @@ export const useGetAllSliders = (lang: string = 'en') => {
 export const useGetSliderById = (id: string, lang: string = 'en') => {
   return useQuery({
     queryKey: [...sliderKeys.detail(id), lang],
-    queryFn: () => getSliderById(id, lang),
+    queryFn: async () => {
+      const data = await getSliderById(id, lang);
+      // Transform API response to match Slider type
+      return {
+        id: data.id.toString(),
+        arName: data.nameAr,
+        enName: data.nameEn,
+        arImage: data.imageUrlAr,
+        enImage: data.imageUrlEn,
+        brandName: data.brandName || '',
+        productName: data.variantName || '',
+        categoryName: data.categoryName || '',
+        isVisible: true, // Default to true since API doesn't provide this
+        createdAt: new Date().toISOString(), // Default since API doesn't provide this
+        createdBy: data.createdBy || '',
+      };
+    },
     enabled: !!id,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
@@ -100,7 +116,7 @@ export const useDeleteSlider = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, lang = 'en' }: { id: string; lang?: string }) => deleteSlider(id, lang),
+    mutationFn: ({ id, lang = 'en' }: { id: number; lang?: string }) => deleteSlider(id, lang),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: sliderKeys.lists() });
       toast.success('Slider deleted successfully');

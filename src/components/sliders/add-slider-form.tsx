@@ -23,7 +23,7 @@ import { useCreateSlider } from '@/hooks/useSliders';
 import { sliderFormSchema, type SliderFormData } from '@/lib/schemas/slider-schema';
 import { validateImage } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ const categories = [
   { id: '4', name: 'Sports Equipment' },
 ];
 
-export default function SingleSliderForm() {
+export default function AddSliderForm() {
   const router = useRouter();
   const createSliderMutation = useCreateSlider();
   const [arImagePreview, setArImagePreview] = useState<string | null>(null);
@@ -130,28 +130,34 @@ export default function SingleSliderForm() {
 
   return (
     <div className='space-y-6'>
-      <div className='flex items-center space-x-4'>
-        <Button variant='outline' onClick={handleBack}>
-          <ArrowLeft className='w-4 h-4 mr-2' />
-          Back to Sliders
-        </Button>
+      {/* Header */}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center space-x-4'>
+          <Button variant='outline' onClick={handleBack}>
+            <ArrowLeft className='w-4 h-4 mr-2' />
+            Back to Sliders
+          </Button>
+        </div>
       </div>
 
+      {/* Form */}
       <Card>
         <CardHeader>
-          <CardTitle>Slider Information</CardTitle>
+          <CardTitle className='flex items-center gap-2'>
+            <Upload className='w-5 h-5' />
+            Slider Information
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-6'
-              encType='multipart/form-data'
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
               {/* Arabic Content Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Arabic Content</h3>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>Arabic Content</h3>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
                     name='arName'
@@ -161,7 +167,11 @@ export default function SingleSliderForm() {
                           Arabic Name <span className='text-red-500'>*</span>
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder='أدخل الاسم بالعربية' {...field} />
+                          <Input
+                            placeholder='أدخل الاسم بالعربية'
+                            {...field}
+                            className='text-right'
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -177,25 +187,29 @@ export default function SingleSliderForm() {
                           Arabic Image <span className='text-red-500'>*</span>
                         </FormLabel>
                         <FormControl>
-                          <div className='space-y-2'>
-                            <Input
-                              type='file'
-                              accept='image/*'
-                              onChange={e => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  handleImageUpload('arImage', file);
-                                }
-                              }}
-                            />
+                          <div className='space-y-3'>
+                            <div className='relative'>
+                              <Input
+                                type='file'
+                                accept='image/*'
+                                onChange={e => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleImageUpload('arImage', file);
+                                  }
+                                }}
+                                className='cursor-pointer'
+                              />
+                              <Upload className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                            </div>
                             {arImageError && <p className='text-sm text-red-500'>{arImageError}</p>}
                             {arImagePreview && (
-                              <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
+                              <div className='w-full h-32 bg-muted rounded-lg overflow-hidden'>
                                 <Image
                                   src={arImagePreview}
                                   alt='Arabic Image Preview'
-                                  width={128}
-                                  height={96}
+                                  width={400}
+                                  height={128}
                                   className='w-full h-full object-cover'
                                 />
                               </div>
@@ -210,9 +224,12 @@ export default function SingleSliderForm() {
               </div>
 
               {/* English Content Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>English Content</h3>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>English Content</h3>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
                     name='enName'
@@ -238,25 +255,29 @@ export default function SingleSliderForm() {
                           English Image <span className='text-red-500'>*</span>
                         </FormLabel>
                         <FormControl>
-                          <div className='space-y-2'>
-                            <Input
-                              type='file'
-                              accept='image/*'
-                              onChange={e => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  handleImageUpload('enImage', file);
-                                }
-                              }}
-                            />
+                          <div className='space-y-3'>
+                            <div className='relative'>
+                              <Input
+                                type='file'
+                                accept='image/*'
+                                onChange={e => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleImageUpload('enImage', file);
+                                  }
+                                }}
+                                className='cursor-pointer'
+                              />
+                              <Upload className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                            </div>
                             {enImageError && <p className='text-sm text-red-500'>{enImageError}</p>}
                             {enImagePreview && (
-                              <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
+                              <div className='w-full h-32 bg-muted rounded-lg overflow-hidden'>
                                 <Image
                                   src={enImagePreview}
                                   alt='English Image Preview'
-                                  width={128}
-                                  height={96}
+                                  width={400}
+                                  height={128}
                                   className='w-full h-full object-cover'
                                 />
                               </div>
@@ -271,9 +292,12 @@ export default function SingleSliderForm() {
               </div>
 
               {/* Optional Fields Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Optional Information</h3>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>Optional Information</h3>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
                   <FormField
                     control={form.control}
                     name='brandName'
@@ -379,21 +403,30 @@ export default function SingleSliderForm() {
               </div>
 
               {/* Visibility Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Visibility Settings</h3>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>Visibility Settings</h3>
+                </div>
                 <FormField
                   control={form.control}
                   name='isVisible'
                   render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-6'>
                       <div className='space-y-0.5'>
-                        <FormLabel className='text-base'>Make slider visible</FormLabel>
+                        <FormLabel className='text-base font-semibold'>
+                          Make slider visible
+                        </FormLabel>
                         <div className='text-sm text-muted-foreground'>
-                          Control whether this slider is visible to users
+                          Control whether this slider is visible to users on the frontend
                         </div>
                       </div>
                       <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className='data-[state=checked]:bg-green-600'
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -401,13 +434,13 @@ export default function SingleSliderForm() {
               </div>
 
               {/* Save Button */}
-              <div className='flex justify-end space-x-4 pt-6'>
+              <div className='flex justify-end space-x-4 pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
                   Cancel
                 </Button>
                 <Button type='submit' disabled={createSliderMutation.isPending}>
                   <Save className='w-4 h-4 mr-2' />
-                  {createSliderMutation.isPending ? 'Saving...' : 'Save Slider'}
+                  {createSliderMutation.isPending ? 'Creating...' : 'Create Slider'}
                 </Button>
               </div>
             </form>

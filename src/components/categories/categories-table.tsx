@@ -3,11 +3,11 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { categories } from '@/data/categories';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -19,466 +19,387 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Category } from '@/types/category';
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+// import { useDeleteCategory } from '@/hooks/useCategories';
+// import { useGetAllCategories } from '@/hooks/useCategories';
+import { Category } from '@/types/category';
 import { format } from 'date-fns';
 import {
-  Ban,
   ChevronDown,
   ChevronUp,
-  Clock,
   Edit,
   Eye,
   Image as ImageIcon,
   MoreHorizontal,
-  Package,
+  Plus,
   Search,
   Trash2,
-  User,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
-interface CategoriesTableProps {
-  categories: Category[];
-}
-
-export default function CategoriesTable({ categories }: CategoriesTableProps) {
+export default function CategoriesTable() {
   const router = useRouter();
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<keyof Category>('id');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
-  const handleDeleteCategory = (category: Category) => {
+  // React Query hooks
+  // const { data: categories = [], isLoading, error } = useGetAllCategories('en');
+  // const deleteCategoryMutation = useDeleteCategory();
+
+  const handleSort = (field: keyof Category) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const handleShowDetails = (category: Category) => {
+    setSelectedCategory(category);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleEdit = (category: Category) => {
+    router.push(`/categories/edit/${category.id}`);
+  };
+
+  const handleDelete = (category: Category) => {
     setCategoryToDelete(category);
     setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
-    // Here you would typically make an API call to delete the category
-    console.log('Deleting category:', categoryToDelete);
-    // For now, we'll just close the modal
-    setIsDeleteModalOpen(false);
-    setCategoryToDelete(null);
+    if (categoryToDelete) {
+      // deleteCategoryMutation.mutate(
+      // { id: categoryToDelete.id, lang: 'en' },
+      // {
+      // onSuccess: () => {
+      //   setIsDeleteModalOpen(false);
+      //   setCategoryToDelete(null);
+      // },
+      // },
+      //  );
+    }
   };
 
-  const handleDeactivateCategory = (category: Category) => {
-    // Here you would typically make an API call to deactivate the category
-    console.log('Deactivating category:', category);
-    // You could update the category status to inactive
+  // Filter and sort categories
+  const filteredAndSortedCategories = categories
+    .filter(
+      category =>
+        category.arName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        category.enName.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .sort((a, b) => {
+      const aValue = a[sortField];
+      const bValue = b[sortField];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      return 0;
+    });
+
+  const SortIcon = ({ field }: { field: keyof Category }) => {
+    if (sortField !== field) return null;
+    return sortDirection === 'asc' ? (
+      <ChevronUp className='w-4 h-4 ml-1' />
+    ) : (
+      <ChevronDown className='w-4 h-4 ml-1' />
+    );
   };
 
-  const columns: ColumnDef<Category>[] = useMemo(
-    () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        cell: ({ row }) => (
-          <div className='font-mono text-sm text-gray-600 dark:text-gray-400'>
-            {row.getValue('id')}
+  if (false) {
+    return (
+      <Card>
+        <CardContent className='flex items-center justify-center py-12'>
+          <div className='text-center'>
+            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
+            <p className='text-muted-foreground'>Loading categories...</p>
           </div>
-        ),
-      },
-      {
-        accessorKey: 'arName',
-        header: 'Arabic Name',
-        cell: ({ row }) => (
-          <div className='max-w-[150px] truncate' title={row.getValue('arName')}>
-            <div className='font-medium text-gray-900 dark:text-white'>
-              {row.getValue('arName')}
-            </div>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'enName',
-        header: 'English Name',
-        cell: ({ row }) => (
-          <div className='max-w-[150px] truncate' title={row.getValue('enName')}>
-            <div className='font-medium text-gray-900 dark:text-white'>
-              {row.getValue('enName')}
-            </div>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'image',
-        header: 'Image',
-        cell: ({ row }) => {
-          const image = row.getValue('image') as string;
-          return (
-            <div className='w-12 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden'>
-              {image ? (
-                <Image
-                  src={image}
-                  alt='Category Image'
-                  width={48}
-                  height={32}
-                  className='object-cover w-full h-full'
-                />
-              ) : (
-                <ImageIcon className='w-4 h-4 text-gray-400' />
-              )}
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: 'productsCount',
-        header: 'Products Count',
-        cell: ({ row }) => {
-          const count = row.getValue('productsCount') as number;
-          return (
-            <div className='flex items-center space-x-2'>
-              <Package className='w-4 h-4 text-gray-500' />
-              <span className='font-medium text-gray-900 dark:text-white'>{count}</span>
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: 'isActive',
-        header: 'Status',
-        cell: ({ row }) => {
-          const isActive = row.getValue('isActive') as boolean;
-          return (
-            <Badge variant={isActive ? 'default' : 'secondary'}>
-              {isActive ? 'Active' : 'Inactive'}
-            </Badge>
-          );
-        },
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        cell: ({ row }) => {
-          const date = new Date(row.getValue('createdAt') as string);
-          return (
-            <div className='flex items-center space-x-2'>
-              <Clock className='w-4 h-4 text-gray-500' />
-              <span className='text-sm text-gray-600 dark:text-gray-400'>
-                {format(date, 'MMM dd, yyyy')}
-              </span>
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: 'createdBy',
-        header: 'Created By',
-        cell: ({ row }) => (
-          <div className='flex items-center space-x-2'>
-            <User className='w-4 h-4 text-gray-500' />
-            <span className='text-sm text-gray-600 dark:text-gray-400'>
-              {row.getValue('createdBy')}
-            </span>
-          </div>
-        ),
-      },
-      {
-        id: 'actions',
-        header: 'Actions',
-        cell: ({ row }) => {
-          const category = row.original;
+        </CardContent>
+      </Card>
+    );
+  }
 
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant='ghost' className='h-8 w-8 p-0'>
-                  <span className='sr-only'>Open menu</span>
-                  <MoreHorizontal className='h-4 w-4' />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align='end'>
-                <DropdownMenuItem onClick={() => setSelectedCategory(category)}>
-                  <Eye className='mr-2 h-4 w-4' />
-                  View Details
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Edit className='mr-2 h-4 w-4' />
-                  Edit Category
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => handleDeactivateCategory(category)}
-                  className='text-red-600'
-                >
-                  <Ban className='mr-2 h-4 w-4' />
-                  {category.isActive ? 'Deactivate' : 'Activate'}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleDeleteCategory(category)}
-                  className='text-red-600'
-                >
-                  <Trash2 className='mr-2 h-4 w-4' />
-                  Delete Category
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        },
-      },
-    ],
-    [],
-  );
-
-  const table = useReactTable({
-    data: categories,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    state: {
-      sorting,
-      columnFilters,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10,
-      },
-    },
-  });
+  if (false) {
+    return (
+      <Card>
+        <CardContent className='flex items-center justify-center py-12'>
+          <div className='text-center'>
+            <p className='text-destructive mb-2'>Error loading categories</p>
+            <p className='text-muted-foreground text-sm'>{'An error occurred'}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-6'>
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
             <span>Categories Management</span>
-            <div className='flex items-center space-x-2'>
-              <div className='relative'>
-                <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400' />
-                <Input
-                  placeholder='Search categories...'
-                  value={(table.getColumn('enName')?.getFilterValue() as string) ?? ''}
-                  onChange={event => table.getColumn('enName')?.setFilterValue(event.target.value)}
-                  className='pl-10 w-64'
-                />
-              </div>
-              <Button onClick={() => router.push('/categories/add')}>Add Category</Button>
-            </div>
+            <Button
+              onClick={() => router.push('/categories/add')}
+              className='flex items-center gap-2'
+            >
+              <Plus className='w-4 h-4' />
+              Add New Category
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='rounded-md border'>
-            <div className='max-h-[600px] overflow-x-auto'>
-              <table className='w-full min-w-full'>
-                <thead className='bg-gray-50 dark:bg-gray-800 sticky top-0 z-10'>
-                  {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map(header => (
-                        <th
-                          key={header.id}
-                          className='px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-800'
-                        >
-                          {header.isPlaceholder ? null : (
-                            <div
-                              className={`flex items-center space-x-1 ${
-                                header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-                              }`}
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(header.column.columnDef.header, header.getContext())}
-                              {{
-                                asc: <ChevronUp className='w-4 h-4' />,
-                                desc: <ChevronDown className='w-4 h-4' />,
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>
-                          )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody className='bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700'>
-                  {table.getRowModel().rows.map(row => (
-                    <tr
-                      key={row.id}
-                      className='hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
-                    >
-                      {row.getVisibleCells().map(cell => (
-                        <td key={cell.id} className='px-3 py-4 whitespace-nowrap'>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Search Bar */}
+          <div className='mb-6'>
+            <div className='relative'>
+              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+              <Input
+                placeholder='Search categories by name...'
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className='pl-10'
+              />
             </div>
           </div>
 
-          {/* Pagination */}
-          <div className='flex items-center justify-between space-x-2 py-4'>
-            <div className='flex-1 text-sm text-gray-700 dark:text-gray-300'>
-              Showing{' '}
-              {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
-              {Math.min(
-                (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-                table.getFilteredRowModel().rows.length,
-              )}{' '}
-              of {table.getFilteredRowModel().rows.length} results
-            </div>
-            <div className='flex items-center space-x-4'>
-              <div className='flex items-center space-x-2'>
-                <span className='text-sm text-gray-700 dark:text-gray-300'>Rows per page:</span>
-                <select
-                  value={table.getState().pagination.pageSize}
-                  onChange={e => {
-                    table.setPageSize(Number(e.target.value));
-                  }}
-                  className='border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
-                >
-                  {[10, 20, 30, 40, 50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                      {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className='flex items-center space-x-2'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  Previous
-                </Button>
-                <div className='flex items-center space-x-1'>
-                  {Array.from({ length: Math.min(5, table.getPageCount()) }, (_, i) => {
-                    const pageIndex = table.getState().pagination.pageIndex;
-                    const pageCount = table.getPageCount();
-                    let startPage = Math.max(0, pageIndex - 2);
-                    const endPage = Math.min(pageCount, startPage + 5);
-                    if (endPage - startPage < 5) {
-                      startPage = Math.max(0, endPage - 5);
-                    }
-                    return startPage + i;
-                  }).map(pageIndex => (
-                    <Button
-                      key={pageIndex}
-                      variant={
-                        table.getState().pagination.pageIndex === pageIndex ? 'default' : 'outline'
-                      }
-                      size='sm'
-                      onClick={() => table.setPageIndex(pageIndex)}
-                      className='w-8 h-8 p-0'
-                    >
-                      {pageIndex + 1}
-                    </Button>
-                  ))}
-                </div>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  Next
-                </Button>
-              </div>
-            </div>
+          {/* Table */}
+          <div className='rounded-md border'>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead
+                    className='cursor-pointer hover:bg-muted/50'
+                    onClick={() => handleSort('id')}
+                  >
+                    <div className='flex items-center'>
+                      ID
+                      <SortIcon field='id' />
+                    </div>
+                  </TableHead>
+                  <TableHead
+                    className='cursor-pointer hover:bg-muted/50'
+                    onClick={() => handleSort('arName')}
+                  >
+                    <div className='flex items-center'>
+                      Arabic Name
+                      <SortIcon field='arName' />
+                    </div>
+                  </TableHead>
+                  <TableHead
+                    className='cursor-pointer hover:bg-muted/50'
+                    onClick={() => handleSort('enName')}
+                  >
+                    <div className='flex items-center'>
+                      English Name
+                      <SortIcon field='enName' />
+                    </div>
+                  </TableHead>
+                  <TableHead>Image</TableHead>
+                  <TableHead
+                    className='cursor-pointer hover:bg-muted/50'
+                    onClick={() => handleSort('productsCount')}
+                  >
+                    <div className='flex items-center'>
+                      Products Count
+                      <SortIcon field='productsCount' />
+                    </div>
+                  </TableHead>
+                  <TableHead className='text-right'>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredAndSortedCategories.map(category => (
+                  <TableRow key={category.id} className='hover:bg-muted/50'>
+                    <TableCell className='font-mono text-sm'>{category.id}</TableCell>
+                    <TableCell>
+                      <div className='max-w-[150px] truncate' title={category.arName}>
+                        {category.arName}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='max-w-[150px] truncate' title={category.enName}>
+                        {category.enName}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
+                        {category.image ? (
+                          <Image
+                            src={category.image}
+                            alt='Category Image'
+                            width={64}
+                            height={48}
+                            className='object-cover w-full h-full'
+                          />
+                        ) : (
+                          <ImageIcon className='w-6 h-6 text-muted-foreground' />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant='secondary' className='font-normal'>
+                        {category.productsCount} products
+                      </Badge>
+                    </TableCell>
+                    <TableCell className='text-right'>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant='ghost' className='h-8 w-8 p-0'>
+                            <span className='sr-only'>Open menu</span>
+                            <MoreHorizontal className='h-4 w-4' />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align='end'>
+                          <DropdownMenuItem onClick={() => handleShowDetails(category)}>
+                            <Eye className='mr-2 h-4 w-4' />
+                            Show Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEdit(category)}>
+                            <Edit className='mr-2 h-4 w-4' />
+                            Edit Category
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(category)}
+                            className='text-red-600 focus:text-red-600'
+                          >
+                            <Trash2 className='mr-2 h-4 w-4' />
+                            Delete Category
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
+
+          {/* Empty State */}
+          {filteredAndSortedCategories.length === 0 && (
+            <div className='text-center py-12'>
+              <ImageIcon className='w-12 h-12 text-muted-foreground mx-auto mb-4' />
+              <h3 className='text-lg font-semibold mb-2'>No categories found</h3>
+              <p className='text-muted-foreground mb-4'>
+                {searchTerm
+                  ? 'Try adjusting your search terms.'
+                  : 'Get started by creating your first category.'}
+              </p>
+              {!searchTerm && (
+                <Button onClick={() => router.push('/categories/add')}>
+                  <Plus className='w-4 h-4 mr-2' />
+                  Create First Category
+                </Button>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
       {/* Category Details Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className='max-w-2xl'>
+      <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
+        <DialogContent className='max-w-4xl'>
           <DialogHeader>
             <DialogTitle>Category Details</DialogTitle>
-            <DialogDescription>
-              View detailed information about the selected category.
-            </DialogDescription>
+            <DialogDescription>Detailed information about the selected category</DialogDescription>
           </DialogHeader>
           {selectedCategory && (
-            <div className='space-y-4'>
-              <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <label className='text-sm font-medium'>Arabic Name</label>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    {selectedCategory.arName}
-                  </p>
+            <div className='space-y-6'>
+              <div className='grid grid-cols-2 gap-6'>
+                <div className='space-y-4'>
+                  <h3 className='text-lg font-semibold'>Arabic Content</h3>
+                  <div className='space-y-3'>
+                    <div>
+                      <label className='text-sm font-medium text-muted-foreground'>
+                        Arabic Name
+                      </label>
+                      <p className='text-lg font-semibold'>{selectedCategory.arName}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className='text-sm font-medium'>English Name</label>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    {selectedCategory.enName}
-                  </p>
+
+                <div className='space-y-4'>
+                  <h3 className='text-lg font-semibold'>English Content</h3>
+                  <div className='space-y-3'>
+                    <div>
+                      <label className='text-sm font-medium text-muted-foreground'>
+                        English Name
+                      </label>
+                      <p className='text-lg font-semibold'>{selectedCategory.enName}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label className='text-sm font-medium'>Image</label>
-                <div className='mt-2 w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
+
+              <div className='space-y-4'>
+                <h3 className='text-lg font-semibold'>Category Image</h3>
+                <div className='w-full h-48 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
                   {selectedCategory.image ? (
                     <Image
                       src={selectedCategory.image}
-                      alt={selectedCategory.enName}
-                      width={128}
-                      height={96}
-                      className='w-full h-full object-cover'
+                      alt='Category Image'
+                      width={400}
+                      height={192}
+                      className='object-cover w-full h-full'
                     />
                   ) : (
-                    <div className='w-full h-full flex items-center justify-center'>
-                      <ImageIcon className='w-8 h-8 text-gray-400' />
-                    </div>
+                    <ImageIcon className='w-16 h-16 text-muted-foreground' />
                   )}
                 </div>
               </div>
+
               <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <label className='text-sm font-medium'>Products Count</label>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    {selectedCategory.productsCount}
-                  </p>
-                </div>
-                <div>
-                  <label className='text-sm font-medium'>Status</label>
-                  <Badge variant={selectedCategory.isActive ? 'default' : 'secondary'}>
-                    {selectedCategory.isActive ? 'Active' : 'Inactive'}
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-muted-foreground'>
+                    Products Count
+                  </label>
+                  <Badge variant='secondary' className='text-lg'>
+                    {selectedCategory.productsCount} products
                   </Badge>
                 </div>
-              </div>
-              <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <label className='text-sm font-medium'>Created At</label>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-muted-foreground'>Created At</label>
+                  <p className='text-lg'>
                     {format(new Date(selectedCategory.createdAt), 'MMM dd, yyyy HH:mm')}
                   </p>
                 </div>
-                <div>
-                  <label className='text-sm font-medium'>Created By</label>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    {selectedCategory.createdBy}
-                  </p>
-                </div>
+              </div>
+
+              <div className='flex space-x-2 pt-4'>
+                <Button onClick={() => handleEdit(selectedCategory)} className='flex-1'>
+                  <Edit className='w-4 h-4 mr-2' />
+                  Edit Category
+                </Button>
+                <Button variant='outline' className='flex-1'>
+                  <Eye className='w-4 h-4 mr-2' />
+                  View Products
+                </Button>
               </div>
             </div>
           )}
-          <DialogFooter>
-            <Button variant='outline' onClick={() => setIsModalOpen(false)}>
-              Close
-            </Button>
-            <Button onClick={() => setIsModalOpen(false)}>Edit Category</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -486,19 +407,20 @@ export default function CategoriesTable({ categories }: CategoriesTableProps) {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Category</DialogTitle>
+            <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this category? This action cannot be undone.
+              Are you sure you want to delete category <strong>{categoryToDelete?.enName}</strong>?
+              This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <div className='flex justify-end space-x-2'>
             <Button variant='outline' onClick={() => setIsDeleteModalOpen(false)}>
               Cancel
             </Button>
             <Button variant='destructive' onClick={confirmDelete}>
               Delete
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

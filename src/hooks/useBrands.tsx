@@ -1,112 +1,125 @@
-import {
-  createBrand,
-  deleteBrand,
-  getAllBrands,
-  getBrandById,
-  updateBrand,
-  updateBrandVisibilityOrder,
-} from '@/services/brands/BrandService';
-import { Brand, CreateBrandData, UpdateBrandData } from '@/types/brand';
+import { BrandService, GetBrandsResponse } from '@/services/brands/BrandService';
+import { Brand, BrandforAll } from '@/types/brand';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-// Query keys
-export const brandKeys = {
-  all: ['brands'] as const,
-  lists: () => [...brandKeys.all, 'list'] as const,
-  list: (filters: string) => [...brandKeys.lists(), { filters }] as const,
-  details: () => [...brandKeys.all, 'detail'] as const,
-  detail: (id: string | number) => [...brandKeys.details(), id.toString()] as const,
+// Define error type for API responses
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+// Transform API response to Brand type
+const transformBrandResponse = (response: GetBrandsResponse): BrandforAll[] => {
+  return response.brands.map(brand => ({
+    id: brand.id,
+    name: brand.name,
+    imageUrl: brand.imageUrl,
+    visibilityOrder: brand.visibilityOrder,
+    productsCount: brand.productsCount,
+    createdAt: brand.createdAt,
+    createdBy: brand.createdBy,
+  }));
 };
 
-// Get all brands
-export const useGetAllBrands = (page: number = 1, pageSize: number = 20) => {
+export const useGetAllBrands = (lang: string = 'en', page: number = 1, pageSize: number = 20) => {
   return useQuery({
-    queryKey: brandKeys.lists(),
-    queryFn: () => getAllBrands(page, pageSize),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    queryKey: ['brands', lang, page, pageSize],
+    queryFn: async () => {
+      const response = await BrandService.getAllBrands(lang, page, pageSize);
+      return {
+        brands: transformBrandResponse(response),
+        pagination: response.pagination,
+      };
+    },
   });
 };
 
-// Get single brand by ID
-export const useGetBrandById = (id: number) => {
+export const useGetBrandById = (id: string, lang: string = 'en') => {
   return useQuery({
-    queryKey: brandKeys.detail(id.toString()),
-    queryFn: () => getBrandById(id),
+    queryKey: ['brand', id, lang],
+    queryFn: async () => {
+      const response = await BrandService.getBrandById(id, lang);
+      return transformSingleBrandResponse(response);
+    },
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
-// Create brand
+const transformSingleBrandResponse = (brand: Brand): Brand => {
+  return {
+    id: brand.id,
+    nameAr: brand.nameAr,
+    nameEn: brand.nameEn,
+    imageUrl: brand.imageUrl,
+    visibilityOrder: brand.visibilityOrder,
+  };
+};
+
 export const useCreateBrand = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateBrandData) => createBrand(data),
+    mutationFn: async ({ formData, lang }: { formData: FormData; lang: string }) => {
+      const response = await BrandService.createBrand(formData, lang);
+      return response;
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: brandKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
       toast.success('Brand created successfully');
     },
     onError: (error: Error) => {
-      console.error('Error creating brand:', error);
-      toast.error('Failed to create brand');
+      const apiError = error as unknown as ApiError;
+      toast.error(apiError?.response?.data?.message || 'Failed to create brand');
     },
   });
 };
 
-// Update brand
 export const useUpdateBrand = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpdateBrandData) => updateBrand(data),
-    onSuccess: updatedBrand => {
-      queryClient.invalidateQueries({ queryKey: brandKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: brandKeys.detail(updatedBrand.id) });
+    mutationFn: async ({
+      id,
+      formData,
+      lang,
+    }: {
+      id: string;
+      formData: FormData;
+      lang: string;
+    }) => {
+      const response = await BrandService.updateBrand(id, formData, lang);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
       toast.success('Brand updated successfully');
     },
     onError: (error: Error) => {
-      console.error('Error updating brand:', error);
-      toast.error('Failed to update brand');
+      const apiError = error as unknown as ApiError;
+      toast.error(apiError?.response?.data?.message || 'Failed to update brand');
     },
   });
 };
 
-// Delete brand
 export const useDeleteBrand = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => deleteBrand(id),
+    mutationFn: async (id: number) => {
+      const response = await BrandService.deleteBrand(id);
+      return response;
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: brandKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
       toast.success('Brand deleted successfully');
     },
     onError: (error: Error) => {
-      console.error('Error deleting brand:', error);
-      toast.error('Failed to delete brand');
-    },
-  });
-};
-
-// Update brand visibility order
-export const useUpdateBrandVisibilityOrder = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, visibilityOrder }: { id: number; visibilityOrder: number }) =>
-      updateBrandVisibilityOrder(id, visibilityOrder),
-    onSuccess: (updatedBrand: Brand) => {
-      queryClient.invalidateQueries({ queryKey: brandKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: brandKeys.detail(updatedBrand.id.toString()) });
-      toast.success('Brand visibility order updated successfully');
-    },
-    onError: (error: Error) => {
-      console.error('Error updating brand visibility order:', error);
-      toast.error('Failed to update brand visibility order');
+      const apiError = error as unknown as ApiError;
+      toast.error(apiError?.response?.data?.message || 'Failed to delete brand');
     },
   });
 };

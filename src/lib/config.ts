@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { getToken } from './Cookie';
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
@@ -11,10 +10,10 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 //     Authorization: `Bearer ${getToken()}`,
 //   },
 // });
-
 // Initialize cookies instance
-
+console.log('token', getToken());
 // create an instance of the axios server
+
 export const baseAPI = axios.create({
   baseURL: API_BASE_URL,
   headers: {

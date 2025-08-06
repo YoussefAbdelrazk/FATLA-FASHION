@@ -59,7 +59,10 @@ export const getAllSliders = async (lang: string = 'en'): Promise<GetSlidersResp
 };
 
 // Get single slider by ID
-export const getSliderById = async (id: string, lang: string = 'en'): Promise<Slider> => {
+export const getSliderById = async (
+  id: string,
+  lang: string = 'en',
+): Promise<GetSlidersResponse> => {
   try {
     const response = await baseAPI.get(`/api/${lang}/Sliders/GetSingleSlider?id=${id}`);
     return response.data;
@@ -99,9 +102,9 @@ export const updateSlider = async (
 };
 
 // Delete slider
-export const deleteSlider = async (id: string, lang: string = 'en'): Promise<void> => {
+export const deleteSlider = async (id: number, lang: string = 'en') => {
   try {
-    await baseAPI.delete(`/api/${lang}/Sliders/DeleteSlider?id=${id}`);
+    await baseAPI.post(`/api/${lang}/Sliders/DeleteSlider?id=${id}`);
   } catch (error) {
     console.error('Error deleting slider:', error);
     throw error;

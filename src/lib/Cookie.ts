@@ -1,34 +1,32 @@
-'use server';
-
-import { cookies } from 'next/headers';
+import Cookies from 'js-cookie';
 
 const COOKIE_CONFIG = {
-  expires: 1,
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   path: '/',
   secure: true,
   sameSite: 'strict' as const,
 };
 
 export const getToken = () => {
-  return cookies().get('token')?.value || null;
+  return Cookies.get('token') || null;
 };
 
 export const getRefreshToken = () => {
-  return cookies().get('refreshToken')?.value || null;
+  return Cookies.get('refreshToken') || null;
 };
 
 export const setToken = (token: string) => {
-  cookies().set('token', token, COOKIE_CONFIG);
+  Cookies.set('token', token, COOKIE_CONFIG);
 };
 
 export const setRefreshToken = (refreshToken: string) => {
-  cookies().set('refreshToken', refreshToken, COOKIE_CONFIG);
+  Cookies.set('refreshToken', refreshToken, COOKIE_CONFIG);
 };
 
 export const removeToken = () => {
-  cookies().delete('token');
+  Cookies.remove('token');
 };
 
 export const removeRefreshToken = () => {
-  cookies().delete('refreshToken');
+  Cookies.remove('refreshToken');
 };

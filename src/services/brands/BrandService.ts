@@ -1,8 +1,8 @@
-import baseAPI, { baseAPIForm } from '@/lib/config';
-import { Brand, CreateBrandData, UpdateBrandData } from '@/types/brand';
+import { baseAPI, baseAPIForm } from '@/lib/config';
+import { Brand, BrandforAll } from '@/types/brand';
 
-export interface BrandResponse {
-  brands: Brand[];
+export interface GetBrandsResponse {
+  brands: BrandforAll[];
   pagination: {
     currentPage: number;
     pageSize: number;
@@ -10,51 +10,55 @@ export interface BrandResponse {
   };
 }
 
-// Get all brands
-export const getAllBrands = async (
-  page: number = 1,
-  pageSize: number = 20,
-): Promise<BrandResponse> => {
-  const response = await baseAPI.get('/api/en/Brands/GetAllBrands', {
-    params: { page, pageSize },
-  });
-  console.log(response.data);
-  return response.data;
-};
+export const BrandService = {
+  getAllBrands: async (
+    lang: string = 'en',
+    page: number = 1,
+    pageSize: number = 20,
+  ): Promise<GetBrandsResponse> => {
+    try {
+      const response = await baseAPI.get(`/api/${lang}/Brands/GetAllBrands`, {
+        params: { page, pageCount: pageSize },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-// Get brand by ID
-export const getBrandById = async (id: number): Promise<Brand> => {
-  const response = await baseAPI.get(`/api/en/Brands/GetSingleBrand?id=${id}`);
-  return response.data;
-};
+  getBrandById: async (id: string, lang: string = 'en'): Promise<Brand> => {
+    try {
+      const response = await baseAPI.get(`/api/${lang}/Brands/GetSingleBrand?id=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-// Create brand
-export const createBrand = async (data: CreateBrandData): Promise<Brand> => {
-  const response = await baseAPIForm.post('/api/en/Brands/AddNewBrand', data);
-  return response.data;
-};
+  createBrand: async (formData: FormData, lang: string = 'en') => {
+    try {
+      const response = await baseAPIForm.post(`/api/${lang}/Brands/AddNewBrand`, formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-// Update brand
-export const updateBrand = async (data: UpdateBrandData): Promise<Brand> => {
-  const { id, ...updateData } = data;
-  const response = await baseAPIForm.put(`/api/en/Brands/UpdateBrand?id=${id}`, updateData);
-  return response.data;
-};
+  updateBrand: async (id: string, formData: FormData, lang: string = 'en') => {
+    try {
+      const response = await baseAPIForm.post(`/api/${lang}/Brands/EditBrand?id=${id}`, formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-// Delete brand
-export const deleteBrand = async (id: number) => {
-  const response = await baseAPI.post(`/api/en/Brands/DeleteBrand?id=${id}`);
-  console.log(response.data);
-  return response.data;
-};
-
-// Update brand visibility order
-export const updateBrandVisibilityOrder = async (
-  id: number,
-  visibilityOrder: number,
-): Promise<Brand> => {
-  const response = await baseAPI.patch(`/api/en/Brands/UpdateVisibilityOrder/${id}`, {
-    visibilityOrder,
-  });
-  return response.data;
+  deleteBrand: async (id: number, lang: string = 'en') => {
+    try {
+      const response = await baseAPI.post(`/api/${lang}/Brands/DeleteBrand?id=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
