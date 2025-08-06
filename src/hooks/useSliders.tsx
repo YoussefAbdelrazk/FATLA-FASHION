@@ -1,7 +1,6 @@
 import {
   CreateSliderData,
   GetSlidersResponse,
-  UpdateSliderData,
   createSlider,
   deleteSlider,
   getAllSliders,
@@ -97,8 +96,8 @@ export const useUpdateSlider = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ data, lang = 'en' }: { data: UpdateSliderData; lang?: string }) =>
-      updateSlider(data, lang),
+    mutationFn: ({ data, id, lang = 'en' }: { data: FormData; id: string; lang?: string }) =>
+      updateSlider(data, id, lang),
     onSuccess: updatedSlider => {
       queryClient.invalidateQueries({ queryKey: sliderKeys.lists() });
       queryClient.invalidateQueries({ queryKey: sliderKeys.detail(updatedSlider.id) });

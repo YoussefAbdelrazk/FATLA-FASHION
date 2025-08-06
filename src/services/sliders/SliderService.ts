@@ -31,7 +31,7 @@ export interface GetSlidersResponse {
 export interface CreateSliderResponse {
   message: string;
   slider: {
-    id: number;
+    id?: number;
     nameAr: string;
     nameEn: string;
     imageUrlAr: string;
@@ -40,10 +40,6 @@ export interface CreateSliderResponse {
     categoryId: number;
     variantId: number;
   };
-}
-
-export interface UpdateSliderData extends Partial<CreateSliderData> {
-  id: string;
 }
 
 // Get all sliders
@@ -88,12 +84,12 @@ export const createSlider = async (
 
 // Update slider
 export const updateSlider = async (
-  data: UpdateSliderData,
+  data: FormData,
+  id: string,
   lang: string = 'en',
 ): Promise<Slider> => {
   try {
-    const { id, ...updateData } = data;
-    const response = await baseAPI.put(`/api/${lang}/Sliders/EditSlider?id=${id}`, updateData);
+    const response = await baseAPI.post(`/api/${lang}/Sliders/EditSlider?id=${id}`, data);
     return response.data;
   } catch (error) {
     console.error('Error updating slider:', error);
