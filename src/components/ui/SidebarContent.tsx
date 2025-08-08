@@ -63,13 +63,14 @@ const navigation: NavigationItemType[] = [
   },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Sliders', href: '/sliders', icon: Image },
-  { name: 'Brands', href: '/brands', icon: Globe },
+
   {
     name: 'Products',
     icon: Package,
     children: [
       { name: 'Products List', href: '/products' },
       { name: 'Categories', href: '/categories' },
+      { name: 'Brands', href: '/brands' },
       { name: 'Sizes', href: '/products/sizes' },
       { name: 'Colors', href: '/colors' },
     ],
