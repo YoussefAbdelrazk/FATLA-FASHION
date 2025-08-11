@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useAuthHook } from '@/hooks/useAuthHook';
+import Link from 'next/link';
 import { toast } from 'sonner';
 
 const formSchema = z.object({
@@ -41,7 +42,6 @@ export function LoginForm() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async data => {
-
     try {
       await toast.promise(
         loginMutation({ mobileNumber: data.mobileNumber, password: data.password }),
@@ -93,9 +93,12 @@ export function LoginForm() {
         </Button>
 
         <div className='text-center'>
-          <a href='/request-otp' className='text-sm text-blue-600 hover:text-blue-800 font-medium'>
+          <Link
+            href='/forgot-password'
+            className='text-sm text-blue-600 hover:text-blue-800 font-medium'
+          >
             Forgot your password?
-          </a>
+          </Link>
         </div>
       </form>
     </Form>

@@ -14,6 +14,12 @@ const nextConfig = {
         port: '',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
       // Add support for local/relative image paths
     ],
     domains: ['fatlaapi.alsalhani.com', 'localhost'],

@@ -19,7 +19,7 @@ export interface BrandFormData {
   NameAr: string;
   NameEn: string;
   imageUrl: string;
-  visibilityOrder: number;
+  VisibilityOrder: number;
 }
 
 export interface CreateBrandData {

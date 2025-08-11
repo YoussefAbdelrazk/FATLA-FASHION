@@ -20,8 +20,10 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useCreateSlider } from '@/hooks/useSliders';
+import { getToken } from '@/lib/Cookie';
 import { sliderFormSchema, type SliderFormData } from '@/lib/schemas/slider-schema';
 import { validateImage } from '@/lib/utils';
+import { useAuthStore } from '@/store/authStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
 import Image from 'next/image';
@@ -60,14 +62,20 @@ export default function AddSliderForm() {
   const [enImagePreview, setEnImagePreview] = useState<string | null>(null);
   const [arImageError, setArImageError] = useState<string | null>(null);
   const [enImageError, setEnImageError] = useState<string | null>(null);
+  const [arImageFile, setArImageFile] = useState<File | null>(null);
+  const [enImageFile, setEnImageFile] = useState<File | null>(null);
+
+  // Debug: Get current token
+  // const currentToken = useAuthStore(state => state.token);
+  // const cookieToken = getToken();
 
   const form = useForm<SliderFormData>({
     resolver: zodResolver(sliderFormSchema),
     defaultValues: {
-      arName: '',
-      enName: '',
-      arImage: '',
-      enImage: '',
+      NameAr: '',
+      NameEn: '',
+      ImageAr: '',
+      ImageEn: '',
       brandName: '',
       productName: '',
       categoryName: '',
@@ -75,35 +83,39 @@ export default function AddSliderForm() {
     },
   });
 
-  const handleImageUpload = (field: 'arImage' | 'enImage', file: File) => {
+  const handleImageUpload = (field: 'ImageAr' | 'ImageEn', file: File) => {
     // Validate the image
     const validation = validateImage(file);
 
     if (!validation.isValid) {
       // Set error message
-      if (field === 'arImage') {
+      if (field === 'ImageAr') {
         setArImageError(validation.error || 'Invalid image');
         setArImagePreview(null);
-        form.setValue('arImage', '');
+        setArImageFile(null);
+        form.setValue('ImageAr', '');
       } else {
         setEnImageError(validation.error || 'Invalid image');
         setEnImagePreview(null);
-        form.setValue('enImage', '');
+        setEnImageFile(null);
+        form.setValue('ImageEn', '');
       }
       return;
     }
 
     // Clear any previous errors
-    if (field === 'arImage') {
+    if (field === 'ImageAr') {
       setArImageError(null);
+      setArImageFile(file);
     } else {
       setEnImageError(null);
+      setEnImageFile(file);
     }
 
     const reader = new FileReader();
     reader.onload = e => {
       const result = e.target?.result as string;
-      if (field === 'arImage') {
+      if (field === 'ImageAr') {
         setArImagePreview(result);
       } else {
         setEnImagePreview(result);
@@ -114,8 +126,41 @@ export default function AddSliderForm() {
   };
 
   const onSubmit = (data: SliderFormData) => {
+    // Create FormData and append all form fields
+    const formData = new FormData();
+    formData.append('NameAr', data.NameAr || '');
+    formData.append('NameEn', data.NameEn || '');
+
+    // Append the actual File objects if they exist
+    if (arImageFile) {
+      formData.append('ImageAr', arImageFile);
+    }
+    if (enImageFile) {
+      formData.append('ImageEn', enImageFile);
+    }
+
+    // if (data.brandName) {
+    //   formData.append('brandName', data.brandName);
+    // }
+    // if (data.productName) {
+    //   formData.append('productName', data.productName);
+    // }
+    // if (data.categoryName) {
+    //   formData.append('categoryName', data.categoryName);
+    // }
+    // formData.append('isVisible', data.isVisible.toString());
+    // const dataForApi = {
+    //   NameAr: data.NameAr,
+    //   NameEn: data.NameEn,
+    //   ImageAr: arImageFile,
+    //   ImageEn: enImageFile,
+    // };
+    console.log(formData);
+
+    console.log('FormData being sent:', Object.fromEntries(formData.entries()));
+
     createSliderMutation.mutate(
-      { data, lang: 'en' },
+      { data: formData, lang: 'en' },
       {
         onSuccess: () => {
           router.push('/sliders');
@@ -160,7 +205,7 @@ export default function AddSliderForm() {
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
-                    name='arName'
+                    name='NameAr'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
@@ -180,7 +225,7 @@ export default function AddSliderForm() {
 
                   <FormField
                     control={form.control}
-                    name='arImage'
+                    name='ImageAr'
                     render={() => (
                       <FormItem>
                         <FormLabel>
@@ -195,7 +240,7 @@ export default function AddSliderForm() {
                                 onChange={e => {
                                   const file = e.target.files?.[0];
                                   if (file) {
-                                    handleImageUpload('arImage', file);
+                                    handleImageUpload('ImageAr', file);
                                   }
                                 }}
                                 className='cursor-pointer'
@@ -222,7 +267,6 @@ export default function AddSliderForm() {
                   />
                 </div>
               </div>
-
               {/* English Content Section */}
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
@@ -232,7 +276,7 @@ export default function AddSliderForm() {
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
-                    name='enName'
+                    name='NameEn'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
@@ -248,7 +292,7 @@ export default function AddSliderForm() {
 
                   <FormField
                     control={form.control}
-                    name='enImage'
+                    name='ImageEn'
                     render={() => (
                       <FormItem>
                         <FormLabel>
@@ -263,7 +307,7 @@ export default function AddSliderForm() {
                                 onChange={e => {
                                   const file = e.target.files?.[0];
                                   if (file) {
-                                    handleImageUpload('enImage', file);
+                                    handleImageUpload('ImageEn', file);
                                   }
                                 }}
                                 className='cursor-pointer'
@@ -290,7 +334,6 @@ export default function AddSliderForm() {
                   />
                 </div>
               </div>
-
               {/* Optional Fields Section */}
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
@@ -401,7 +444,6 @@ export default function AddSliderForm() {
                   />
                 </div>
               </div>
-
               {/* Visibility Section */}
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
@@ -432,7 +474,6 @@ export default function AddSliderForm() {
                   )}
                 />
               </div>
-
               {/* Save Button */}
               <div className='flex justify-end space-x-4 pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>

@@ -1,13 +1,13 @@
-import { ResetPasswordForm } from '@/components/auth/reset-password-form';
+import ForgotPassword from '@/components/auth/ForgotPassword/Forgot-Password';
 
-export default function ResetPasswordPage() {
+export default function RequestOtpPage() {
   return (
     <div className='bg-white shadow-2xl rounded-lg p-8'>
       <div className='text-center mb-6'>
-        <h1 className='text-3xl font-bold text-gray-900 mb-2'>Reset Password</h1>
-        <p className='text-gray-600'>Enter your new password</p>
+        <h1 className='text-3xl font-bold text-gray-900 mb-2'>Forgot Password</h1>
+        {/* <p className='text-gray-600'>Enter your mobile number to receive an OTP</p> */}
       </div>
-      <ResetPasswordForm />
+      <ForgotPassword />
       <div className='mt-6 text-center'>
         <p className='text-gray-600'>
           Remember your password?{' '}

@@ -1,15 +1,18 @@
 export interface Slider {
-  id: string;
-  arName: string;
-  enName: string;
-  arImage: string;
-  enImage: string;
-  brandName: string;
-  productName: string;
-  categoryName: string;
-  isVisible: boolean;
-  createdAt: string;
+  brandId: number | null;
+  nameAr: string;
+  nameEn: string;
+  imageUrlAr: string;
+  imageUrlEn: string;
+  categoryId: number | null;
+  variantId: number | null;
   createdBy: string;
+  id: number;
+  brandName: string | null;
+  categoryName: string | null;
+  variantName: string | null;
+  isVisible?: boolean;
+  createdAt?: string;
 }
 
 export interface SliderTableProps {

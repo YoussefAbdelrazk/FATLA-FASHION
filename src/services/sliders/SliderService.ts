@@ -1,6 +1,8 @@
-import baseAPI from '@/lib/config';
+import baseAPI, { API_BASE_URL, baseAPIForm } from '@/lib/config';
+import { getToken } from '@/lib/Cookie';
 
 import { Slider } from '@/types/slider';
+import axios from 'axios';
 
 export interface CreateSliderData {
   arName: string;
@@ -28,19 +30,19 @@ export interface GetSlidersResponse {
   variantName: null;
 }
 
-export interface CreateSliderResponse {
-  message: string;
-  slider: {
-    id?: number;
-    nameAr: string;
-    nameEn: string;
-    imageUrlAr: string;
-    imageUrlEn: string;
-    brandId: number;
-    categoryId: number;
-    variantId: number;
-  };
-}
+// export interface CreateSliderResponse {
+//   message: string;
+//   slider: {
+//     id?: number;
+//     nameAr: string;
+//     nameEn: string;
+//     imageUrlAr: string;
+//     imageUrlEn: string;
+//     brandId: number;
+//     categoryId: number;
+//     variantId: number;
+//   };
+// }
 
 // Get all sliders
 export const getAllSliders = async (lang: string = 'en'): Promise<GetSlidersResponse[]> => {
@@ -69,12 +71,14 @@ export const getSliderById = async (
 };
 
 // Create new slider
-export const createSlider = async (
-  data: CreateSliderData,
-  lang: string = 'en',
-): Promise<CreateSliderResponse> => {
+export const createSlider = async (data: FormData, lang: string = 'en') => {
   try {
-    const response = await baseAPI.post(`/api/${lang}/Sliders/CreateSlider`, data);
+    const response = await axios.post(`${API_BASE_URL}/api/${lang}/Sliders/CreateSlider`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error creating slider:', error);
@@ -89,7 +93,7 @@ export const updateSlider = async (
   lang: string = 'en',
 ): Promise<Slider> => {
   try {
-    const response = await baseAPI.post(`/api/${lang}/Sliders/EditSlider?id=${id}`, data);
+    const response = await baseAPIForm.post(`/api/${lang}/Sliders/EditSlider?id=${id}`, data);
     return response.data;
   } catch (error) {
     console.error('Error updating slider:', error);

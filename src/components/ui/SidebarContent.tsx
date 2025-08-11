@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import {
   Building,
   ChevronDown,
-  Globe,
   Home,
   Image,
   List,
@@ -17,7 +16,7 @@ import {
   ShoppingBag,
   Tag,
   Users,
-  X,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -71,7 +70,7 @@ const navigation: NavigationItemType[] = [
       { name: 'Products List', href: '/products' },
       { name: 'Categories', href: '/categories' },
       { name: 'Brands', href: '/brands' },
-      { name: 'Sizes', href: '/products/sizes' },
+      { name: 'Sizes', href: '/sizes' },
       { name: 'Colors', href: '/colors' },
     ],
   },

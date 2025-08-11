@@ -23,10 +23,10 @@ import { useGetSliderById, useUpdateSlider } from '@/hooks/useSliders';
 import { sliderFormSchema, type SliderFormData } from '@/lib/schemas/slider-schema';
 import { validateImage } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Edit3, Save, Upload } from 'lucide-react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Sample data for dropdowns - in real app, these would come from API
@@ -54,25 +54,31 @@ const categories = [
 ];
 
 export default function EditSliderForm() {
-  const params = useParams();
   const router = useRouter();
+  const params = useParams();
   const sliderId = params.id as string;
 
   const { data: slider, isLoading, error } = useGetSliderById(sliderId, 'en');
   const updateSliderMutation = useUpdateSlider();
+  // const { data: brands } = useGetBrands();
+  // const { data: products } = useGetProducts();
+  // const { data: categories } = useGetCategories();
 
   const [arImagePreview, setArImagePreview] = useState<string | null>(null);
   const [enImagePreview, setEnImagePreview] = useState<string | null>(null);
   const [arImageError, setArImageError] = useState<string | null>(null);
   const [enImageError, setEnImageError] = useState<string | null>(null);
+  const [arImageFile, setArImageFile] = useState<File | null>(null);
+  const [enImageFile, setEnImageFile] = useState<File | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const form = useForm<SliderFormData>({
     resolver: zodResolver(sliderFormSchema),
     defaultValues: {
-      arName: '',
-      enName: '',
-      arImage: '',
-      enImage: '',
+      NameAr: '',
+      NameEn: '',
+      ImageAr: '',
+      ImageEn: '',
       brandName: '',
       productName: '',
       categoryName: '',
@@ -81,52 +87,53 @@ export default function EditSliderForm() {
   });
 
   // Update form when slider data loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (slider) {
       form.reset({
-        arName: slider.arName,
-        enName: slider.enName,
-        arImage: slider.arImage,
-        enImage: slider.enImage,
-        brandName: slider.brandName,
-        productName: slider.productName,
-        categoryName: slider.categoryName,
-        isVisible: slider.isVisible,
+        NameAr: slider.nameAr,
+        NameEn: slider.nameEn,
+        ImageAr: slider.imageUrlAr,
+        ImageEn: slider.imageUrlEn,
+        brandName: slider.brandName || '',
+        productName: slider.variantName || '',
+        categoryName: slider.categoryName || '',
+        isVisible: slider.isVisible || true,
       });
-      setArImagePreview(slider.arImage);
-      setEnImagePreview(slider.enImage);
+      setArImagePreview(slider.imageUrlAr);
+      setEnImagePreview(slider.imageUrlEn);
     }
   }, [slider, form]);
 
-  const handleImageUpload = (field: 'arImage' | 'enImage', file: File) => {
-    // Validate the image
+  const handleImageUpload = (field: 'ImageAr' | 'ImageEn', file: File) => {
     const validation = validateImage(file);
 
     if (!validation.isValid) {
-      // Set error message
-      if (field === 'arImage') {
+      if (field === 'ImageAr') {
         setArImageError(validation.error || 'Invalid image');
         setArImagePreview(null);
-        form.setValue('arImage', '');
+        setArImageFile(null);
+        form.setValue('ImageAr', '');
       } else {
         setEnImageError(validation.error || 'Invalid image');
         setEnImagePreview(null);
-        form.setValue('enImage', '');
+        setEnImageFile(null);
+        form.setValue('ImageEn', '');
       }
       return;
     }
 
-    // Clear any previous errors
-    if (field === 'arImage') {
+    if (field === 'ImageAr') {
       setArImageError(null);
+      setArImageFile(file);
     } else {
       setEnImageError(null);
+      setEnImageFile(file);
     }
 
     const reader = new FileReader();
     reader.onload = e => {
       const result = e.target?.result as string;
-      if (field === 'arImage') {
+      if (field === 'ImageAr') {
         setArImagePreview(result);
       } else {
         setEnImagePreview(result);
@@ -136,31 +143,57 @@ export default function EditSliderForm() {
     reader.readAsDataURL(file);
   };
 
-  const onSubmit = (data: SliderFormData) => {
-    const formData = new FormData();
+  const onSubmit = async (data: SliderFormData) => {
+    setIsUpdating(true);
 
-    formData.append('arName', data.arName);
-    formData.append('enName', data.enName);
-    formData.append('arImage', data.arImage);
-    formData.append('enImage', data.enImage);
-    if (data.brandName) {
-      formData.append('brandName', data.brandName);
-    }
-    if (data.productName) {
-      formData.append('productName', data.productName);
-    }
-    if (data.categoryName) {
-      formData.append('categoryName', data.categoryName);
-    }
-    formData.append('isVisible', data.isVisible.toString());
-    updateSliderMutation.mutate(
-      { data: formData, id: sliderId, lang: 'en' },
-      {
-        onSuccess: () => {
-          router.push('/sliders');
+    try {
+      const formData = new FormData();
+      formData.append('NameAr', data.NameAr || '');
+      formData.append('NameEn', data.NameEn || '');
+
+      // Handle Arabic image
+      if (arImageFile) {
+        formData.append('updateImageAr', 'true');
+        formData.append('ImageAr', arImageFile);
+      } else {
+        formData.append('updateImageAr', 'false');
+      }
+
+      // Handle English image
+      if (enImageFile) {
+        formData.append('updateImageEn', 'true');
+        formData.append('ImageEn', enImageFile);
+      } else {
+        formData.append('updateImageEn', 'false');
+      }
+
+      // Optional fields
+      if (data.brandName) {
+        formData.append('brandName', data.brandName);
+      }
+      if (data.productName) {
+        formData.append('productName', data.productName);
+      }
+      if (data.categoryName) {
+        formData.append('categoryName', data.categoryName);
+      }
+      formData.append('isVisible', data.isVisible.toString());
+
+      console.log('FormData being sent:', Object.fromEntries(formData.entries()));
+
+      await updateSliderMutation.mutate(
+        { id: sliderId, data: formData, lang: 'en' },
+        {
+          onSuccess: () => {
+            router.push('/sliders');
+          },
         },
-      },
-    );
+      );
+    } catch (error) {
+      console.error('Error updating slider:', error);
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const handleBack = () => {
@@ -213,45 +246,52 @@ export default function EditSliderForm() {
 
   return (
     <div className='space-y-6'>
-      <div className='flex items-center space-x-4'>
-        <Button variant='outline' onClick={handleBack}>
-          <ArrowLeft className='w-4 h-4 mr-2' />
-          Back to Sliders
-        </Button>
-      </div>
-
+      {/* Header */}
       <div className='flex items-center justify-between'>
-        <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Edit Slider</h1>
-          <p className='text-muted-foreground'>Update slider information and content</p>
+        <div className='flex items-center space-x-4'>
+          <Button variant='outline' onClick={handleBack}>
+            <ArrowLeft className='w-4 h-4 mr-2' />
+            Back to Sliders
+          </Button>
+        </div>
+        <div className='flex items-center space-x-3'>
+          <Edit3 className='w-6 h-6 text-primary' />
+          <h1 className='text-2xl font-bold'>Edit Slider</h1>
         </div>
       </div>
 
+      {/* Form */}
       <Card>
         <CardHeader>
-          <CardTitle>Slider Information</CardTitle>
+          <CardTitle className='flex items-center gap-2'>
+            <Upload className='w-5 h-5' />
+            Slider Information
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-6'
-              encType='multipart/form-data'
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
               {/* Arabic Content Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Arabic Content</h3>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>Arabic Content</h3>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
-                    name='arName'
+                    name='NameAr'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
                           Arabic Name <span className='text-red-500'>*</span>
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder='أدخل الاسم بالعربية' {...field} />
+                          <Input
+                            placeholder='أدخل الاسم بالعربية'
+                            {...field}
+                            className='text-right'
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -260,36 +300,49 @@ export default function EditSliderForm() {
 
                   <FormField
                     control={form.control}
-                    name='arImage'
+                    name='ImageAr'
                     render={() => (
                       <FormItem>
                         <FormLabel>
                           Arabic Image <span className='text-red-500'>*</span>
                         </FormLabel>
                         <FormControl>
-                          <div className='space-y-2'>
-                            <Input
-                              type='file'
-                              accept='image/*'
-                              onChange={e => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  handleImageUpload('arImage', file);
-                                }
-                              }}
-                            />
-                            {arImageError && <p className='text-sm text-red-500'>{arImageError}</p>}
+                          <div className='space-y-3'>
+                            <div className='relative'>
+                              <Input
+                                type='file'
+                                accept='image/*'
+                                onChange={e => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleImageUpload('ImageAr', file);
+                                  }
+                                }}
+                                className='cursor-pointer'
+                              />
+                              <Upload className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                            </div>
+                            {arImageError && (
+                              <p className='text-sm text-red-500 bg-red-50 p-2 rounded'>
+                                {arImageError}
+                              </p>
+                            )}
                             {arImagePreview && (
-                              <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
+                              <div className='w-full h-32 bg-muted rounded-lg overflow-hidden'>
                                 <Image
                                   src={arImagePreview}
                                   alt='Arabic Image Preview'
-                                  width={128}
-                                  height={96}
+                                  width={400}
+                                  height={128}
                                   className='w-full h-full object-cover'
                                 />
                               </div>
                             )}
+                            <p className='text-sm text-muted-foreground'>
+                              {arImageFile
+                                ? 'New image selected. Will update Arabic image.'
+                                : 'No new image selected. Will keep existing Arabic image.'}
+                            </p>
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -300,12 +353,15 @@ export default function EditSliderForm() {
               </div>
 
               {/* English Content Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>English Content</h3>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-green-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>English Content</h3>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
                     control={form.control}
-                    name='enName'
+                    name='NameEn'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
@@ -321,36 +377,49 @@ export default function EditSliderForm() {
 
                   <FormField
                     control={form.control}
-                    name='enImage'
+                    name='ImageEn'
                     render={() => (
                       <FormItem>
                         <FormLabel>
                           English Image <span className='text-red-500'>*</span>
                         </FormLabel>
                         <FormControl>
-                          <div className='space-y-2'>
-                            <Input
-                              type='file'
-                              accept='image/*'
-                              onChange={e => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  handleImageUpload('enImage', file);
-                                }
-                              }}
-                            />
-                            {enImageError && <p className='text-sm text-red-500'>{enImageError}</p>}
+                          <div className='space-y-3'>
+                            <div className='relative'>
+                              <Input
+                                type='file'
+                                accept='image/*'
+                                onChange={e => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleImageUpload('ImageEn', file);
+                                  }
+                                }}
+                                className='cursor-pointer'
+                              />
+                              <Upload className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                            </div>
+                            {enImageError && (
+                              <p className='text-sm text-red-500 bg-red-50 p-2 rounded'>
+                                {enImageError}
+                              </p>
+                            )}
                             {enImagePreview && (
-                              <div className='w-32 h-24 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden'>
+                              <div className='w-full h-32 bg-muted rounded-lg overflow-hidden'>
                                 <Image
                                   src={enImagePreview}
                                   alt='English Image Preview'
-                                  width={128}
-                                  height={96}
+                                  width={400}
+                                  height={128}
                                   className='w-full h-full object-cover'
                                 />
                               </div>
                             )}
+                            <p className='text-sm text-muted-foreground'>
+                              {enImageFile
+                                ? 'New image selected. Will update English image.'
+                                : 'No new image selected. Will keep existing English image.'}
+                            </p>
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -361,9 +430,12 @@ export default function EditSliderForm() {
               </div>
 
               {/* Optional Fields Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Optional Information</h3>
-                <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>Optional Information</h3>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
                   <FormField
                     control={form.control}
                     name='brandName'
@@ -373,7 +445,6 @@ export default function EditSliderForm() {
                         <Select
                           onValueChange={value => {
                             field.onChange(value);
-                            // Auto-hide slider when brand is selected
                             if (value) {
                               form.setValue('isVisible', false);
                             }
@@ -407,7 +478,6 @@ export default function EditSliderForm() {
                         <Select
                           onValueChange={value => {
                             field.onChange(value);
-                            // Auto-hide slider when product is selected
                             if (value) {
                               form.setValue('isVisible', false);
                             }
@@ -441,7 +511,6 @@ export default function EditSliderForm() {
                         <Select
                           onValueChange={value => {
                             field.onChange(value);
-                            // Auto-hide slider when category is selected
                             if (value) {
                               form.setValue('isVisible', false);
                             }
@@ -469,21 +538,30 @@ export default function EditSliderForm() {
               </div>
 
               {/* Visibility Section */}
-              <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Visibility Settings</h3>
+              <div className='space-y-6'>
+                <div className='flex items-center space-x-2'>
+                  <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
+                  <h3 className='text-xl font-semibold'>Visibility Settings</h3>
+                </div>
                 <FormField
                   control={form.control}
                   name='isVisible'
                   render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-6'>
                       <div className='space-y-0.5'>
-                        <FormLabel className='text-base'>Make slider visible</FormLabel>
+                        <FormLabel className='text-base font-semibold'>
+                          Make slider visible
+                        </FormLabel>
                         <div className='text-sm text-muted-foreground'>
-                          Control whether this slider is visible to users
+                          Control whether this slider is visible to users on the frontend
                         </div>
                       </div>
                       <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className='data-[state=checked]:bg-green-600'
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -491,13 +569,13 @@ export default function EditSliderForm() {
               </div>
 
               {/* Save Button */}
-              <div className='flex justify-end space-x-4 pt-6'>
+              <div className='flex justify-end space-x-4 pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
                   Cancel
                 </Button>
-                <Button type='submit' disabled={updateSliderMutation.isPending}>
+                <Button type='submit' disabled={isUpdating}>
                   <Save className='w-4 h-4 mr-2' />
-                  {updateSliderMutation.isPending ? 'Updating...' : 'Update Slider'}
+                  {isUpdating ? 'Updating...' : 'Update Slider'}
                 </Button>
               </div>
             </form>

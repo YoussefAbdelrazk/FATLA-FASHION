@@ -44,6 +44,7 @@ export const BrandService = {
     }
   },
 
+  // Single update method that handles both scenarios
   updateBrand: async (id: string, formData: FormData, lang: string = 'en') => {
     try {
       const response = await baseAPIForm.post(`/api/${lang}/Brands/EditBrand?id=${id}`, formData);

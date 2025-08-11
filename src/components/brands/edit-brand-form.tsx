@@ -32,6 +32,7 @@ export default function EditBrandForm() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const form = useForm<BrandFormData>({
     resolver: zodResolver(brandFormSchema),
@@ -81,27 +82,33 @@ export default function EditBrandForm() {
     reader.readAsDataURL(file);
   };
 
-  const onSubmit = (data: BrandFormData) => {
-    // Create FormData
-    const formData = new FormData();
-    formData.append('id', brandId);
-    formData.append('NameAr', data.NameAr);
-    formData.append('NameEn', data.NameEn);
-    formData.append('VisibilityOrder', data.VisibilityOrder.toString());
+  const onSubmit = async (data: BrandFormData) => {
+    setIsUpdating(true);
 
-    // Only append image if a new file is selected
-    if (selectedFile) {
-      formData.append('image', selectedFile);
+    try {
+      // Create FormData
+      const formData = new FormData();
+      formData.append('NameAr', data.NameAr);
+      formData.append('NameEn', data.NameEn);
+      formData.append('VisibilityOrder', data.VisibilityOrder.toString());
+
+      if (selectedFile) {
+        // Update with new image
+        formData.append('updateImage', 'true');
+        formData.append('image', selectedFile);
+      } else {
+        // Update without changing image
+        formData.append('updateImage', 'false');
+      }
+
+      await updateBrandMutation.mutate({ id: brandId, formData, lang: 'en' });
+      router.push('/brands');
+    } catch (error) {
+      console.error('Error updating brand:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsUpdating(false);
     }
-
-    updateBrandMutation.mutate(
-      { id: brandId, formData, lang: 'en' },
-      {
-        onSuccess: () => {
-          router.push('/brands');
-        },
-      },
-    );
   };
 
   const handleBack = () => {
@@ -258,6 +265,11 @@ export default function EditBrandForm() {
                               />
                             </div>
                           )}
+                          <p className='text-sm text-muted-foreground'>
+                            {selectedFile
+                              ? 'New image selected. Will update image.'
+                              : 'No new image selected. Will keep existing image.'}
+                          </p>
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -300,9 +312,9 @@ export default function EditBrandForm() {
                 <Button type='button' variant='outline' onClick={handleBack}>
                   Cancel
                 </Button>
-                <Button type='submit' disabled={updateBrandMutation.isPending}>
+                <Button type='submit' disabled={isUpdating}>
                   <Save className='w-4 h-4 mr-2' />
-                  {updateBrandMutation.isPending ? 'Updating...' : 'Update Brand'}
+                  {isUpdating ? 'Updating...' : 'Update Brand'}
                 </Button>
               </div>
             </form>
