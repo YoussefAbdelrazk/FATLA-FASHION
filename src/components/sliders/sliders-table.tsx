@@ -60,6 +60,11 @@ export default function SlidersTable() {
   const deleteSliderMutation = useDeleteSlider();
   const toggleVisibilityMutation = useToggleSliderVisibility();
 
+  // Debug logging
+  console.log('SlidersTable - data:', sliders);
+  console.log('SlidersTable - isLoading:', isLoading);
+  console.log('SlidersTable - error:', error);
+
   const handleSort = (field: keyof Slider) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -164,7 +169,7 @@ export default function SlidersTable() {
     );
   };
 
-  if (isLoading) {
+  if (isLoading && sliders.length === 0) {
     return (
       <Card>
         <CardContent className='flex items-center justify-center py-12'>
@@ -177,7 +182,7 @@ export default function SlidersTable() {
     );
   }
 
-  if (error) {
+  if (error && sliders.length === 0) {
     return (
       <Card>
         <CardContent className='flex items-center justify-center py-12'>

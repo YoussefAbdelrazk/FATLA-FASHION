@@ -57,22 +57,23 @@ export const useGetSliderById = (id: string, lang: string = 'en') => {
     queryFn: async () => {
       const data = await getSliderById(id, lang);
       // Transform API response to match Slider type
-      return {
-        id: data.id,
-        nameAr: data.nameAr,
-        nameEn: data.nameEn,
-        imageUrlAr: data.imageUrlAr,
-        imageUrlEn: data.imageUrlEn,
-        brandId: data.brandId,
-        categoryId: data.categoryId,
-        variantId: data.variantId,
-        brandName: data.brandName,
-        categoryName: data.categoryName,
-        variantName: data.variantName,
-        createdBy: data.createdBy,
-        isVisible: true, // Default to true since API doesn't provide this
-        createdAt: new Date().toISOString(), // Default since API doesn't provide this
-      };
+      // return {
+      //   id: data.id,
+      //   nameAr: data.nameAr,
+      //   nameEn: data.nameEn,
+      //   imageUrlAr: data.imageUrlAr,
+      //   imageUrlEn: data.imageUrlEn,
+      //   brandId: data.brandId,
+      //   categoryId: data.categoryId,
+      //   variantId: data.variantId,
+      //   brandName: data.brandName,
+      //   categoryName: data.categoryName,
+      //   variantName: data.variantName,
+      //   createdBy: data.createdBy,
+      //   isVisible: true, // Default to true since API doesn't provide this
+      //   createdAt: new Date().toISOString(), // Default since API doesn't provide this
+      // };
+      return data;
     },
     enabled: !!id,
     staleTime: 5 * 60 * 1000, // 5 minutes

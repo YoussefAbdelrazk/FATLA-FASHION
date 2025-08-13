@@ -74,6 +74,11 @@ export default function BrandsTable() {
   const { data, isLoading, error } = useGetAllBrands('en', currentPage, pageSize);
   const deleteBrandMutation = useDeleteBrand();
 
+  // Debug logging
+  console.log('BrandsTable - data:', data);
+  console.log('BrandsTable - isLoading:', isLoading);
+  console.log('BrandsTable - error:', error);
+
   const brands = data?.brands || [];
   const pagination = data?.pagination;
 
@@ -146,7 +151,7 @@ export default function BrandsTable() {
 
   const totalPages = pagination ? Math.ceil(pagination.totalCount / pagination.pageSize) : 0;
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return (
       <Card>
         <CardContent className='flex items-center justify-center py-8'>
@@ -159,7 +164,7 @@ export default function BrandsTable() {
     );
   }
 
-  if (error) {
+  if (error && !data) {
     return (
       <Card>
         <CardContent className='flex items-center justify-center py-8'>

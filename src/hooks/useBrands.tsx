@@ -1,5 +1,5 @@
-import { BrandService, GetBrandsResponse } from '@/services/brands/BrandService';
-import { Brand, BrandforAll } from '@/types/brand';
+import { BrandService } from '@/services/brands/BrandService';
+import { Brand } from '@/types/brand';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -13,17 +13,17 @@ interface ApiError {
 }
 
 // Transform API response to Brand type
-const transformBrandResponse = (response: GetBrandsResponse): BrandforAll[] => {
-  return response.brands.map(brand => ({
-    id: brand.id,
-    name: brand.name,
-    imageUrl: brand.imageUrl,
-    visibilityOrder: brand.visibilityOrder,
-    productsCount: brand.productsCount,
-    createdAt: brand.createdAt,
-    createdBy: brand.createdBy,
-  }));
-};
+// const transformBrandResponse = (response: GetBrandsResponse): BrandforAll[] => {
+//   return response.brands.map(brand => ({
+//     id: brand.id,
+//     name: brand.name,
+//     imageUrl: brand.imageUrl,
+//     visibilityOrder: brand.visibilityOrder,
+//     productsCount: brand.productsCount,
+//     createdAt: brand.createdAt,
+//     createdBy: brand.createdBy,
+//   }));
+// };
 
 export const useGetAllBrands = (lang: string = 'en', page: number = 1, pageSize: number = 20) => {
   return useQuery({
@@ -31,10 +31,12 @@ export const useGetAllBrands = (lang: string = 'en', page: number = 1, pageSize:
     queryFn: async () => {
       const response = await BrandService.getAllBrands(lang, page, pageSize);
       return {
-        brands: transformBrandResponse(response),
+        brands: response.brands,
         pagination: response.pagination,
       };
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
