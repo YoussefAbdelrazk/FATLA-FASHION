@@ -25,7 +25,6 @@ interface Step2Props {
 }
 
 export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
-  const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [otpValue, setOtpValue] = useState('');
   const [timeLeft, setTimeLeft] = useState(60);
@@ -84,7 +83,6 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
     console.log(data, 'data');
     console.log(mobileNumber, 'mobileNumber');
 
-    setIsLoading(true);
     try {
       await verifyOtp(mobileNumber, data.otpCode);
       toast.success('Code verified successfully!');
@@ -96,8 +94,6 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
             'Invalid verification code'
           : 'Invalid verification code';
       toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
     }
   };
 

@@ -27,7 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useDeleteSlider, useGetAllSliders, useToggleSliderVisibility } from '@/hooks/useSliders';
+import { useDeleteSlider, useGetAllSliders } from '@/hooks/useSliders';
 import { Slider } from '@/types/slider';
 import { format } from 'date-fns';
 import {
@@ -58,7 +58,6 @@ export default function SlidersTable() {
   // React Query hooks
   const { data: sliders = [], isLoading, error } = useGetAllSliders('en');
   const deleteSliderMutation = useDeleteSlider();
-  const toggleVisibilityMutation = useToggleSliderVisibility();
 
   // Debug logging
   console.log('SlidersTable - data:', sliders);

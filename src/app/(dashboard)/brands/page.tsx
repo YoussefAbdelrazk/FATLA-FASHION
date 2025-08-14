@@ -1,6 +1,6 @@
 import BrandsTable from '@/components/brands/brands-table';
 import { createQueryClient } from '@/lib/query-client';
-import { BrandService } from '@/services/brands/BrandService';
+import { getAllBrands } from '@/services/brands/BrandService';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 export default async function BrandsPage() {
@@ -13,7 +13,7 @@ export default async function BrandsPage() {
     queryKey: ['brands', 'en', 1, 20], // Match the hook's query key structure
     queryFn: async () => {
       console.log('Fetching brands from API...');
-      const response = await BrandService.getAllBrands('en', 1, 20);
+      const response = await getAllBrands('en', 1, 20);
       console.log('Raw API response:', response);
 
       // Transform API response to exactly match what the hook expects

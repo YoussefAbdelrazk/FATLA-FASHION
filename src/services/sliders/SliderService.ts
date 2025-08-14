@@ -1,8 +1,7 @@
-import baseAPI, { API_BASE_URL, baseAPIForm } from '@/lib/config';
-import { getToken } from '@/lib/Cookie';
+'use server';
+import baseAPI, { baseAPIForm } from '@/lib/config';
 
 import { Slider } from '@/types/slider';
-import axios from 'axios';
 
 export interface CreateSliderData {
   arName: string;
@@ -73,12 +72,7 @@ export const getSliderById = async (
 // Create new slider
 export const createSlider = async (data: FormData, lang: string = 'en') => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/${lang}/Sliders/CreateSlider`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${getToken()}`,
-      },
-    });
+    const response = await baseAPIForm.post(`/api/${lang}/Sliders/CreateSlider`, data);
     return response.data;
   } catch (error) {
     console.error('Error creating slider:', error);

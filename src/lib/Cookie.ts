@@ -1,32 +1,52 @@
-import Cookies from 'js-cookie';
+import { cookies } from 'next/headers';
 
 const COOKIE_CONFIG = {
-  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  httpOnly: true,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
   path: '/',
   secure: true,
   sameSite: 'strict' as const,
 };
 
+// Server-side token functions (for use in Server Components and Server Actions)
 export const getToken = () => {
-  return Cookies.get('token') || null;
+  return cookies().get('token')?.value || null;
 };
 
 export const getRefreshToken = () => {
-  return Cookies.get('refreshToken') || null;
+  return cookies().get('refreshToken')?.value || null;
 };
 
 export const setToken = (token: string) => {
-  Cookies.set('token', token, COOKIE_CONFIG);
+  cookies().set('token', token, COOKIE_CONFIG);
 };
 
 export const setRefreshToken = (refreshToken: string) => {
-  Cookies.set('refreshToken', refreshToken, COOKIE_CONFIG);
+  cookies().set('refreshToken', refreshToken, COOKIE_CONFIG);
 };
 
 export const removeToken = () => {
-  Cookies.remove('token');
+  cookies().delete('token');
 };
 
 export const removeRefreshToken = () => {
-  Cookies.remove('refreshToken');
+  cookies().delete('refreshToken');
+};
+
+// Client-side token functions (for use in Client Components)
+export const getClientToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+
+  // Try to get token from localStorage as fallback
+  return localStorage.getItem('token') || null;
+};
+
+export const setClientToken = (token: string) => {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('token', token);
+};
+
+export const removeClientToken = () => {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('token');
 };

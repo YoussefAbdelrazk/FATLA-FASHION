@@ -1,4 +1,6 @@
-import { baseAPI } from '@/lib/config';
+'use server';
+
+import baseAPI from '@/lib/config';
 import { removeToken, setRefreshToken, setToken } from '@/lib/Cookie';
 
 interface LoginResponse {
@@ -13,6 +15,7 @@ export const login = async (mobileNumber: string, password: string): Promise<Log
   });
   setToken(response.data.token);
   setRefreshToken(response.data.refreshToken);
+  console.log(response.data);
   return response.data;
 };
 

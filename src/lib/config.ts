@@ -3,14 +3,6 @@ import { getToken } from './Cookie';
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-// export const api = axios.create({
-//   baseURL: API_BASE_URL,
-//   headers: {
-//     'Content-Type': 'application/json',
-//     Authorization: `Bearer ${getToken()}`,
-//   },
-// });
-// Initialize cookies instance
 console.log('token', getToken());
 // create an instance of the axios server
 

@@ -20,10 +20,8 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useCreateSlider } from '@/hooks/useSliders';
-import { getToken } from '@/lib/Cookie';
 import { sliderFormSchema, type SliderFormData } from '@/lib/schemas/slider-schema';
 import { validateImage } from '@/lib/utils';
-import { useAuthStore } from '@/store/authStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
 import Image from 'next/image';

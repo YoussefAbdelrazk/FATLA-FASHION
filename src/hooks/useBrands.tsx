@@ -1,4 +1,10 @@
-import { BrandService } from '@/services/brands/BrandService';
+import {
+  createBrand,
+  deleteBrand,
+  getAllBrands,
+  getBrandById,
+  updateBrand,
+} from '@/services/brands/BrandService';
 import { Brand } from '@/types/brand';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -29,7 +35,7 @@ export const useGetAllBrands = (lang: string = 'en', page: number = 1, pageSize:
   return useQuery({
     queryKey: ['brands', lang, page, pageSize],
     queryFn: async () => {
-      const response = await BrandService.getAllBrands(lang, page, pageSize);
+      const response = await getAllBrands(lang, page, pageSize);
       return {
         brands: response.brands,
         pagination: response.pagination,
@@ -44,7 +50,7 @@ export const useGetBrandById = (id: string, lang: string = 'en') => {
   return useQuery({
     queryKey: ['brand', id, lang],
     queryFn: async () => {
-      const response = await BrandService.getBrandById(id, lang);
+      const response = await getBrandById(id, lang);
       return transformSingleBrandResponse(response);
     },
     enabled: !!id,
@@ -66,7 +72,7 @@ export const useCreateBrand = () => {
 
   return useMutation({
     mutationFn: async ({ formData, lang }: { formData: FormData; lang: string }) => {
-      const response = await BrandService.createBrand(formData, lang);
+      const response = await createBrand(formData, lang);
       return response;
     },
     onSuccess: () => {
@@ -93,7 +99,7 @@ export const useUpdateBrand = () => {
       formData: FormData;
       lang: string;
     }) => {
-      const response = await BrandService.updateBrand(id, formData, lang);
+      const response = await updateBrand(id, formData, lang);
       return response;
     },
     onSuccess: () => {
@@ -112,7 +118,7 @@ export const useDeleteBrand = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await BrandService.deleteBrand(id);
+      const response = await deleteBrand(id);
       return response;
     },
     onSuccess: () => {
