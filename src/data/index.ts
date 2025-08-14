@@ -5,6 +5,7 @@ export { dashboardStatistics, type DashboardStatistics } from './dashboard/stati
 export { dailyOrdersData, type DailyOrder, type DailyOrdersData } from './analytics/daily-orders';
 
 // Products Data
+export { products } from './products';
 export {
   restockProductsData,
   type RestockProduct,
