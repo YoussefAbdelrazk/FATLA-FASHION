@@ -32,7 +32,8 @@ export interface UpdateCategoryData extends Partial<CreateCategoryData> {
 // Get all categories
 export const getAllCategories = async (lang: string = 'en'): Promise<GetCategoriesResponse[]> => {
   try {
-    const response = await baseAPI.get(`/api/${lang}/Categories/GetCategories`);
+    const api = await baseAPI();
+    const response = await api.get(`/api/${lang}/Categories/GetCategories`);
     console.log('GetCategories response:', response.data);
     return response.data;
   } catch (error) {
@@ -47,7 +48,8 @@ export const getCategoryById = async (
   lang: string = 'en',
 ): Promise<GetCategoriesResponse> => {
   try {
-    const response = await baseAPI.get(`/api/${lang}/Categories/GetSingleCategory?id=${id}`);
+    const api = await baseAPI();
+    const response = await api.get(`/api/${lang}/Categories/GetSingleCategory?id=${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching category:', error);
@@ -61,7 +63,8 @@ export const createCategory = async (
   lang: string = 'en',
 ): Promise<CreateCategoryResponse> => {
   try {
-    const response = await baseAPI.post(`/api/${lang}/Categories/CreateCategory`, data);
+    const api = await baseAPI();
+    const response = await api.post(`/api/${lang}/Categories/CreateCategory`, data);
     return response.data;
   } catch (error) {
     console.error('Error creating category:', error);
@@ -76,7 +79,8 @@ export const updateCategory = async (
 ): Promise<GetCategoriesResponse> => {
   try {
     const { id, ...updateData } = data;
-    const response = await baseAPI.put(`/api/${lang}/Categories/EditCategory?id=${id}`, updateData);
+    const api = await baseAPI();
+    const response = await api.put(`/api/${lang}/Categories/EditCategory?id=${id}`, updateData);
     return response.data;
   } catch (error) {
     console.error('Error updating category:', error);
@@ -87,7 +91,8 @@ export const updateCategory = async (
 // Delete category
 export const deleteCategory = async (id: string, lang: string = 'en'): Promise<void> => {
   try {
-    await baseAPI.delete(`/api/${lang}/Categories/DeleteCategory?id=${id}`);
+    const api = await baseAPI();
+    await api.delete(`/api/${lang}/Categories/DeleteCategory?id=${id}`);
   } catch (error) {
     console.error('Error deleting category:', error);
     throw error;

@@ -8,8 +8,10 @@ interface LoginResponse {
   refreshToken: string;
 }
 
+
 export const login = async (mobileNumber: string, password: string): Promise<LoginResponse> => {
-  const response = await baseAPI.post(`/api/en/AdminAuth/login`, {
+  const api = await baseAPI();
+  const response = await api.post(`/api/en/AdminAuth/login`, {
     mobileNumber,
     password,
   });
@@ -21,26 +23,27 @@ export const login = async (mobileNumber: string, password: string): Promise<Log
 
 export const logout = async (): Promise<void> => {
   try {
-    // Call logout endpoint if available
-    await baseAPI.post(`/api/en/AdminAuth/logout`);
+    const api = await baseAPI();
+    await api.post(`/api/en/AdminAuth/logout`);
   } catch (error) {
     console.error('Logout API call failed:', error);
   } finally {
-    // Always clear local tokens
     removeToken();
   }
 };
 
 // Request OTP for password reset
 export const requestOtp = async (mobileNumber: string): Promise<void> => {
-  await baseAPI.post(`/api/en/AdminAuth/forget-password/request-otp`, {
+  const api = await baseAPI();
+  await api.post(`/api/en/AdminAuth/forget-password/request-otp`, {
     mobileNumber,
   });
 };
 
 // Verify OTP
 export const verifyOtp = async (mobileNumber: string, otpCode: string): Promise<void> => {
-  await baseAPI.post(`/api/en/AdminAuth/forget-password/verify-otp`, {
+  const api = await baseAPI();
+  await api.post(`/api/en/AdminAuth/forget-password/verify-otp`, {
     mobileNumber,
     otpCode,
   });
@@ -52,7 +55,8 @@ export const resetPassword = async (
   newPassword: string,
   confirmPassword: string,
 ): Promise<void> => {
-  await baseAPI.post(`/api/en/AdminAuth/forget-password/reset`, {
+  const api = await baseAPI();
+  await api.post(`/api/en/AdminAuth/forget-password/reset`, {
     mobileNumber,
     newPassword,
     confirmPassword,

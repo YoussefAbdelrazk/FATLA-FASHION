@@ -17,7 +17,8 @@ export const getAllBrands = async (
   pageSize: number = 20,
 ): Promise<GetBrandsResponse> => {
   try {
-    const response = await baseAPI.get(`/api/${lang}/Brands/GetAllBrands`, {
+    const api = await baseAPI();
+    const response = await api.get(`/api/${lang}/Brands/GetAllBrands`, {
       params: { page, pageCount: pageSize },
     });
     return response.data;
@@ -28,7 +29,8 @@ export const getAllBrands = async (
 
 export const getBrandById = async (id: string, lang: string = 'en'): Promise<Brand> => {
   try {
-    const response = await baseAPI.get(`/api/${lang}/Brands/GetSingleBrand?id=${id}`);
+    const api = await baseAPI();
+    const response = await api.get(`/api/${lang}/Brands/GetSingleBrand?id=${id}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -37,7 +39,8 @@ export const getBrandById = async (id: string, lang: string = 'en'): Promise<Bra
 
 export const createBrand = async (formData: FormData, lang: string = 'en') => {
   try {
-    const response = await baseAPIForm.post(`/api/${lang}/Brands/AddNewBrand`, formData);
+    const api = await baseAPIForm();
+    const response = await api.post(`/api/${lang}/Brands/AddNewBrand`, formData);
     return response.data;
   } catch (error) {
     throw error;
@@ -46,7 +49,8 @@ export const createBrand = async (formData: FormData, lang: string = 'en') => {
 
 export const updateBrand = async (id: string, formData: FormData, lang: string = 'en') => {
   try {
-    const response = await baseAPIForm.post(`/api/${lang}/Brands/EditBrand?id=${id}`, formData);
+    const api = await baseAPIForm();
+    const response = await api.post(`/api/${lang}/Brands/EditBrand?id=${id}`, formData);
     return response.data;
   } catch (error) {
     throw error;
@@ -55,7 +59,8 @@ export const updateBrand = async (id: string, formData: FormData, lang: string =
 
 export const deleteBrand = async (id: number, lang: string = 'en') => {
   try {
-    const response = await baseAPI.post(`/api/${lang}/Brands/DeleteBrand?id=${id}`);
+    const api = await baseAPI();
+    const response = await api.post(`/api/${lang}/Brands/DeleteBrand?id=${id}`);
     return response.data;
   } catch (error) {
     throw error;

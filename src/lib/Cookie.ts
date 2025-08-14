@@ -1,3 +1,4 @@
+'use server';
 import { cookies } from 'next/headers';
 
 const COOKIE_CONFIG = {
@@ -8,7 +9,6 @@ const COOKIE_CONFIG = {
   sameSite: 'strict' as const,
 };
 
-// Server-side token functions (for use in Server Components and Server Actions)
 export const getToken = () => {
   return cookies().get('token')?.value || null;
 };
@@ -31,22 +31,4 @@ export const removeToken = () => {
 
 export const removeRefreshToken = () => {
   cookies().delete('refreshToken');
-};
-
-// Client-side token functions (for use in Client Components)
-export const getClientToken = (): string | null => {
-  if (typeof window === 'undefined') return null;
-
-  // Try to get token from localStorage as fallback
-  return localStorage.getItem('token') || null;
-};
-
-export const setClientToken = (token: string) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem('token', token);
-};
-
-export const removeClientToken = () => {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem('token');
 };
