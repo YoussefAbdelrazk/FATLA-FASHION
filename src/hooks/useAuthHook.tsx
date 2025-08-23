@@ -13,6 +13,7 @@ export const useAuthHook = () => {
       router.push('/');
     },
     onError: error => {
+      console.log('Login mutation error:', error);
       console.error('Login mutation error:', error);
     },
   });

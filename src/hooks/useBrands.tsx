@@ -1,10 +1,5 @@
-import {
-  createBrand,
-  deleteBrand,
-  getAllBrands,
-  getBrandById,
-  updateBrand,
-} from '@/services/brands/BrandService';
+import { createBrand, deleteBrand, updateBrand } from '@/services/brands/BrandActions';
+import { getAllBrands, getBrandById } from '@/services/brands/BrandService';
 import { Brand } from '@/types/brand';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';

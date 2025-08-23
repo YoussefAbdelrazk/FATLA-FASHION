@@ -1,12 +1,6 @@
-import {
-  GetSlidersResponse,
-  createSlider,
-  deleteSlider,
-  getAllSliders,
-  getSliderById,
-  toggleSliderVisibility,
-  updateSlider,
-} from '@/services/sliders/SliderService';
+import { createSlider, deleteSlider, updateSlider } from '@/services/sliders/SliderActions';
+import { getAllSliders, getSliderById, GetSlidersResponse } from '@/services/sliders/SliderService';
+
 import { Slider } from '@/types/slider';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -139,28 +133,28 @@ export const useDeleteSlider = () => {
 };
 
 // Toggle slider visibility
-export const useToggleSliderVisibility = () => {
-  const queryClient = useQueryClient();
+// export const useToggleSliderVisibility = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({
-      id,
-      isVisible,
-      lang = 'en',
-    }: {
-      id: string;
-      isVisible: boolean;
-      lang?: string;
-    }) => toggleSliderVisibility(id, isVisible, lang),
-    onSuccess: updatedSlider => {
-      queryClient.invalidateQueries({ queryKey: sliderKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: sliderKeys.detail(updatedSlider.id.toString()) });
-      // Since the Slider type doesn't have isVisible, we'll use a generic success message
-      toast.success('Slider visibility updated successfully');
-    },
-    onError: (error: Error) => {
-      console.error('Error toggling slider visibility:', error);
-      toast.error('Failed to toggle slider visibility');
-    },
-  });
-};
+//   return useMutation({
+//     mutationFn: ({
+//       id,
+//       isVisible,
+//       lang = 'en',
+//     }: {
+//       id: string;
+//       isVisible: boolean;
+//       lang?: string;
+//     }) => toggleSliderVisibility(id, isVisible, lang),
+//     onSuccess: updatedSlider => {
+//       queryClient.invalidateQueries({ queryKey: sliderKeys.lists() });
+//       queryClient.invalidateQueries({ queryKey: sliderKeys.detail(updatedSlider.id.toString()) });
+//       // Since the Slider type doesn't have isVisible, we'll use a generic success message
+//       toast.success('Slider visibility updated successfully');
+//     },
+//     onError: (error: Error) => {
+//       console.error('Error toggling slider visibility:', error);
+//       toast.error('Failed to toggle slider visibility');
+//     },
+//   });
+// };

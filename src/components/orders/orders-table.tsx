@@ -3,13 +3,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,10 +47,19 @@ const mockOrders: Order[] = [
     orderNo: 'ORD-2024-001',
     clientName: 'Ahmed Hassan',
     clientMobile: '+20 123 456 7890',
+    clientAddress: {
+      government: 'Cairo',
+      city: 'New Cairo',
+      area: 'First Settlement',
+      floor: '3rd Floor',
+      building: 'Building A',
+      landmark: 'Near City Center Mall',
+    },
     orderDate: '2024-01-15T10:30:00Z',
     subTotal: 299.99,
     deliveryTotal: 25.0,
     discountTotal: 30.0,
+    couponDiscount: 15.0,
     finalTotal: 294.99,
     paymentMethod: 'COD',
     orderStatus: 'Delivered',
@@ -64,16 +67,27 @@ const mockOrders: Order[] = [
     driverMobile: '+20 987 654 3210',
     codCollected: 294.99,
     deliveryDateTime: '2024-01-16T14:30:00Z',
+    totalQuantity: 3,
+    orderItems: [],
   },
   {
     id: '2',
     orderNo: 'ORD-2024-002',
     clientName: 'Fatima Ahmed',
     clientMobile: '+20 111 222 3333',
+    clientAddress: {
+      government: 'Alexandria',
+      city: 'Alexandria',
+      area: 'Miami',
+      floor: '2nd Floor',
+      building: 'Building B',
+      landmark: 'Near Corniche',
+    },
     orderDate: '2024-01-16T11:45:00Z',
     subTotal: 159.99,
     deliveryTotal: 20.0,
     discountTotal: 0.0,
+    couponDiscount: 0.0,
     finalTotal: 179.99,
     paymentMethod: 'Card',
     orderStatus: 'Processing',
@@ -81,16 +95,27 @@ const mockOrders: Order[] = [
     driverMobile: '+20 555 666 7777',
     codCollected: 0.0,
     deliveryDateTime: '2024-01-17T16:00:00Z',
+    totalQuantity: 2,
+    orderItems: [],
   },
   {
     id: '3',
     orderNo: 'ORD-2024-003',
     clientName: 'Youssef Mahmoud',
     clientMobile: '+20 444 555 6666',
+    clientAddress: {
+      government: 'Giza',
+      city: '6th of October',
+      area: 'Sheikh Zayed',
+      floor: '1st Floor',
+      building: 'Building C',
+      landmark: 'Near Mall of Egypt',
+    },
     orderDate: '2024-01-17T09:15:00Z',
     subTotal: 449.99,
     deliveryTotal: 30.0,
     discountTotal: 50.0,
+    couponDiscount: 0.0,
     finalTotal: 429.99,
     paymentMethod: 'Online',
     orderStatus: 'Shipped',
@@ -98,16 +123,27 @@ const mockOrders: Order[] = [
     driverMobile: '+20 777 888 9999',
     codCollected: 0.0,
     deliveryDateTime: '2024-01-18T12:30:00Z',
+    totalQuantity: 4,
+    orderItems: [],
   },
   {
     id: '4',
     orderNo: 'ORD-2024-004',
     clientName: 'Nour El-Din',
     clientMobile: '+20 888 999 0000',
+    clientAddress: {
+      government: 'Cairo',
+      city: 'Maadi',
+      area: 'Degla',
+      floor: '5th Floor',
+      building: 'Building D',
+      landmark: 'Near Maadi Grand Mall',
+    },
     orderDate: '2024-01-18T14:20:00Z',
     subTotal: 89.99,
     deliveryTotal: 15.0,
     discountTotal: 10.0,
+    couponDiscount: 5.0,
     finalTotal: 94.99,
     paymentMethod: 'Cash',
     orderStatus: 'Pending',
@@ -115,16 +151,27 @@ const mockOrders: Order[] = [
     driverMobile: '+20 123 456 7890',
     codCollected: 0.0,
     deliveryDateTime: '2024-01-19T10:00:00Z',
+    totalQuantity: 1,
+    orderItems: [],
   },
   {
     id: '5',
     orderNo: 'ORD-2024-005',
     clientName: 'Layla Mohamed',
     clientMobile: '+20 999 000 1111',
+    clientAddress: {
+      government: 'Cairo',
+      city: 'Heliopolis',
+      area: 'Korba',
+      floor: 'Ground Floor',
+      building: 'Building E',
+      landmark: 'Near Heliopolis Club',
+    },
     orderDate: '2024-01-19T16:45:00Z',
     subTotal: 199.99,
     deliveryTotal: 25.0,
     discountTotal: 25.0,
+    couponDiscount: 0.0,
     finalTotal: 199.99,
     paymentMethod: 'COD',
     orderStatus: 'Confirmed',
@@ -132,6 +179,8 @@ const mockOrders: Order[] = [
     driverMobile: '+20 222 333 4444',
     codCollected: 0.0,
     deliveryDateTime: '2024-01-20T15:30:00Z',
+    totalQuantity: 2,
+    orderItems: [],
   },
 ];
 
@@ -215,8 +264,6 @@ export default function OrdersTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<keyof Order>('orderDate');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
 
   // Filter orders (client-side filtering for current page)
@@ -245,11 +292,6 @@ export default function OrdersTable() {
       setSortField(field);
       setSortDirection('asc');
     }
-  };
-
-  const handleViewDetails = (order: Order) => {
-    setSelectedOrder(order);
-    setShowDetailsDialog(true);
   };
 
   const handleEdit = (order: Order) => {
@@ -290,10 +332,6 @@ export default function OrdersTable() {
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
             <span>Orders Management</span>
-            <Button onClick={() => router.push('/orders/add')} className='flex items-center gap-2'>
-              <Plus className='w-4 h-4' />
-              Add New Order
-            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -426,7 +464,7 @@ export default function OrdersTable() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align='end'>
-                            <DropdownMenuItem onClick={() => handleViewDetails(order)}>
+                            <DropdownMenuItem onClick={() => router.push(`/orders/${order.id}`)}>
                               <Eye className='mr-2 h-4 w-4' />
                               View Details
                             </DropdownMenuItem>
@@ -509,125 +547,26 @@ export default function OrdersTable() {
         </CardContent>
       </Card>
 
-      {/* Details Dialog */}
-      <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-        <DialogContent className='max-w-2xl'>
-          <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
-            <DialogDescription>View detailed information about this order</DialogDescription>
-          </DialogHeader>
-          {selectedOrder && (
-            <div className='space-y-4'>
-              <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <h3 className='font-semibold text-lg mb-2'>Order Information</h3>
-                  <div className='space-y-2 text-sm'>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Order No:</span>
-                      <span>{selectedOrder.orderNo}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Order Date:</span>
-                      <span>{formatDate(selectedOrder.orderDate)}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Status:</span>
-                      <Badge variant={getStatusBadgeVariant(selectedOrder.orderStatus)}>
-                        {selectedOrder.orderStatus}
-                      </Badge>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Payment Method:</span>
-                      <Badge variant={getPaymentMethodBadgeVariant(selectedOrder.paymentMethod)}>
-                        {selectedOrder.paymentMethod}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className='font-semibold text-lg mb-2'>Client Information</h3>
-                  <div className='space-y-2 text-sm'>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Name:</span>
-                      <span>{selectedOrder.clientName}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Mobile:</span>
-                      <span>{selectedOrder.clientMobile}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <h3 className='font-semibold text-lg mb-2'>Financial Details</h3>
-                  <div className='space-y-2 text-sm'>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Sub Total:</span>
-                      <span>{formatCurrency(selectedOrder.subTotal)}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Delivery Total:</span>
-                      <span>{formatCurrency(selectedOrder.deliveryTotal)}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Discount Total:</span>
-                      <span>{formatCurrency(selectedOrder.discountTotal)}</span>
-                    </div>
-                    <div className='flex justify-between font-semibold'>
-                      <span>Final Total:</span>
-                      <span>{formatCurrency(selectedOrder.finalTotal)}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>COD Collected:</span>
-                      <span>{formatCurrency(selectedOrder.codCollected)}</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className='font-semibold text-lg mb-2'>Delivery Information</h3>
-                  <div className='space-y-2 text-sm'>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Driver Name:</span>
-                      <span>{selectedOrder.driverName}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Driver Mobile:</span>
-                      <span>{selectedOrder.driverMobile}</span>
-                    </div>
-                    <div className='flex justify-between'>
-                      <span className='font-medium'>Delivery Date:</span>
-                      <span>{formatDate(selectedOrder.deliveryDateTime)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
       {/* Delete Confirmation Dialog */}
-      <Dialog open={!!orderToDelete} onOpenChange={() => setOrderToDelete(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete order <strong>{orderToDelete?.orderNo}</strong>? This
+      {orderToDelete && (
+        <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
+          <div className='bg-white rounded-lg p-6 max-w-md w-full mx-4'>
+            <h3 className='text-lg font-semibold mb-2'>Confirm Deletion</h3>
+            <p className='text-gray-600 mb-4'>
+              Are you sure you want to delete order <strong>{orderToDelete.orderNo}</strong>? This
               action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <div className='flex justify-end space-x-2'>
-            <Button variant='outline' onClick={() => setOrderToDelete(null)}>
-              Cancel
-            </Button>
-            <Button variant='destructive' onClick={confirmDelete}>
-              Delete
-            </Button>
+            </p>
+            <div className='flex justify-end space-x-2'>
+              <Button variant='outline' onClick={() => setOrderToDelete(null)}>
+                Cancel
+              </Button>
+              <Button variant='destructive' onClick={confirmDelete}>
+                Delete
+              </Button>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   );
 }
