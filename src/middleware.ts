@@ -1,21 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
 
-export function middleware(request: NextRequest) {
-  const authRoutes = ['/login', '/forgot-password'];
-  const { pathname } = request.nextUrl;
-
-  // Get token from cookies in the request context
-  const token = request.cookies.get('token')?.value;
-
-  if (authRoutes.includes(pathname) && token) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-  if (!authRoutes.includes(pathname) && !token) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-  return NextResponse.next();
-}
+export default createMiddleware({
+  locales: ['en', 'ar'],
+  defaultLocale: 'en',
+  localePrefix: 'always',
+});
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    // Match all pathnames except for
+    // - … if they start with `/api`, `/_next` or `/_vercel`
+    // - … the ones containing a dot (e.g. `favicon.ico`)
+    '/((?!api|_next|_vercel|.*\\..*).*)',
+  ],
 };

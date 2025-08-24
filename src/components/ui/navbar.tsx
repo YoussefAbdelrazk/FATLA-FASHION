@@ -13,13 +13,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useSidebar } from '@/context/sidebar';
 import { Bell, Crown, LogOut, Menu, Settings, Shield, ShoppingBag, User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
+
+// import { LanguageSwitcher } from './language-switcher';
+import LanguageSwitcher from './language-switcher';
 import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
   const [notificationCount] = useState(8);
   const { openMobileSidebar } = useSidebar();
+  const t = useTranslations('navigation');
 
   return (
     <nav className='sticky top-0 z-50 backdrop-blur-xl bg-white/95 dark:bg-black/95 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm'>
@@ -52,7 +57,7 @@ export function Navbar() {
                   FATLA Admin
                 </h1>
                 <p className='text-xs text-gray-500 dark:text-gray-400 -mt-0.5 font-medium hidden lg:block'>
-                  Fashion Management Dashboard
+                  {t('navigation.dashboard')}
                 </p>
               </div>
             </Link>
@@ -60,6 +65,9 @@ export function Navbar() {
 
           {/* Right Section - Quick Access Icons */}
           <div className='flex items-center space-x-1 lg:space-x-2'>
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -120,10 +128,10 @@ export function Navbar() {
                       </Avatar>
                       <div>
                         <p className='text-sm font-semibold leading-none text-black dark:text-white'>
-                          Admin User
+                          {t('auth.adminUser')}
                         </p>
                         <p className='text-xs leading-none text-gray-500 dark:text-gray-400 mt-1'>
-                          Super Administrator
+                          {t('auth.superAdministrator')}
                         </p>
                       </div>
                     </div>
@@ -132,16 +140,22 @@ export function Navbar() {
                 <DropdownMenuSeparator className='bg-gray-200 dark:bg-gray-700' />
                 <DropdownMenuItem className='p-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200'>
                   <User className='mr-3 h-4 w-4 text-gray-600 dark:text-gray-400' />
-                  <span className='font-medium text-black dark:text-white'>Admin Profile</span>
+                  <span className='font-medium text-black dark:text-white'>
+                    {t('auth.adminProfile')}
+                  </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className='p-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200'>
                   <Settings className='mr-3 h-4 w-4 text-gray-600 dark:text-gray-400' />
-                  <span className='font-medium text-black dark:text-white'>System Settings</span>
+                  <span className='font-medium text-black dark:text-white'>
+                    {t('auth.systemSettings')}
+                  </span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className='bg-gray-200 dark:bg-gray-700' />
                 <DropdownMenuItem className='p-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200'>
                   <LogOut className='mr-3 h-4 w-4 text-red-500' />
-                  <span className='font-medium text-red-600 dark:text-red-400'>Log out</span>
+                  <span className='font-medium text-red-600 dark:text-red-400'>
+                    {t('auth.logout')}
+                  </span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

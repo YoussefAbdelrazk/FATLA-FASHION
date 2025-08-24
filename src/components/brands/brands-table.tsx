@@ -31,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
 import { useDeleteBrand, useGetAllBrands } from '@/hooks/useBrands';
 import { BrandforAll } from '@/types/brand';
 import {
@@ -43,6 +44,7 @@ import {
   Search,
   Trash2,
 } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -69,9 +71,11 @@ const getValidImageUrl = (imageUrl: string): string => {
 
 export default function BrandsTable() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const { data, isLoading, error } = useGetAllBrands('en', currentPage, pageSize);
+  const { data, isLoading, error } = useGetAllBrands(locale, currentPage, pageSize);
   const deleteBrandMutation = useDeleteBrand();
 
   // Debug logging
@@ -157,7 +161,7 @@ export default function BrandsTable() {
         <CardContent className='flex items-center justify-center py-8'>
           <div className='text-center'>
             <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>Loading brands...</p>
+            <p className='text-muted-foreground'>{t('common.loading')}</p>
           </div>
         </CardContent>
       </Card>
@@ -169,7 +173,7 @@ export default function BrandsTable() {
       <Card>
         <CardContent className='flex items-center justify-center py-8'>
           <div className='text-center'>
-            <p className='text-destructive mb-2'>Error loading brands</p>
+            <p className='text-destructive mb-2'>{t('common.error')} loading brands</p>
             <p className='text-muted-foreground text-sm'>
               {error instanceof Error ? error.message : 'Failed to load brands'}
             </p>
@@ -184,10 +188,10 @@ export default function BrandsTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Brands Management</span>
+            <span>{t('management.brandsManagement')}</span>
             <Button onClick={() => router.push('/brands/add')} className='flex items-center gap-2'>
               <Plus className='w-4 h-4' />
-              Add New Brand
+              {t('management.addNewBrand')}
             </Button>
           </CardTitle>
         </CardHeader>
@@ -197,14 +201,14 @@ export default function BrandsTable() {
             <div className='relative flex-1'>
               <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
-                placeholder='Search brands...'
+                placeholder={t('management.searchBrands')}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className='pl-10'
               />
             </div>
             <div className='flex items-center gap-2'>
-              <span className='text-sm text-muted-foreground'>Show:</span>
+              <span className='text-sm text-muted-foreground'>{t('common.filter')}:</span>
               <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
                 <SelectTrigger className='w-20'>
                   <SelectValue />
@@ -227,31 +231,34 @@ export default function BrandsTable() {
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('id')}
                   >
-                    ID {sortField === 'id' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    {t('table.id')} {sortField === 'id' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('name')}
                   >
-                    Name {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    {t('table.name')}{' '}
+                    {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
-                  <TableHead>Image</TableHead>
+                  <TableHead>{t('table.image')}</TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('visibilityOrder')}
                   >
-                    Visibility Order{' '}
+                    {t('table.visibilityOrder')}{' '}
                     {sortField === 'visibilityOrder' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
 
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead className='text-right'>{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredBrands.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className='text-center py-8'>
-                      <p className='text-muted-foreground'>No brands found</p>
+                      <p className='text-muted-foreground'>
+                        {t('common.noItemsFound', { items: t('navigation.brands').toLowerCase() })}
+                      </p>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -267,7 +274,7 @@ export default function BrandsTable() {
                           <div className='w-12 h-12 bg-muted rounded-lg overflow-hidden flex items-center justify-center'>
                             {hasFailed ? (
                               <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
-                                <span className='text-xs text-gray-500'>No Image</span>
+                                <span className='text-xs text-gray-500'>{t('table.noImage')}</span>
                               </div>
                             ) : (
                               <Image
@@ -294,18 +301,18 @@ export default function BrandsTable() {
                             <DropdownMenuContent align='end'>
                               <DropdownMenuItem onClick={() => handleViewDetails(brand)}>
                                 <Eye className='mr-2 h-4 w-4' />
-                                View Details
+                                {t('common.viewDetails')}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleEdit(brand)}>
                                 <Pencil className='mr-2 h-4 w-4' />
-                                Edit
+                                {t('common.edit')}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleDelete(brand)}
                                 className='text-destructive'
                               >
                                 <Trash2 className='mr-2 h-4 w-4' />
-                                Delete
+                                {t('common.delete')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -322,9 +329,10 @@ export default function BrandsTable() {
           {pagination && totalPages > 1 && (
             <div className='flex items-center justify-between mt-4'>
               <div className='text-sm text-muted-foreground'>
-                Showing {(pagination.currentPage - 1) * pagination.pageSize + 1} to{' '}
-                {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalCount)} of{' '}
-                {pagination.totalCount} results
+                {t('common.showing')} {(pagination.currentPage - 1) * pagination.pageSize + 1}{' '}
+                {t('common.to')}{' '}
+                {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalCount)}{' '}
+                {t('common.of')} {pagination.totalCount} {t('common.results')}
               </div>
               <div className='flex items-center space-x-2'>
                 <Button
@@ -334,7 +342,7 @@ export default function BrandsTable() {
                   disabled={currentPage <= 1}
                 >
                   <ChevronLeft className='h-4 w-4' />
-                  Previous
+                  {t('common.previous')}
                 </Button>
                 <div className='flex items-center space-x-1'>
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -368,7 +376,7 @@ export default function BrandsTable() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                 >
-                  Next
+                  {t('common.next')}
                   <ChevronRight className='h-4 w-4' />
                 </Button>
               </div>
@@ -381,8 +389,8 @@ export default function BrandsTable() {
       <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
-            <DialogTitle>Brand Details</DialogTitle>
-            <DialogDescription>View detailed information about this brand</DialogDescription>
+            <DialogTitle>{t('management.brandDetails')}</DialogTitle>
+            <DialogDescription>{t('management.brandInfo')}</DialogDescription>
           </DialogHeader>
           {selectedBrand && (
             <div className='space-y-4'>
@@ -390,7 +398,7 @@ export default function BrandsTable() {
                 <div className='w-16 h-16 bg-muted rounded-lg overflow-hidden'>
                   {failedImages.has(getValidImageUrl(selectedBrand.imageUrl)) ? (
                     <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
-                      <span className='text-xs text-gray-500'>No Image</span>
+                      <span className='text-xs text-gray-500'>{t('table.noImage')}</span>
                     </div>
                   ) : (
                     <Image
@@ -410,7 +418,7 @@ export default function BrandsTable() {
               </div>
               <div className='grid grid-cols-2 gap-4 text-sm'>
                 <div>
-                  <span className='font-medium'>Visibility Order:</span>
+                  <span className='font-medium'>{t('management.visibilityOrder')}:</span>
                   <p>{selectedBrand.visibilityOrder}</p>
                 </div>
               </div>
@@ -423,22 +431,22 @@ export default function BrandsTable() {
       <Dialog open={!!brandToDelete} onOpenChange={() => setBrandToDelete(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>{t('common.confirmDeletion')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete brand <strong>{brandToDelete?.name}</strong>? This
-              action cannot be undone.
+              {t('common.deletionWarning', { item: t('navigation.brands').toLowerCase() })}{' '}
+              <strong>{brandToDelete?.name}</strong>
             </DialogDescription>
           </DialogHeader>
           <div className='flex justify-end space-x-2'>
             <Button variant='outline' onClick={() => setBrandToDelete(null)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               variant='destructive'
               onClick={confirmDelete}
               disabled={deleteBrandMutation.isPending}
             >
-              {deleteBrandMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteBrandMutation.isPending ? t('common.deleting') : t('common.delete')}
             </Button>
           </div>
         </DialogContent>

@@ -2,11 +2,13 @@
 
 import { useSidebar } from '@/context/sidebar';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from './button';
 import SidebarContent from './SidebarContent';
 
 export default function Sidebar() {
+  const t = useTranslations('navigation');
   const { isDesktopExpanded, toggleDesktopSidebar, isMobileOpen, closeMobileSidebar } =
     useSidebar();
 
@@ -19,7 +21,7 @@ export default function Sidebar() {
           isDesktopExpanded ? 'w-64' : 'w-20',
         )}
       >
-        <SidebarContent isExpanded={isDesktopExpanded} />
+        <SidebarContent isExpanded={isDesktopExpanded} t={t} />
 
         <Button
           onClick={toggleDesktopSidebar}
@@ -50,7 +52,7 @@ export default function Sidebar() {
           isMobileOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
-        <SidebarContent isExpanded={true} onLinkClick={closeMobileSidebar} />
+        <SidebarContent isExpanded={true} onLinkClick={closeMobileSidebar} t={t} />
       </aside>
     </>
   );

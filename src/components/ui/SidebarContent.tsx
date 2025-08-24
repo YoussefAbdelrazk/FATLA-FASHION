@@ -18,14 +18,17 @@ import {
   Users,
   X
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './button';
+import LanguageSwitcher from './language-switcher';
 
 interface SidebarContentProps {
   isExpanded: boolean;
   onLinkClick?: () => void;
+  t: ReturnType<typeof useTranslations>;
 }
 
 interface NavigationChild {
@@ -49,36 +52,39 @@ interface NavigationGroup {
 type NavigationItemType = NavigationItem | NavigationGroup;
 
 const navigation: NavigationItemType[] = [
-  { name: 'Home', href: '/', icon: Home },
+  { name: 'home', href: '/', icon: Home },
   {
-    name: 'Orders',
+    name: 'orders',
     icon: ShoppingBag,
     children: [
-      { name: 'All Orders', href: '/orders', count: 10 },
-      { name: 'Pending', href: '/orders/pending', count: 1 },
-      { name: 'Done', href: '/orders/done', count: 4 },
-      { name: 'Cancelled', href: '/orders/cancelled', count: 300 },
+      { name: 'allOrders', href: '/orders', count: 10 },
+      { name: 'pending', href: '/orders/pending', count: 1 },
+      { name: 'done', href: '/orders/done', count: 4 },
+      { name: 'cancelled', href: '/orders/cancelled', count: 300 },
     ],
   },
-  { name: 'Clients', href: '/clients', icon: Users },
-  { name: 'Sliders', href: '/sliders', icon: Image },
+  { name: 'clients', href: '/clients', icon: Users },
+  { name: 'sliders', href: '/sliders', icon: Image },
 
   {
-    name: 'Products',
+    name: 'products',
     icon: Package,
     children: [
-      { name: 'Products List', href: '/products' },
-      { name: 'Categories', href: '/categories' },
-      { name: 'Brands', href: '/brands' },
-      { name: 'Sizes', href: '/sizes' },
-      { name: 'Colors', href: '/colors' },
+      { name: 'productsList', href: '/products' },
+      { name: 'categories', href: '/categories' },
+      { name: 'brands', href: '/brands' },
+      { name: 'sizes', href: '/sizes' },
+      { name: 'colors', href: '/colors' },
     ],
   },
 ];
 
-export default function SidebarContent({ isExpanded, onLinkClick }: SidebarContentProps) {
+export default function SidebarContent({ isExpanded, onLinkClick, t }: SidebarContentProps) {
   const pathname = usePathname();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['Orders', 'Products']);
+  const [expandedItems, setExpandedItems] = useState<string[]>(['orders', 'products']);
+  const sidebarT = useTranslations('sidebar');
+
+
 
   const toggleExpanded = (itemName: string) => {
     setExpandedItems(prev =>
@@ -105,7 +111,14 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
             <div className='w-8 h-8 lg:w-10 lg:h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center'>
               <Shield className='w-4 h-4 lg:w-5 lg:h-5 text-white dark:text-black' />
             </div>
-            <span className='text-lg lg:text-xl font-bold text-black dark:text-white'>FATLA</span>
+            <div className='flex flex-col'>
+              <span className='text-lg lg:text-xl font-bold text-black dark:text-white'>
+                {sidebarT('brandName')}
+              </span>
+              <span className='text-xs text-gray-500 dark:text-gray-400 hidden lg:block'>
+                {sidebarT('brandDescription')}
+              </span>
+            </div>
           </div>
         ) : (
           <div className='w-8 h-8 lg:w-10 lg:h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center'>
@@ -113,17 +126,21 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
           </div>
         )}
 
-        {/* Close button for mobile */}
-        {isExpanded && onLinkClick && (
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={onLinkClick}
-            className='lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 p-2'
-          >
-            <X className='h-5 w-5 text-gray-700 dark:text-gray-300' />
-          </Button>
-        )}
+        {/* Language Switcher and Close button */}
+        <div className='flex items-center space-x-2'>
+          {isExpanded && <LanguageSwitcher variant='compact' />}
+          {isExpanded && onLinkClick && (
+            <Button
+              variant='ghost'
+              size='sm'
+              onClick={onLinkClick}
+              className='lg:hidden hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 p-2'
+              title={sidebarT('closeSidebar')}
+            >
+              <X className='h-5 w-5 text-gray-700 dark:text-gray-300' />
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Navigation */}
@@ -143,6 +160,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                       : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white',
                   )}
                   onClick={onLinkClick}
+                  title={t(item.name)}
                 >
                   <item.icon
                     className={cn(
@@ -151,7 +169,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                     )}
                   />
                   {isExpanded && (
-                    <span className='font-medium text-sm lg:text-base'>{item.name}</span>
+                    <span className='font-medium text-sm lg:text-base'>{t(item.name)}</span>
                   )}
                   {!isExpanded && isActive && (
                     <div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-white dark:bg-black rounded-r-full'></div>
@@ -175,6 +193,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                         ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg'
                         : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white',
                     )}
+                    title={isExpanded ? sidebarT('collapseSidebar') : sidebarT('expandSidebar')}
                   >
                     <div className='flex items-center space-x-3'>
                       <item.icon
@@ -184,7 +203,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                         )}
                       />
                       {isExpanded && (
-                        <span className='font-medium text-sm lg:text-base'>{item.name}</span>
+                        <span className='font-medium text-sm lg:text-base'>{t(item.name)}</span>
                       )}
                     </div>
                     {isExpanded && (
@@ -199,14 +218,6 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                       <div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-white dark:bg-black rounded-r-full'></div>
                     )}
                   </button>
-
-                  {/* Modern Tooltip for collapsed sidebar */}
-                  {/* {!isExpanded && (
-                    <div className='absolute left-full ml-2 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap'>
-                      {item.name}
-                      <div className='absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rotate-45'></div>
-                    </div>
-                  )} */}
                 </div>
 
                 {/* Nested items */}
@@ -225,16 +236,17 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                               : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white',
                           )}
                           onClick={onLinkClick}
+                          title={t(child.name)}
                         >
                           <div className='flex items-center space-x-3'>
-                            {child.name === 'All Orders' && <ShoppingBag className='w-4 h-4' />}
-                            {child.name === 'Products List' && <List className='w-4 h-4' />}
-                            {child.name === 'New Product' && <Plus className='w-4 h-4' />}
-                            {child.name === 'Categories' && <Tag className='w-4 h-4' />}
-                            {child.name === 'Sizes' && <Tag className='w-4 h-4' />}
-                            {child.name === 'Colors' && <Palette className='w-4 h-4' />}
-                            {child.name === 'Brands' && <Building className='w-4 h-4' />}
-                            <span className='font-medium'>{child.name}</span>
+                            {child.name === 'allOrders' && <ShoppingBag className='w-4 h-4' />}
+                            {child.name === 'productsList' && <List className='w-4 h-4' />}
+                            {child.name === 'newProduct' && <Plus className='w-4 h-4' />}
+                            {child.name === 'categories' && <Tag className='w-4 h-4' />}
+                            {child.name === 'sizes' && <Tag className='w-4 h-4' />}
+                            {child.name === 'colors' && <Palette className='w-4 h-4' />}
+                            {child.name === 'brands' && <Building className='w-4 h-4' />}
+                            <span className='font-medium'>{t(child.name)}</span>
                           </div>
                           {child.count && (
                             <span className='bg-white dark:bg-black text-black dark:text-white border border-gray-200 dark:border-gray-700 px-2 py-1 rounded-full text-xs font-medium'>
@@ -261,9 +273,10 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
             'w-full justify-start text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm lg:text-base',
             !isExpanded && 'justify-center',
           )}
+          title={t('logout')}
         >
           <LogOut className={cn('w-5 h-5 flex-shrink-0', isExpanded ? 'mr-3' : '')} />
-          {isExpanded && 'Logout'}
+          {isExpanded && t('logout')}
         </Button>
       </div>
     </div>

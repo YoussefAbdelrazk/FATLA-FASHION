@@ -27,6 +27,7 @@ interface ApiError {
 // };
 
 export const useGetAllBrands = (lang: string = 'en', page: number = 1, pageSize: number = 20) => {
+  console.log('lang', lang);
   return useQuery({
     queryKey: ['brands', lang, page, pageSize],
     queryFn: async () => {
