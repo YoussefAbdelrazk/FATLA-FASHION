@@ -33,7 +33,7 @@ import {
   Eye,
   MoreHorizontal,
   Pencil,
-  Plus,
+
   Search,
   Trash2,
 } from 'lucide-react';

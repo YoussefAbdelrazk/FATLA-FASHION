@@ -1,7 +1,7 @@
 import { Order } from '@/types/order';
 
 export class OrderService {
-  static async getOrderById(id: string): Promise<Order> {
+  static async getOrderById(): Promise<Order> {
     try {
       // TODO: Replace with actual API call
       // const response = await baseAPI.get(`/orders/${id}`);
@@ -64,7 +64,7 @@ export class OrderService {
         ],
       };
     } catch (error) {
-      throw new Error('Failed to fetch order');
+      throw new Error('Failed to fetch order ' + error);
     }
   }
 
@@ -74,7 +74,7 @@ export class OrderService {
       // await baseAPI.patch(`/orders/${id}/status`, { status });
       console.log('Updating order status to:', status);
     } catch (error) {
-      throw new Error('Failed to update order status');
+      throw new Error('Failed to update order status ' + error);
     }
   }
 
@@ -84,7 +84,7 @@ export class OrderService {
       // await baseAPI.patch(`/orders/${id}/cancel`);
       console.log('Cancelling order:', id);
     } catch (error) {
-      throw new Error('Failed to cancel order');
+      throw new Error('Failed to cancel order ' + error);
     }
   }
 
@@ -94,7 +94,7 @@ export class OrderService {
       // await baseAPI.patch(`/orders/${orderId}/items/${itemId}/missing`);
       console.log('Toggling missing status for item:', itemId);
     } catch (error) {
-      throw new Error('Failed to toggle item missing status');
+      throw new Error('Failed to toggle item missing status ' + error);
     }
   }
 }

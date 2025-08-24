@@ -1,4 +1,5 @@
 import ForgotPassword from '@/components/auth/ForgotPassword/Forgot-Password';
+import Link from 'next/link';
 
 export default function RequestOtpPage() {
   return (
@@ -11,9 +12,9 @@ export default function RequestOtpPage() {
       <div className='mt-6 text-center'>
         <p className='text-gray-600'>
           Remember your password?{' '}
-          <a href='/login' className='text-blue-600 hover:text-blue-800 font-medium'>
+          <Link href='/login' className='text-blue-600 hover:text-blue-800 font-medium'>
             Login here
-          </a>
+          </Link>
         </p>
       </div>
     </div>

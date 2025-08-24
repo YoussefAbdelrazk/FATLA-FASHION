@@ -13,16 +13,16 @@ interface SingleOrderPageProps {
 
 async function getOrderData(id: string) {
   try {
-    return await OrderService.getOrderById(id);
+    return await OrderService.getOrderById();
   } catch (error) {
-    return null;
+    return error as Error;
   }
 }
 
 export default async function SingleOrderPage({ params }: SingleOrderPageProps) {
   const order = await getOrderData(params.id);
 
-  if (!order) {
+  if (order instanceof Error) {
     notFound();
   }
 
