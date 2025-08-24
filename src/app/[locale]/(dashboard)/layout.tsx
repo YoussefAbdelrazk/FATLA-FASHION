@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   params,
 }: DashboardLayoutProps) {
   const { locale } = await params;
-  
+
   // Import messages directly
   let messages;
   try {
