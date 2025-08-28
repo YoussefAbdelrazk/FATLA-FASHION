@@ -29,6 +29,7 @@ import {
 import { clientsData } from '@/data/clients';
 import { Client } from '@/types/client';
 import { format } from 'date-fns';
+import { ar } from 'date-fns/locale';
 import {
   ChevronDown,
   ChevronUp,
@@ -137,15 +138,15 @@ export default function ClientsTable() {
       <Card>
         <CardHeader>
           <div className='flex items-center justify-between'>
-            <CardTitle>Clients</CardTitle>
-            <div className='flex items-center space-x-2'>
+            <CardTitle>العملاء</CardTitle>
+            <div className='flex items-center space-x-2 space-x-reverse'>
               <div className='relative flex-1 max-w-sm'>
-                <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
+                <Search className='absolute right-2 top-2.5 h-4 w-4 text-muted-foreground' />
                 <Input
-                  placeholder='Search clients...'
+                  placeholder='البحث في العملاء...'
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  className='pl-8'
+                  className='pr-8'
                 />
               </div>
             </div>
@@ -162,7 +163,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('id')}
                       className='h-auto p-0 font-semibold'
                     >
-                      ID
+                      المعرف
                       <SortIcon field='id' />
                     </Button>
                   </TableHead>
@@ -172,7 +173,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('firstName')}
                       className='h-auto p-0 font-semibold'
                     >
-                      First Name
+                      الاسم الأول
                       <SortIcon field='firstName' />
                     </Button>
                   </TableHead>
@@ -182,7 +183,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('lastName')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Last Name
+                      اسم العائلة
                       <SortIcon field='lastName' />
                     </Button>
                   </TableHead>
@@ -192,7 +193,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('mobile')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Mobile
+                      رقم الهاتف
                       <SortIcon field='mobile' />
                     </Button>
                   </TableHead>
@@ -202,7 +203,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('status')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Status
+                      الحالة
                       <SortIcon field='status' />
                     </Button>
                   </TableHead>
@@ -212,7 +213,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('lastActivity')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Last Activity
+                      آخر نشاط
                       <SortIcon field='lastActivity' />
                     </Button>
                   </TableHead>
@@ -222,7 +223,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('ordersCount')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Orders Count
+                      عدد الطلبات
                       <SortIcon field='ordersCount' />
                     </Button>
                   </TableHead>
@@ -232,7 +233,7 @@ export default function ClientsTable() {
                       onClick={() => handleSort('ordersTotal')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Orders Total EGP
+                      إجمالي الطلبات (جنيه)
                       <SortIcon field='ordersTotal' />
                     </Button>
                   </TableHead>
@@ -242,11 +243,11 @@ export default function ClientsTable() {
                       onClick={() => handleSort('createdAt')}
                       className='h-auto p-0 font-semibold'
                     >
-                      Created At
+                      تاريخ الإنشاء
                       <SortIcon field='createdAt' />
                     </Button>
                   </TableHead>
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -261,31 +262,33 @@ export default function ClientsTable() {
                         variant={client.status === 'Active' ? 'default' : 'destructive'}
                         className='capitalize'
                       >
-                        {client.status}
+                        {client.status === 'Active' ? 'نشط' : 'محظور'}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {format(new Date(client.lastActivity), 'MMM dd, yyyy HH:mm')}
+                      {format(new Date(client.lastActivity), 'MMM dd, yyyy HH:mm', { locale: ar })}
                     </TableCell>
                     <TableCell>{client.ordersCount}</TableCell>
-                    <TableCell>EGP {client.ordersTotal.toLocaleString()}</TableCell>
-                    <TableCell>{format(new Date(client.createdAt), 'MMM dd, yyyy')}</TableCell>
+                    <TableCell>{client.ordersTotal.toLocaleString()} جنيه</TableCell>
+                    <TableCell>
+                      {format(new Date(client.createdAt), 'MMM dd, yyyy', { locale: ar })}
+                    </TableCell>
                     <TableCell className='text-right'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'>Open menu</span>
+                            <span className='sr-only'>فتح القائمة</span>
                             <MoreHorizontal className='h-4 w-4' />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
                           <DropdownMenuItem onClick={() => handleShowDetails(client)}>
-                            <Eye className='mr-2 h-4 w-4' />
-                            View Details
+                            <Eye className='ml-2 h-4 w-4' />
+                            عرض التفاصيل
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(client)}>
-                            <Edit className='mr-2 h-4 w-4' />
-                            Edit
+                            <Edit className='ml-2 h-4 w-4' />
+                            تعديل
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -296,13 +299,13 @@ export default function ClientsTable() {
                           >
                             {client.status === 'Active' ? (
                               <>
-                                <ShieldOff className='mr-2 h-4 w-4' />
-                                Block
+                                <ShieldOff className='ml-2 h-4 w-4' />
+                                حظر
                               </>
                             ) : (
                               <>
-                                <Shield className='mr-2 h-4 w-4' />
-                                Unblock
+                                <Shield className='ml-2 h-4 w-4' />
+                                إلغاء الحظر
                               </>
                             )}
                           </DropdownMenuItem>
@@ -311,8 +314,8 @@ export default function ClientsTable() {
                             onClick={() => handleDelete(client)}
                             className='text-destructive'
                           >
-                            <Trash2 className='mr-2 h-4 w-4' />
-                            Delete
+                            <Trash2 className='ml-2 h-4 w-4' />
+                            حذف
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -329,12 +332,12 @@ export default function ClientsTable() {
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
         <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle>Client Details</DialogTitle>
-            <DialogDescription>Detailed information about the selected client</DialogDescription>
+            <DialogTitle>تفاصيل العميل</DialogTitle>
+            <DialogDescription>معلومات مفصلة عن العميل المحدد</DialogDescription>
           </DialogHeader>
           {selectedClient && (
             <div className='space-y-4'>
-              <div className='flex items-center space-x-3'>
+              <div className='flex items-center space-x-3 space-x-reverse'>
                 <div className='flex h-12 w-12 items-center justify-center rounded-full bg-primary/10'>
                   <User className='h-6 w-6 text-primary' />
                 </div>
@@ -342,42 +345,46 @@ export default function ClientsTable() {
                   <h3 className='text-lg font-semibold'>
                     {selectedClient.firstName} {selectedClient.lastName}
                   </h3>
-                  <p className='text-sm text-muted-foreground'>Client ID: {selectedClient.id}</p>
+                  <p className='text-sm text-muted-foreground'>معرف العميل: {selectedClient.id}</p>
                 </div>
               </div>
 
               <div className='grid grid-cols-2 gap-4'>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>Mobile</label>
+                  <label className='text-sm font-medium text-muted-foreground'>رقم الهاتف</label>
                   <p className='text-sm'>{selectedClient.mobile}</p>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>Status</label>
+                  <label className='text-sm font-medium text-muted-foreground'>الحالة</label>
                   <Badge
                     variant={selectedClient.status === 'Active' ? 'default' : 'destructive'}
                     className='capitalize'
                   >
-                    {selectedClient.status}
+                    {selectedClient.status === 'Active' ? 'نشط' : 'محظور'}
                   </Badge>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>Orders Count</label>
+                  <label className='text-sm font-medium text-muted-foreground'>عدد الطلبات</label>
                   <p className='text-sm'>{selectedClient.ordersCount}</p>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>Total Spent</label>
-                  <p className='text-sm'>EGP {selectedClient.ordersTotal.toLocaleString()}</p>
+                  <label className='text-sm font-medium text-muted-foreground'>
+                    إجمالي الإنفاق
+                  </label>
+                  <p className='text-sm'>{selectedClient.ordersTotal.toLocaleString()} جنيه</p>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>Last Activity</label>
+                  <label className='text-sm font-medium text-muted-foreground'>آخر نشاط</label>
                   <p className='text-sm'>
-                    {format(new Date(selectedClient.lastActivity), 'MMM dd, yyyy HH:mm')}
+                    {format(new Date(selectedClient.lastActivity), 'MMM dd, yyyy HH:mm', {
+                      locale: ar,
+                    })}
                   </p>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>Created At</label>
+                  <label className='text-sm font-medium text-muted-foreground'>تاريخ الإنشاء</label>
                   <p className='text-sm'>
-                    {format(new Date(selectedClient.createdAt), 'MMM dd, yyyy')}
+                    {format(new Date(selectedClient.createdAt), 'MMM dd, yyyy', { locale: ar })}
                   </p>
                 </div>
               </div>
@@ -390,17 +397,17 @@ export default function ClientsTable() {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Client</DialogTitle>
+            <DialogTitle>حذف العميل</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this client? This action cannot be undone.
+              هل أنت متأكد من حذف هذا العميل؟ لا يمكن التراجع عن هذا الإجراء.
             </DialogDescription>
           </DialogHeader>
-          <div className='flex justify-end space-x-2'>
+          <div className='flex justify-end space-x-2 space-x-reverse'>
             <Button variant='outline' onClick={() => setIsDeleteModalOpen(false)}>
-              Cancel
+              إلغاء
             </Button>
             <Button variant='destructive' onClick={confirmDelete}>
-              Delete
+              حذف
             </Button>
           </div>
         </DialogContent>
@@ -411,23 +418,23 @@ export default function ClientsTable() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {clientToBlock?.status === 'Active' ? 'Block Client' : 'Unblock Client'}
+              {clientToBlock?.status === 'Active' ? 'حظر العميل' : 'إلغاء حظر العميل'}
             </DialogTitle>
             <DialogDescription>
               {clientToBlock?.status === 'Active'
-                ? 'Are you sure you want to block this client? They will not be able to access their account.'
-                : 'Are you sure you want to unblock this client? They will be able to access their account again.'}
+                ? 'هل أنت متأكد من حظر هذا العميل؟ لن يتمكن من الوصول إلى حسابه.'
+                : 'هل أنت متأكد من إلغاء حظر هذا العميل؟ سيتمكن من الوصول إلى حسابه مرة أخرى.'}
             </DialogDescription>
           </DialogHeader>
-          <div className='flex justify-end space-x-2'>
+          <div className='flex justify-end space-x-2 space-x-reverse'>
             <Button variant='outline' onClick={() => setIsBlockModalOpen(false)}>
-              Cancel
+              إلغاء
             </Button>
             <Button
               variant={clientToBlock?.status === 'Active' ? 'destructive' : 'default'}
               onClick={confirmBlock}
             >
-              {clientToBlock?.status === 'Active' ? 'Block' : 'Unblock'}
+              {clientToBlock?.status === 'Active' ? 'حظر' : 'إلغاء الحظر'}
             </Button>
           </div>
         </DialogContent>

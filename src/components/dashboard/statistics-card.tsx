@@ -37,7 +37,7 @@ export default function StatisticsCard({
             <ArrowDownRight className='w-4 h-4 text-red-500 mr-1' />
           )}
           <span className='text-sm text-gray-600 dark:text-gray-400'>
-            +{change}% {subtitle || 'from yesterday'}
+            +{change}% {subtitle || 'من أمس'}
           </span>
         </div>
       </CardContent>

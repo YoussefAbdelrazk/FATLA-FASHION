@@ -201,10 +201,10 @@ export default function SlidersTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Sliders Management</span>
+            <span>إدارة السلايدرز</span>
             <Button onClick={() => router.push('/sliders/add')} className='flex items-center gap-2'>
               <Plus className='w-4 h-4' />
-              Add New Slider
+              إضافة سلايدر جديد
             </Button>
           </CardTitle>
         </CardHeader>
@@ -214,7 +214,7 @@ export default function SlidersTable() {
             <div className='relative'>
               <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
-                placeholder='Search sliders by name, brand, product, or category...'
+                placeholder='البحث في السلايدرز بالاسم، العلامة التجارية، المنتج، أو الفئة...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className='pl-10'
@@ -232,7 +232,7 @@ export default function SlidersTable() {
                     onClick={() => handleSort('id')}
                   >
                     <div className='flex items-center'>
-                      ID
+                      المعرف
                       <SortIcon field='id' />
                     </div>
                   </TableHead>
@@ -241,7 +241,7 @@ export default function SlidersTable() {
                     onClick={() => handleSort('nameAr')}
                   >
                     <div className='flex items-center'>
-                      Arabic Name
+                      الاسم العربي
                       <SortIcon field='nameAr' />
                     </div>
                   </TableHead>
@@ -250,18 +250,18 @@ export default function SlidersTable() {
                     onClick={() => handleSort('nameEn')}
                   >
                     <div className='flex items-center'>
-                      English Name
+                      الاسم الإنجليزي
                       <SortIcon field='nameEn' />
                     </div>
                   </TableHead>
-                  <TableHead>Arabic Image</TableHead>
-                  <TableHead>English Image</TableHead>
+                  <TableHead>الصورة العربية</TableHead>
+                  <TableHead>الصورة الإنجليزية</TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('brandName')}
                   >
                     <div className='flex items-center'>
-                      Brand Name
+                      اسم العلامة التجارية
                       <SortIcon field='brandName' />
                     </div>
                   </TableHead>
@@ -270,7 +270,7 @@ export default function SlidersTable() {
                     onClick={() => handleSort('variantName')}
                   >
                     <div className='flex items-center'>
-                      Product Name
+                      اسم المنتج
                       <SortIcon field='variantName' />
                     </div>
                   </TableHead>
@@ -279,12 +279,12 @@ export default function SlidersTable() {
                     onClick={() => handleSort('categoryName')}
                   >
                     <div className='flex items-center'>
-                      Category Name
+                      اسم الفئة
                       <SortIcon field='categoryName' />
                     </div>
                   </TableHead>
-                  <TableHead>Visibility</TableHead>
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead>الظهور</TableHead>
+                  <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -306,7 +306,7 @@ export default function SlidersTable() {
                         {slider.imageUrlAr ? (
                           <Image
                             src={slider.imageUrlAr}
-                            alt='Arabic Image'
+                            alt='الصورة العربية'
                             width={64}
                             height={48}
                             className='object-cover w-full h-full'
@@ -321,7 +321,7 @@ export default function SlidersTable() {
                         {slider.imageUrlEn ? (
                           <Image
                             src={slider.imageUrlEn}
-                            alt='English Image'
+                            alt='الصورة الإنجليزية'
                             width={64}
                             height={48}
                             className='object-cover w-full h-full'
@@ -333,17 +333,17 @@ export default function SlidersTable() {
                     </TableCell>
                     <TableCell>
                       <Badge variant='secondary' className='font-normal'>
-                        {slider.brandName || 'N/A'}
+                        {slider.brandName || 'غير محدد'}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant='outline' className='font-normal'>
-                        {slider.variantName || 'N/A'}
+                        {slider.variantName || 'غير محدد'}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant='outline' className='font-normal'>
-                        {slider.categoryName || 'N/A'}
+                        {slider.categoryName || 'غير محدد'}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -354,7 +354,7 @@ export default function SlidersTable() {
                           className='data-[state=checked]:bg-green-600'
                         />
                         <span className='text-sm text-muted-foreground'>
-                          {slider.isVisible ? 'Visible' : 'Hidden'}
+                          {slider.isVisible ? 'ظاهر' : 'مخفي'}
                         </span>
                       </div>
                     </TableCell>
@@ -362,18 +362,18 @@ export default function SlidersTable() {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'>Open menu</span>
+                            <span className='sr-only'>فتح القائمة</span>
                             <MoreHorizontal className='h-4 w-4' />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
                           <DropdownMenuItem onClick={() => handleShowDetails(slider)}>
                             <Eye className='mr-2 h-4 w-4' />
-                            Show Details
+                            عرض التفاصيل
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(slider)}>
                             <Edit className='mr-2 h-4 w-4' />
-                            Edit Slider
+                            تعديل السلايدر
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -381,7 +381,7 @@ export default function SlidersTable() {
                             className='text-red-600 focus:text-red-600'
                           >
                             <Trash2 className='mr-2 h-4 w-4' />
-                            Delete Slider
+                            حذف السلايدر
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -396,16 +396,14 @@ export default function SlidersTable() {
           {filteredAndSortedSliders.length === 0 && (
             <div className='text-center py-12'>
               <ImageIcon className='w-12 h-12 text-muted-foreground mx-auto mb-4' />
-              <h3 className='text-lg font-semibold mb-2'>No sliders found</h3>
+              <h3 className='text-lg font-semibold mb-2'>لم يتم العثور على سلايدرز</h3>
               <p className='text-muted-foreground mb-4'>
-                {searchTerm
-                  ? 'Try adjusting your search terms.'
-                  : 'Get started by creating your first slider.'}
+                {searchTerm ? 'حاول تعديل مصطلحات البحث.' : 'ابدأ بإنشاء أول سلايدر لك.'}
               </p>
               {!searchTerm && (
                 <Button onClick={() => router.push('/sliders/add')}>
                   <Plus className='w-4 h-4 mr-2' />
-                  Create First Slider
+                  إنشاء أول سلايدر
                 </Button>
               )}
             </div>
@@ -417,30 +415,30 @@ export default function SlidersTable() {
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
         <DialogContent className='max-w-4xl'>
           <DialogHeader>
-            <DialogTitle>Slider Details</DialogTitle>
-            <DialogDescription>Detailed information about the selected slider</DialogDescription>
+            <DialogTitle>تفاصيل السلايدر</DialogTitle>
+            <DialogDescription>معلومات تفصيلية حول السلايدر المحدد</DialogDescription>
           </DialogHeader>
           {selectedSlider && (
             <div className='space-y-6'>
               <div className='grid grid-cols-2 gap-6'>
                 <div className='space-y-4'>
-                  <h3 className='text-lg font-semibold'>Arabic Content</h3>
+                  <h3 className='text-lg font-semibold'>المحتوى العربي</h3>
                   <div className='space-y-3'>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        Arabic Name
+                        الاسم العربي
                       </label>
                       <p className='text-lg font-semibold'>{selectedSlider.nameAr}</p>
                     </div>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        Arabic Image
+                        الصورة العربية
                       </label>
                       <div className='w-full h-32 bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-2'>
                         {selectedSlider.imageUrlAr ? (
                           <Image
                             src={selectedSlider.imageUrlAr}
-                            alt='Arabic Image'
+                            alt='الصورة العربية'
                             width={400}
                             height={128}
                             className='object-cover w-full h-full'
@@ -454,23 +452,23 @@ export default function SlidersTable() {
                 </div>
 
                 <div className='space-y-4'>
-                  <h3 className='text-lg font-semibold'>English Content</h3>
+                  <h3 className='text-lg font-semibold'>المحتوى الإنجليزي</h3>
                   <div className='space-y-3'>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        English Name
+                        الاسم الإنجليزي
                       </label>
                       <p className='text-lg font-semibold'>{selectedSlider.nameEn}</p>
                     </div>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        English Image
+                        الصورة الإنجليزية
                       </label>
                       <div className='w-full h-32 bg-muted rounded-lg flex items-center justify-center overflow-hidden mt-2'>
                         {selectedSlider.imageUrlEn ? (
                           <Image
                             src={selectedSlider.imageUrlEn}
-                            alt='English Image'
+                            alt='الصورة الإنجليزية'
                             width={400}
                             height={128}
                             className='object-cover w-full h-full'
@@ -481,43 +479,49 @@ export default function SlidersTable() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <div className='grid grid-cols-3 gap-4'>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Brand Name</label>
-                  <p className='text-lg font-semibold'>{selectedSlider.brandName || 'N/A'}</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Product Name</label>
-                  <p className='text-lg font-semibold'>{selectedSlider.variantName || 'N/A'}</p>
-                </div>
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Category Name</label>
-                  <p className='text-lg font-semibold'>{selectedSlider.categoryName || 'N/A'}</p>
                 </div>
               </div>
 
               <div className='grid grid-cols-3 gap-4'>
                 <div className='space-y-2'>
                   <label className='text-sm font-medium text-muted-foreground'>
-                    Visibility Status
+                    اسم العلامة التجارية
                   </label>
-                  <Badge variant={selectedSlider.isVisible ? 'default' : 'destructive'}>
-                    {selectedSlider.isVisible ? 'Visible' : 'Hidden'}
-                  </Badge>
+                  <p className='text-lg font-semibold'>{selectedSlider.brandName || 'غير محدد'}</p>
                 </div>
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Created At</label>
-                  <p className='text-lg'>
-                    {selectedSlider.createdAt
-                      ? format(new Date(selectedSlider.createdAt), 'MMM dd, yyyy HH:mm')
-                      : 'N/A'}
+                  <label className='text-sm font-medium text-muted-foreground'>اسم المنتج</label>
+                  <p className='text-lg font-semibold'>
+                    {selectedSlider.variantName || 'غير محدد'}
                   </p>
                 </div>
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Created By</label>
+                  <label className='text-sm font-medium text-muted-foreground'>اسم الفئة</label>
+                  <p className='text-lg font-semibold'>
+                    {selectedSlider.categoryName || 'غير محدد'}
+                  </p>
+                </div>
+              </div>
+
+              <div className='grid grid-cols-3 gap-4'>
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-muted-foreground'>حالة الظهور</label>
+                  <Badge variant={selectedSlider.isVisible ? 'default' : 'destructive'}>
+                    {selectedSlider.isVisible ? 'ظاهر' : 'مخفي'}
+                  </Badge>
+                </div>
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-muted-foreground'>تاريخ الإنشاء</label>
+                  <p className='text-lg'>
+                    {selectedSlider.createdAt
+                      ? format(new Date(selectedSlider.createdAt), 'MMM dd, yyyy HH:mm')
+                      : 'غير محدد'}
+                  </p>
+                </div>
+                <div className='space-y-2'>
+                  <label className='text-sm font-medium text-muted-foreground'>
+                    تم الإنشاء بواسطة
+                  </label>
                   <p className='text-lg'>{selectedSlider.createdBy}</p>
                 </div>
               </div>
@@ -525,11 +529,11 @@ export default function SlidersTable() {
               <div className='flex space-x-2 pt-4'>
                 <Button onClick={() => handleEdit(selectedSlider)} className='flex-1'>
                   <Edit className='w-4 h-4 mr-2' />
-                  Edit Slider
+                  تعديل السلايدر
                 </Button>
                 <Button variant='outline' className='flex-1'>
                   <Eye className='w-4 h-4 mr-2' />
-                  Preview Slider
+                  معاينة السلايدر
                 </Button>
               </div>
             </div>
@@ -541,18 +545,18 @@ export default function SlidersTable() {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>تأكيد الحذف</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete slider <strong>{sliderToDelete?.nameEn}</strong>? This
-              action cannot be undone.
+              هل أنت متأكد من أنك تريد حذف السلايدر <strong>{sliderToDelete?.nameEn}</strong>؟ هذا
+              الإجراء لا يمكن التراجع عنه.
             </DialogDescription>
           </DialogHeader>
           <div className='flex justify-end space-x-2'>
             <Button variant='outline' onClick={() => setIsDeleteModalOpen(false)}>
-              Cancel
+              إلغاء
             </Button>
             <Button variant='destructive' onClick={confirmDelete}>
-              Delete
+              حذف
             </Button>
           </div>
         </DialogContent>

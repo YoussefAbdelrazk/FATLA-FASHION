@@ -11,10 +11,10 @@ export default function TopClientsCard() {
         <div className='flex items-center justify-between'>
           <div>
             <CardTitle className='text-xl font-bold text-black dark:text-white'>
-              Top 10 Clients
+              أفضل 10 عملاء
             </CardTitle>
             <CardDescription className='text-gray-600 dark:text-gray-400'>
-              Most valuable customers of all time
+              أكثر العملاء قيمة على الإطلاق
             </CardDescription>
           </div>
           <Button variant='outline' size='sm' className='border-gray-200 dark:border-gray-700'>
@@ -35,11 +35,11 @@ export default function TopClientsCard() {
                 </div>
                 <div>
                   <p className='font-semibold text-black dark:text-white'>{client.name}</p>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>{client.orders} orders</p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>{client.orders} طلب</p>
                 </div>
               </div>
               <div className='text-right'>
-                <p className='font-bold text-black dark:text-white'>{client.total} EGP</p>
+                <p className='font-bold text-black dark:text-white'>{client.total} جنيه</p>
                 <Badge
                   variant='secondary'
                   className={

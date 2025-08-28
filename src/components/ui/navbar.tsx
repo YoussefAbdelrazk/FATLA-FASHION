@@ -63,20 +63,8 @@ export function Navbar() {
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {/* Orders - Hidden on very small screens */}
-            <Button
-              variant='ghost'
-              size='sm'
-              className='relative hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 group p-2 hidden sm:flex'
-            >
-              <ShoppingBag className='w-4 h-4 lg:w-5 lg:h-5 text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors duration-200' />
-              <Badge className='absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 rounded-full p-0 flex items-center justify-center text-xs bg-black dark:bg-white text-white dark:text-black border-2 border-white dark:border-black shadow-sm'>
-                12
-              </Badge>
-            </Button>
-
             {/* Notifications */}
-            <Button
+            {/* <Button
               variant='ghost'
               size='sm'
               className='relative hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 group p-2'
@@ -87,7 +75,7 @@ export function Navbar() {
                   {notificationCount}
                 </Badge>
               )}
-            </Button>
+            </Button> */}
 
             {/* Admin Avatar Dropdown */}
             <DropdownMenu>

@@ -11,10 +11,10 @@ export default function RestockProductsCard() {
         <div className='flex items-center justify-between'>
           <div>
             <CardTitle className='text-xl font-bold text-black dark:text-white'>
-              Products Need Restock
+              المنتجات تحتاج إعادة تخزين
             </CardTitle>
             <CardDescription className='text-gray-600 dark:text-gray-400'>
-              Items with low inventory that need attention
+              العناصر ذات المخزون المنخفض التي تحتاج انتباه
             </CardDescription>
           </div>
           <Button
@@ -23,7 +23,7 @@ export default function RestockProductsCard() {
             className='text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20'
           >
             <AlertTriangle className='w-4 h-4 mr-2' />
-            View All
+            عرض الكل
           </Button>
         </div>
       </CardHeader>
@@ -49,7 +49,7 @@ export default function RestockProductsCard() {
                 <div>
                   <p className='font-semibold text-black dark:text-white'>{product.name}</p>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    Current: {product.current} | Min: {product.min}
+                    الحالي: {product.current} | الحد الأدنى: {product.min}
                   </p>
                 </div>
               </div>
@@ -64,10 +64,14 @@ export default function RestockProductsCard() {
                       : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
                   }
                 >
-                  {product.urgency}
+                  {product.urgency === 'Critical'
+                    ? 'حرج'
+                    : product.urgency === 'High'
+                    ? 'عالي'
+                    : 'متوسط'}
                 </Badge>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                  {product.current < product.min ? `${product.min - product.current} needed` : 'OK'}
+                  {product.current < product.min ? `يحتاج ${product.min - product.current}` : 'جيد'}
                 </p>
               </div>
             </div>

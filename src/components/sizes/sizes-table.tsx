@@ -122,10 +122,10 @@ export default function SizesTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Sizes Management</span>
+            <span>إدارة المقاسات</span>
             <Button onClick={() => router.push('/sizes/add')} className='flex items-center gap-2'>
               <Plus className='w-4 h-4' />
-              Add New Size
+              إضافة مقاس جديد
             </Button>
           </CardTitle>
         </CardHeader>
@@ -135,7 +135,7 @@ export default function SizesTable() {
             <div className='relative'>
               <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
-                placeholder='Search sizes by name...'
+                placeholder='البحث في المقاسات بالاسم...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className='pl-10'
@@ -153,7 +153,7 @@ export default function SizesTable() {
                     onClick={() => handleSort('id')}
                   >
                     <div className='flex items-center'>
-                      ID
+                      المعرف
                       <SortIcon field='id' />
                     </div>
                   </TableHead>
@@ -162,7 +162,7 @@ export default function SizesTable() {
                     onClick={() => handleSort('arName')}
                   >
                     <div className='flex items-center'>
-                      Arabic Name
+                      الاسم العربي
                       <SortIcon field='arName' />
                     </div>
                   </TableHead>
@@ -171,7 +171,7 @@ export default function SizesTable() {
                     onClick={() => handleSort('enName')}
                   >
                     <div className='flex items-center'>
-                      English Name
+                      الاسم الإنجليزي
                       <SortIcon field='enName' />
                     </div>
                   </TableHead>
@@ -180,11 +180,11 @@ export default function SizesTable() {
                     onClick={() => handleSort('productsCount')}
                   >
                     <div className='flex items-center'>
-                      Products Count
+                      عدد المنتجات
                       <SortIcon field='productsCount' />
                     </div>
                   </TableHead>
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -203,25 +203,25 @@ export default function SizesTable() {
                     </TableCell>
                     <TableCell>
                       <Badge variant='secondary' className='font-normal'>
-                        {size.productsCount} products
+                        {size.productsCount} منتج
                       </Badge>
                     </TableCell>
                     <TableCell className='text-right'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'>Open menu</span>
+                            <span className='sr-only'>فتح القائمة</span>
                             <MoreHorizontal className='h-4 w-4' />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
                           <DropdownMenuItem onClick={() => handleShowDetails(size)}>
                             <Eye className='mr-2 h-4 w-4' />
-                            Show Details
+                            عرض التفاصيل
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(size)}>
                             <Edit className='mr-2 h-4 w-4' />
-                            Edit Size
+                            تعديل المقاس
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -229,7 +229,7 @@ export default function SizesTable() {
                             className='text-red-600 focus:text-red-600'
                           >
                             <Trash2 className='mr-2 h-4 w-4' />
-                            Delete Size
+                            حذف المقاس
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -246,16 +246,14 @@ export default function SizesTable() {
               <div className='w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4'>
                 <span className='text-2xl'>📏</span>
               </div>
-              <h3 className='text-lg font-semibold mb-2'>No sizes found</h3>
+              <h3 className='text-lg font-semibold mb-2'>لم يتم العثور على مقاسات</h3>
               <p className='text-muted-foreground mb-4'>
-                {searchTerm
-                  ? 'Try adjusting your search terms.'
-                  : 'Get started by creating your first size.'}
+                {searchTerm ? 'حاول تعديل مصطلحات البحث.' : 'ابدأ بإنشاء أول مقاس لك.'}
               </p>
               {!searchTerm && (
                 <Button onClick={() => router.push('/sizes/add')}>
                   <Plus className='w-4 h-4 mr-2' />
-                  Create First Size
+                  إنشاء أول مقاس
                 </Button>
               )}
             </div>
@@ -267,18 +265,18 @@ export default function SizesTable() {
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
         <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle>Size Details</DialogTitle>
-            <DialogDescription>Detailed information about the selected size</DialogDescription>
+            <DialogTitle>تفاصيل المقاس</DialogTitle>
+            <DialogDescription>معلومات تفصيلية حول المقاس المحدد</DialogDescription>
           </DialogHeader>
           {selectedSize && (
             <div className='space-y-6'>
               <div className='grid grid-cols-2 gap-6'>
                 <div className='space-y-4'>
-                  <h3 className='text-lg font-semibold'>Arabic Content</h3>
+                  <h3 className='text-lg font-semibold'>المحتوى العربي</h3>
                   <div className='space-y-3'>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        Arabic Name
+                        الاسم العربي
                       </label>
                       <p className='text-lg font-semibold'>{selectedSize.arName}</p>
                     </div>
@@ -286,11 +284,11 @@ export default function SizesTable() {
                 </div>
 
                 <div className='space-y-4'>
-                  <h3 className='text-lg font-semibold'>English Content</h3>
+                  <h3 className='text-lg font-semibold'>المحتوى الإنجليزي</h3>
                   <div className='space-y-3'>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        English Name
+                        الاسم الإنجليزي
                       </label>
                       <p className='text-lg font-semibold'>{selectedSize.enName}</p>
                     </div>
@@ -300,15 +298,13 @@ export default function SizesTable() {
 
               <div className='grid grid-cols-2 gap-4'>
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>
-                    Products Count
-                  </label>
+                  <label className='text-sm font-medium text-muted-foreground'>عدد المنتجات</label>
                   <Badge variant='secondary' className='text-lg'>
-                    {selectedSize.productsCount} products
+                    {selectedSize.productsCount} منتج
                   </Badge>
                 </div>
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Created At</label>
+                  <label className='text-sm font-medium text-muted-foreground'>تاريخ الإنشاء</label>
                   <p className='text-lg'>
                     {format(new Date(selectedSize.createdAt), 'MMM dd, yyyy HH:mm')}
                   </p>
@@ -318,11 +314,11 @@ export default function SizesTable() {
               <div className='flex space-x-2 pt-4'>
                 <Button onClick={() => handleEdit(selectedSize)} className='flex-1'>
                   <Edit className='w-4 h-4 mr-2' />
-                  Edit Size
+                  تعديل المقاس
                 </Button>
                 <Button variant='outline' className='flex-1'>
                   <Eye className='w-4 h-4 mr-2' />
-                  View Products
+                  عرض المنتجات
                 </Button>
               </div>
             </div>
@@ -334,18 +330,18 @@ export default function SizesTable() {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>تأكيد الحذف</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete size <strong>{sizeToDelete?.enName}</strong>? This
-              action cannot be undone.
+              هل أنت متأكد من أنك تريد حذف المقاس <strong>{sizeToDelete?.enName}</strong>؟ هذا
+              الإجراء لا يمكن التراجع عنه.
             </DialogDescription>
           </DialogHeader>
           <div className='flex justify-end space-x-2'>
             <Button variant='outline' onClick={() => setIsDeleteModalOpen(false)}>
-              Cancel
+              إلغاء
             </Button>
             <Button variant='destructive' onClick={confirmDelete}>
-              Delete
+              حذف
             </Button>
           </div>
         </DialogContent>

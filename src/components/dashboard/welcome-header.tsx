@@ -9,9 +9,9 @@ export default function WelcomeHeader() {
       <div className='relative z-10'>
         <div className='flex items-center justify-between'>
           <div>
-            <h1 className='text-4xl font-bold mb-2'>Welcome back, Admin! 👋</h1>
+            <h1 className='text-4xl font-bold mb-2'>مرحباً بك، المدير! 👋</h1>
             <p className='text-gray-300 dark:text-gray-700 text-lg'>
-              Here&apos;s what&apos;s happening with your fashion empire today.
+              إليك ما يحدث في إمبراطورية الأزياء الخاصة بك اليوم.
             </p>
           </div>
           <div className='hidden md:flex items-center space-x-4'>
@@ -20,14 +20,14 @@ export default function WelcomeHeader() {
               className='bg-white/10 dark:bg-black/10 text-white dark:text-black border-white/20 dark:border-black/20'
             >
               <Activity className='w-4 h-4 mr-2' />
-              Live Dashboard
+              لوحة التحكم المباشرة
             </Badge>
             <Button
               variant='outline'
               className='border-white/30 dark:border-black/30 text-black dark:text-white'
             >
               <Eye className='w-4 h-4 mr-2' />
-              View Reports
+              عرض التقارير
             </Button>
           </div>
         </div>

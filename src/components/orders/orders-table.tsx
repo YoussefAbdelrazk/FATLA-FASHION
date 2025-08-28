@@ -33,7 +33,6 @@ import {
   Eye,
   MoreHorizontal,
   Pencil,
-  Plus,
   Search,
   Trash2,
 } from 'lucide-react';
@@ -225,15 +224,15 @@ const formatDate = (dateString: string) => {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays === 1) {
-    return 'Yesterday';
+    return 'الأمس';
   } else if (diffDays === 0) {
-    return 'Today';
+    return 'اليوم';
   } else if (diffDays <= 7) {
-    return `${diffDays} days ago`;
+    return `${diffDays} أيام سابقاً`;
   } else {
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('ar-SA', {
       year: 'numeric',
-      month: 'short',
+      month: 'numeric',
       day: 'numeric',
     });
   }
@@ -241,19 +240,19 @@ const formatDate = (dateString: string) => {
 
 const formatDateTime = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString('ar-SA', {
     year: 'numeric',
-    month: 'short',
+    month: 'numeric',
     day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: 'numeric',
+    minute: 'numeric',
   });
 };
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('ar-SA', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'EGP',
   }).format(amount);
 };
 
@@ -331,7 +330,7 @@ export default function OrdersTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Orders Management</span>
+            <span>إدارة الطلبات</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -340,14 +339,14 @@ export default function OrdersTable() {
             <div className='relative flex-1'>
               <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
-                placeholder='Search orders by order number, client name, mobile, or driver...'
+                placeholder='البحث في الطلبات برقم الطلب، اسم العميل، الهاتف، أو السائق...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className='pl-10'
               />
             </div>
             <div className='flex items-center gap-2'>
-              <span className='text-sm text-muted-foreground'>Show:</span>
+              <span className='text-sm text-muted-foreground'>عرض:</span>
               <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
                 <SelectTrigger className='w-20'>
                   <SelectValue />
@@ -371,40 +370,39 @@ export default function OrdersTable() {
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('orderNo')}
                   >
-                    Order No {sortField === 'orderNo' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    رقم الطلب {sortField === 'orderNo' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('clientName')}
                   >
-                    Client Name{' '}
-                    {sortField === 'clientName' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    اسم العميل {sortField === 'clientName' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
-                  <TableHead>Client Mobile</TableHead>
+                  <TableHead>هاتف العميل</TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('orderDate')}
                   >
-                    Order Date {sortField === 'orderDate' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    تاريخ الطلب {sortField === 'orderDate' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
-                  <TableHead>Sub Total</TableHead>
-                  <TableHead>Delivery Total</TableHead>
-                  <TableHead>Discount Total</TableHead>
-                  <TableHead>Final Total</TableHead>
-                  <TableHead>Payment Method</TableHead>
-                  <TableHead>Order Status</TableHead>
-                  <TableHead>Driver Name</TableHead>
-                  <TableHead>Driver Mobile</TableHead>
-                  <TableHead>COD Collected</TableHead>
-                  <TableHead>Delivery Date-time</TableHead>
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead>المجموع الفرعي</TableHead>
+                  <TableHead>إجمالي التوصيل</TableHead>
+                  <TableHead>إجمالي الخصم</TableHead>
+                  <TableHead>المجموع النهائي</TableHead>
+                  <TableHead>طريقة الدفع</TableHead>
+                  <TableHead>حالة الطلب</TableHead>
+                  <TableHead>اسم السائق</TableHead>
+                  <TableHead>هاتف السائق</TableHead>
+                  <TableHead>المبلغ المحصل</TableHead>
+                  <TableHead>تاريخ ووقت التوصيل</TableHead>
+                  <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedOrders.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={14} className='text-center py-8'>
-                      <p className='text-muted-foreground'>No orders found</p>
+                      <p className='text-muted-foreground'>لم يتم العثور على طلبات</p>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -416,7 +414,7 @@ export default function OrdersTable() {
                         <a
                           href={`tel:${order.clientMobile}`}
                           className='font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer'
-                          title={`Call ${order.clientMobile}`}
+                          title={`اتصال بـ ${order.clientMobile}`}
                         >
                           {order.clientMobile}
                         </a>
@@ -435,12 +433,30 @@ export default function OrdersTable() {
                       </TableCell>
                       <TableCell>
                         <Badge variant={getPaymentMethodBadgeVariant(order.paymentMethod)}>
-                          {order.paymentMethod}
+                          {order.paymentMethod === 'Cash'
+                            ? 'نقداً'
+                            : order.paymentMethod === 'Card'
+                            ? 'بطاقة'
+                            : order.paymentMethod === 'Online'
+                            ? 'إلكتروني'
+                            : order.paymentMethod === 'COD'
+                            ? 'الدفع عند الاستلام'
+                            : order.paymentMethod}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant={getStatusBadgeVariant(order.orderStatus)}>
-                          {order.orderStatus}
+                          {order.orderStatus === 'Pending'
+                            ? 'قيد الانتظار'
+                            : order.orderStatus === 'Processing'
+                            ? 'قيد المعالجة'
+                            : order.orderStatus === 'Shipped'
+                            ? 'تم الشحن'
+                            : order.orderStatus === 'Delivered'
+                            ? 'تم التوصيل'
+                            : order.orderStatus === 'Cancelled'
+                            ? 'ملغي'
+                            : order.orderStatus}
                         </Badge>
                       </TableCell>
                       <TableCell>{order.driverName}</TableCell>
@@ -448,7 +464,7 @@ export default function OrdersTable() {
                         <a
                           href={`tel:${order.driverMobile}`}
                           className='font-medium text-blue-600 hover:text-blue-800 hover:underline cursor-pointer'
-                          title={`Call ${order.driverMobile}`}
+                          title={`اتصال بـ ${order.driverMobile}`}
                         >
                           {order.driverMobile}
                         </a>
@@ -459,25 +475,25 @@ export default function OrdersTable() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant='ghost' className='h-8 w-8 p-0'>
-                              <span className='sr-only'>Open menu</span>
+                              <span className='sr-only'>فتح القائمة</span>
                               <MoreHorizontal className='h-4 w-4' />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align='end'>
                             <DropdownMenuItem onClick={() => router.push(`/orders/${order.id}`)}>
                               <Eye className='mr-2 h-4 w-4' />
-                              View Details
+                              عرض التفاصيل
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleEdit(order)}>
                               <Pencil className='mr-2 h-4 w-4' />
-                              Edit
+                              تعديل
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => handleDelete(order)}
                               className='text-destructive'
                             >
                               <Trash2 className='mr-2 h-4 w-4' />
-                              Delete
+                              حذف
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -493,8 +509,8 @@ export default function OrdersTable() {
           {totalPages > 1 && (
             <div className='flex items-center justify-between mt-4'>
               <div className='text-sm text-muted-foreground'>
-                Showing {startIndex + 1} to {Math.min(endIndex, sortedOrders.length)} of{' '}
-                {sortedOrders.length} results
+                عرض {startIndex + 1} إلى {Math.min(endIndex, sortedOrders.length)} من{' '}
+                {sortedOrders.length} نتيجة
               </div>
               <div className='flex items-center space-x-2'>
                 <Button
@@ -504,7 +520,7 @@ export default function OrdersTable() {
                   disabled={currentPage <= 1}
                 >
                   <ChevronLeft className='h-4 w-4' />
-                  Previous
+                  السابق
                 </Button>
                 <div className='flex items-center space-x-1'>
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -538,7 +554,7 @@ export default function OrdersTable() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                 >
-                  Next
+                  التالي
                   <ChevronRight className='h-4 w-4' />
                 </Button>
               </div>
@@ -551,17 +567,17 @@ export default function OrdersTable() {
       {orderToDelete && (
         <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
           <div className='bg-white rounded-lg p-6 max-w-md w-full mx-4'>
-            <h3 className='text-lg font-semibold mb-2'>Confirm Deletion</h3>
+            <h3 className='text-lg font-semibold mb-2'>تأكيد الحذف</h3>
             <p className='text-gray-600 mb-4'>
-              Are you sure you want to delete order <strong>{orderToDelete.orderNo}</strong>? This
-              action cannot be undone.
+              هل أنت متأكد من أنك تريد حذف الطلب <strong>{orderToDelete.orderNo}</strong>؟ هذا
+              الإجراء لا يمكن التراجع عنه.
             </p>
             <div className='flex justify-end space-x-2'>
               <Button variant='outline' onClick={() => setOrderToDelete(null)}>
-                Cancel
+                إلغاء
               </Button>
               <Button variant='destructive' onClick={confirmDelete}>
-                Delete
+                حذف
               </Button>
             </div>
           </div>

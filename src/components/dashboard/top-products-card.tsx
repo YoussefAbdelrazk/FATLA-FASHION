@@ -11,10 +11,10 @@ export default function TopProductsCard() {
         <div className='flex items-center justify-between'>
           <div>
             <CardTitle className='text-xl font-bold text-black dark:text-white'>
-              Top 10 Products
+              أفضل 10 منتجات
             </CardTitle>
             <CardDescription className='text-gray-600 dark:text-gray-400'>
-              Best selling products of all time
+              أفضل المنتجات مبيعاً على الإطلاق
             </CardDescription>
           </div>
           <Button variant='outline' size='sm' className='border-gray-200 dark:border-gray-700'>
@@ -35,11 +35,11 @@ export default function TopProductsCard() {
                 </div>
                 <div>
                   <p className='font-semibold text-black dark:text-white'>{product.name}</p>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>{product.sales} sold</p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>{product.sales} مباع</p>
                 </div>
               </div>
               <div className='text-right'>
-                <p className='font-bold text-black dark:text-white'>{product.revenue} EGP</p>
+                <p className='font-bold text-black dark:text-white'>{product.revenue} جنيه</p>
                 <Badge
                   variant='secondary'
                   className='bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'

@@ -157,7 +157,7 @@ export default function BrandsTable() {
         <CardContent className='flex items-center justify-center py-8'>
           <div className='text-center'>
             <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>Loading brands...</p>
+            <p className='text-muted-foreground'>جاري تحميل العلامات التجارية...</p>
           </div>
         </CardContent>
       </Card>
@@ -169,9 +169,9 @@ export default function BrandsTable() {
       <Card>
         <CardContent className='flex items-center justify-center py-8'>
           <div className='text-center'>
-            <p className='text-destructive mb-2'>Error loading brands</p>
+            <p className='text-destructive mb-2'>خطأ في تحميل العلامات التجارية</p>
             <p className='text-muted-foreground text-sm'>
-              {error instanceof Error ? error.message : 'Failed to load brands'}
+              {error instanceof Error ? error.message : 'فشل في تحميل العلامات التجارية'}
             </p>
           </div>
         </CardContent>
@@ -184,10 +184,10 @@ export default function BrandsTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Brands Management</span>
+            <span>إدارة العلامات التجارية</span>
             <Button onClick={() => router.push('/brands/add')} className='flex items-center gap-2'>
               <Plus className='w-4 h-4' />
-              Add New Brand
+              إضافة علامة تجارية جديدة
             </Button>
           </CardTitle>
         </CardHeader>
@@ -197,14 +197,14 @@ export default function BrandsTable() {
             <div className='relative flex-1'>
               <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
-                placeholder='Search brands...'
+                placeholder='البحث في العلامات التجارية...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className='pl-10'
               />
             </div>
             <div className='flex items-center gap-2'>
-              <span className='text-sm text-muted-foreground'>Show:</span>
+              <span className='text-sm text-muted-foreground'>عرض:</span>
               <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
                 <SelectTrigger className='w-20'>
                   <SelectValue />
@@ -227,31 +227,31 @@ export default function BrandsTable() {
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('id')}
                   >
-                    ID {sortField === 'id' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    المعرف {sortField === 'id' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('name')}
                   >
-                    Name {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    الاسم {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
-                  <TableHead>Image</TableHead>
+                  <TableHead>الصورة</TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('visibilityOrder')}
                   >
-                    Visibility Order{' '}
+                    ترتيب الظهور{' '}
                     {sortField === 'visibilityOrder' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
 
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredBrands.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className='text-center py-8'>
-                      <p className='text-muted-foreground'>No brands found</p>
+                      <p className='text-muted-foreground'>لم يتم العثور على علامات تجارية</p>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -267,7 +267,7 @@ export default function BrandsTable() {
                           <div className='w-12 h-12 bg-muted rounded-lg overflow-hidden flex items-center justify-center'>
                             {hasFailed ? (
                               <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
-                                <span className='text-xs text-gray-500'>No Image</span>
+                                <span className='text-xs text-gray-500'>لا توجد صورة</span>
                               </div>
                             ) : (
                               <Image
@@ -287,25 +287,25 @@ export default function BrandsTable() {
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant='ghost' className='h-8 w-8 p-0'>
-                                <span className='sr-only'>Open menu</span>
+                                <span className='sr-only'>فتح القائمة</span>
                                 <MoreHorizontal className='h-4 w-4' />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align='end'>
                               <DropdownMenuItem onClick={() => handleViewDetails(brand)}>
                                 <Eye className='mr-2 h-4 w-4' />
-                                View Details
+                                عرض التفاصيل
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleEdit(brand)}>
                                 <Pencil className='mr-2 h-4 w-4' />
-                                Edit
+                                تعديل
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleDelete(brand)}
                                 className='text-destructive'
                               >
                                 <Trash2 className='mr-2 h-4 w-4' />
-                                Delete
+                                حذف
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -322,9 +322,9 @@ export default function BrandsTable() {
           {pagination && totalPages > 1 && (
             <div className='flex items-center justify-between mt-4'>
               <div className='text-sm text-muted-foreground'>
-                Showing {(pagination.currentPage - 1) * pagination.pageSize + 1} to{' '}
-                {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalCount)} of{' '}
-                {pagination.totalCount} results
+                عرض {(pagination.currentPage - 1) * pagination.pageSize + 1} إلى{' '}
+                {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalCount)} من{' '}
+                {pagination.totalCount} نتيجة
               </div>
               <div className='flex items-center space-x-2'>
                 <Button
@@ -334,7 +334,7 @@ export default function BrandsTable() {
                   disabled={currentPage <= 1}
                 >
                   <ChevronLeft className='h-4 w-4' />
-                  Previous
+                  السابق
                 </Button>
                 <div className='flex items-center space-x-1'>
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -368,7 +368,7 @@ export default function BrandsTable() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                 >
-                  Next
+                  التالي
                   <ChevronRight className='h-4 w-4' />
                 </Button>
               </div>
@@ -381,8 +381,8 @@ export default function BrandsTable() {
       <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
         <DialogContent className='max-w-md'>
           <DialogHeader>
-            <DialogTitle>Brand Details</DialogTitle>
-            <DialogDescription>View detailed information about this brand</DialogDescription>
+            <DialogTitle>تفاصيل العلامة التجارية</DialogTitle>
+            <DialogDescription>عرض المعلومات التفصيلية حول هذه العلامة التجارية</DialogDescription>
           </DialogHeader>
           {selectedBrand && (
             <div className='space-y-4'>
@@ -390,7 +390,7 @@ export default function BrandsTable() {
                 <div className='w-16 h-16 bg-muted rounded-lg overflow-hidden'>
                   {failedImages.has(getValidImageUrl(selectedBrand.imageUrl)) ? (
                     <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
-                      <span className='text-xs text-gray-500'>No Image</span>
+                      <span className='text-xs text-gray-500'>لا توجد صورة</span>
                     </div>
                   ) : (
                     <Image
@@ -405,12 +405,12 @@ export default function BrandsTable() {
                 </div>
                 <div>
                   <h3 className='font-semibold text-lg'>{selectedBrand.name}</h3>
-                  <p className='text-sm text-muted-foreground'>ID: {selectedBrand.id}</p>
+                  <p className='text-sm text-muted-foreground'>المعرف: {selectedBrand.id}</p>
                 </div>
               </div>
               <div className='grid grid-cols-2 gap-4 text-sm'>
                 <div>
-                  <span className='font-medium'>Visibility Order:</span>
+                  <span className='font-medium'>ترتيب الظهور:</span>
                   <p>{selectedBrand.visibilityOrder}</p>
                 </div>
               </div>
@@ -423,22 +423,22 @@ export default function BrandsTable() {
       <Dialog open={!!brandToDelete} onOpenChange={() => setBrandToDelete(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>تأكيد الحذف</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete brand <strong>{brandToDelete?.name}</strong>? This
-              action cannot be undone.
+              هل أنت متأكد من أنك تريد حذف العلامة التجارية <strong>{brandToDelete?.name}</strong>؟
+              هذا الإجراء لا يمكن التراجع عنه.
             </DialogDescription>
           </DialogHeader>
           <div className='flex justify-end space-x-2'>
             <Button variant='outline' onClick={() => setBrandToDelete(null)}>
-              Cancel
+              إلغاء
             </Button>
             <Button
               variant='destructive'
               onClick={confirmDelete}
               disabled={deleteBrandMutation.isPending}
             >
-              {deleteBrandMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteBrandMutation.isPending ? 'جاري الحذف...' : 'حذف'}
             </Button>
           </div>
         </DialogContent>

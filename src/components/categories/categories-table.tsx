@@ -3,7 +3,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { categories } from '@/data/categories';
 import {
   Dialog,
   DialogContent,
@@ -27,10 +26,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { categories } from '@/data/categories';
 // import { useDeleteCategory } from '@/hooks/useCategories';
 // import { useGetAllCategories } from '@/hooks/useCategories';
 import { Category } from '@/types/category';
 import { format } from 'date-fns';
+import { ar } from 'date-fns/locale';
 import {
   ChevronDown,
   ChevronUp,
@@ -124,9 +125,9 @@ export default function CategoriesTable() {
   const SortIcon = ({ field }: { field: keyof Category }) => {
     if (sortField !== field) return null;
     return sortDirection === 'asc' ? (
-      <ChevronUp className='w-4 h-4 ml-1' />
+      <ChevronUp className='w-4 h-4 mr-1' />
     ) : (
-      <ChevronDown className='w-4 h-4 ml-1' />
+      <ChevronDown className='w-4 h-4 mr-1' />
     );
   };
 
@@ -136,7 +137,7 @@ export default function CategoriesTable() {
         <CardContent className='flex items-center justify-center py-12'>
           <div className='text-center'>
             <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>Loading categories...</p>
+            <p className='text-muted-foreground'>جاري تحميل الفئات...</p>
           </div>
         </CardContent>
       </Card>
@@ -148,8 +149,8 @@ export default function CategoriesTable() {
       <Card>
         <CardContent className='flex items-center justify-center py-12'>
           <div className='text-center'>
-            <p className='text-destructive mb-2'>Error loading categories</p>
-            <p className='text-muted-foreground text-sm'>{'An error occurred'}</p>
+            <p className='text-destructive mb-2'>خطأ في تحميل الفئات</p>
+            <p className='text-muted-foreground text-sm'>حدث خطأ ما</p>
           </div>
         </CardContent>
       </Card>
@@ -161,13 +162,13 @@ export default function CategoriesTable() {
       <Card>
         <CardHeader>
           <CardTitle className='flex items-center justify-between'>
-            <span>Categories Management</span>
+            <span>إدارة الفئات</span>
             <Button
               onClick={() => router.push('/categories/add')}
               className='flex items-center gap-2'
             >
               <Plus className='w-4 h-4' />
-              Add New Category
+              إضافة فئة جديدة
             </Button>
           </CardTitle>
         </CardHeader>
@@ -175,12 +176,12 @@ export default function CategoriesTable() {
           {/* Search Bar */}
           <div className='mb-6'>
             <div className='relative'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+              <Search className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
-                placeholder='Search categories by name...'
+                placeholder='البحث في الفئات بالاسم...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className='pl-10'
+                className='pr-10'
               />
             </div>
           </div>
@@ -195,7 +196,7 @@ export default function CategoriesTable() {
                     onClick={() => handleSort('id')}
                   >
                     <div className='flex items-center'>
-                      ID
+                      المعرف
                       <SortIcon field='id' />
                     </div>
                   </TableHead>
@@ -204,7 +205,7 @@ export default function CategoriesTable() {
                     onClick={() => handleSort('arName')}
                   >
                     <div className='flex items-center'>
-                      Arabic Name
+                      الاسم العربي
                       <SortIcon field='arName' />
                     </div>
                   </TableHead>
@@ -213,21 +214,21 @@ export default function CategoriesTable() {
                     onClick={() => handleSort('enName')}
                   >
                     <div className='flex items-center'>
-                      English Name
+                      الاسم الإنجليزي
                       <SortIcon field='enName' />
                     </div>
                   </TableHead>
-                  <TableHead>Image</TableHead>
+                  <TableHead>الصورة</TableHead>
                   <TableHead
                     className='cursor-pointer hover:bg-muted/50'
                     onClick={() => handleSort('productsCount')}
                   >
                     <div className='flex items-center'>
-                      Products Count
+                      عدد المنتجات
                       <SortIcon field='productsCount' />
                     </div>
                   </TableHead>
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -249,7 +250,7 @@ export default function CategoriesTable() {
                         {category.image ? (
                           <Image
                             src={category.image}
-                            alt='Category Image'
+                            alt='صورة الفئة'
                             width={64}
                             height={48}
                             className='object-cover w-full h-full'
@@ -261,33 +262,33 @@ export default function CategoriesTable() {
                     </TableCell>
                     <TableCell>
                       <Badge variant='secondary' className='font-normal'>
-                        {category.productsCount} products
+                        {category.productsCount} منتج
                       </Badge>
                     </TableCell>
                     <TableCell className='text-right'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'>Open menu</span>
+                            <span className='sr-only'>فتح القائمة</span>
                             <MoreHorizontal className='h-4 w-4' />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
                           <DropdownMenuItem onClick={() => handleShowDetails(category)}>
-                            <Eye className='mr-2 h-4 w-4' />
-                            Show Details
+                            <Eye className='ml-2 h-4 w-4' />
+                            عرض التفاصيل
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(category)}>
-                            <Edit className='mr-2 h-4 w-4' />
-                            Edit Category
+                            <Edit className='ml-2 h-4 w-4' />
+                            تعديل الفئة
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             onClick={() => handleDelete(category)}
                             className='text-red-600 focus:text-red-600'
                           >
-                            <Trash2 className='mr-2 h-4 w-4' />
-                            Delete Category
+                            <Trash2 className='ml-2 h-4 w-4' />
+                            حذف الفئة
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -302,16 +303,14 @@ export default function CategoriesTable() {
           {filteredAndSortedCategories.length === 0 && (
             <div className='text-center py-12'>
               <ImageIcon className='w-12 h-12 text-muted-foreground mx-auto mb-4' />
-              <h3 className='text-lg font-semibold mb-2'>No categories found</h3>
+              <h3 className='text-lg font-semibold mb-2'>لم يتم العثور على فئات</h3>
               <p className='text-muted-foreground mb-4'>
-                {searchTerm
-                  ? 'Try adjusting your search terms.'
-                  : 'Get started by creating your first category.'}
+                {searchTerm ? 'حاول تعديل مصطلحات البحث.' : 'ابدأ بإنشاء أول فئة لك.'}
               </p>
               {!searchTerm && (
                 <Button onClick={() => router.push('/categories/add')}>
-                  <Plus className='w-4 h-4 mr-2' />
-                  Create First Category
+                  <Plus className='w-4 h-4 ml-2' />
+                  إنشاء أول فئة
                 </Button>
               )}
             </div>
@@ -323,18 +322,18 @@ export default function CategoriesTable() {
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
         <DialogContent className='max-w-4xl'>
           <DialogHeader>
-            <DialogTitle>Category Details</DialogTitle>
-            <DialogDescription>Detailed information about the selected category</DialogDescription>
+            <DialogTitle>تفاصيل الفئة</DialogTitle>
+            <DialogDescription>معلومات مفصلة عن الفئة المحددة</DialogDescription>
           </DialogHeader>
           {selectedCategory && (
             <div className='space-y-6'>
               <div className='grid grid-cols-2 gap-6'>
                 <div className='space-y-4'>
-                  <h3 className='text-lg font-semibold'>Arabic Content</h3>
+                  <h3 className='text-lg font-semibold'>المحتوى العربي</h3>
                   <div className='space-y-3'>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        Arabic Name
+                        الاسم العربي
                       </label>
                       <p className='text-lg font-semibold'>{selectedCategory.arName}</p>
                     </div>
@@ -342,11 +341,11 @@ export default function CategoriesTable() {
                 </div>
 
                 <div className='space-y-4'>
-                  <h3 className='text-lg font-semibold'>English Content</h3>
+                  <h3 className='text-lg font-semibold'>المحتوى الإنجليزي</h3>
                   <div className='space-y-3'>
                     <div>
                       <label className='text-sm font-medium text-muted-foreground'>
-                        English Name
+                        الاسم الإنجليزي
                       </label>
                       <p className='text-lg font-semibold'>{selectedCategory.enName}</p>
                     </div>
@@ -355,12 +354,12 @@ export default function CategoriesTable() {
               </div>
 
               <div className='space-y-4'>
-                <h3 className='text-lg font-semibold'>Category Image</h3>
+                <h3 className='text-lg font-semibold'>صورة الفئة</h3>
                 <div className='w-full h-48 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
                   {selectedCategory.image ? (
                     <Image
                       src={selectedCategory.image}
-                      alt='Category Image'
+                      alt='صورة الفئة'
                       width={400}
                       height={192}
                       className='object-cover w-full h-full'
@@ -373,29 +372,29 @@ export default function CategoriesTable() {
 
               <div className='grid grid-cols-2 gap-4'>
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>
-                    Products Count
-                  </label>
+                  <label className='text-sm font-medium text-muted-foreground'>عدد المنتجات</label>
                   <Badge variant='secondary' className='text-lg'>
-                    {selectedCategory.productsCount} products
+                    {selectedCategory.productsCount} منتج
                   </Badge>
                 </div>
                 <div className='space-y-2'>
-                  <label className='text-sm font-medium text-muted-foreground'>Created At</label>
+                  <label className='text-sm font-medium text-muted-foreground'>تاريخ الإنشاء</label>
                   <p className='text-lg'>
-                    {format(new Date(selectedCategory.createdAt), 'MMM dd, yyyy HH:mm')}
+                    {format(new Date(selectedCategory.createdAt), 'MMM dd, yyyy HH:mm', {
+                      locale: ar,
+                    })}
                   </p>
                 </div>
               </div>
 
-              <div className='flex space-x-2 pt-4'>
+              <div className='flex space-x-2 space-x-reverse pt-4'>
                 <Button onClick={() => handleEdit(selectedCategory)} className='flex-1'>
-                  <Edit className='w-4 h-4 mr-2' />
-                  Edit Category
+                  <Edit className='w-4 h-4 ml-2' />
+                  تعديل الفئة
                 </Button>
                 <Button variant='outline' className='flex-1'>
-                  <Eye className='w-4 h-4 mr-2' />
-                  View Products
+                  <Eye className='w-4 h-4 ml-2' />
+                  عرض المنتجات
                 </Button>
               </div>
             </div>
@@ -407,18 +406,18 @@ export default function CategoriesTable() {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>تأكيد الحذف</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete category <strong>{categoryToDelete?.enName}</strong>?
-              This action cannot be undone.
+              هل أنت متأكد من حذف الفئة <strong>{categoryToDelete?.arName}</strong>؟ لا يمكن التراجع
+              عن هذا الإجراء.
             </DialogDescription>
           </DialogHeader>
-          <div className='flex justify-end space-x-2'>
+          <div className='flex justify-end space-x-2 space-x-reverse'>
             <Button variant='outline' onClick={() => setIsDeleteModalOpen(false)}>
-              Cancel
+              إلغاء
             </Button>
             <Button variant='destructive' onClick={confirmDelete}>
-              Delete
+              حذف
             </Button>
           </div>
         </DialogContent>

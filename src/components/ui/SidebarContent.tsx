@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import {
+  Bell,
   Building,
   ChevronDown,
   Home,
@@ -16,7 +17,7 @@ import {
   ShoppingBag,
   Tag,
   Users,
-  X
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -49,36 +50,37 @@ interface NavigationGroup {
 type NavigationItemType = NavigationItem | NavigationGroup;
 
 const navigation: NavigationItemType[] = [
-  { name: 'Home', href: '/', icon: Home },
+  { name: 'الرئيسية', href: '/', icon: Home },
   {
-    name: 'Orders',
+    name: 'الطلبات',
     icon: ShoppingBag,
     children: [
-      { name: 'All Orders', href: '/orders', count: 10 },
-      { name: 'Pending', href: '/orders/pending', count: 1 },
-      { name: 'Done', href: '/orders/done', count: 4 },
-      { name: 'Cancelled', href: '/orders/cancelled', count: 300 },
+      { name: 'جميع الطلبات', href: '/orders', count: 10 },
+      { name: 'قيد الانتظار', href: '/orders/pending', count: 1 },
+      { name: 'مكتملة', href: '/orders/done', count: 4 },
+      { name: 'ملغية', href: '/orders/cancelled', count: 300 },
     ],
   },
-  { name: 'Clients', href: '/clients', icon: Users },
-  { name: 'Sliders', href: '/sliders', icon: Image },
+  { name: 'العملاء', href: '/clients', icon: Users },
+  { name: 'السلايدرز', href: '/sliders', icon: Image },
+  { name: 'الإشعارات', href: '/notifications', icon: Bell },
 
   {
-    name: 'Products',
+    name: 'المنتجات',
     icon: Package,
     children: [
-      { name: 'Products List', href: '/products' },
-      { name: 'Categories', href: '/categories' },
-      { name: 'Brands', href: '/brands' },
-      { name: 'Sizes', href: '/sizes' },
-      { name: 'Colors', href: '/colors' },
+      { name: 'قائمة المنتجات', href: '/products' },
+      { name: 'الفئات', href: '/categories' },
+      { name: 'العلامات التجارية', href: '/brands' },
+      { name: 'المقاسات', href: '/sizes' },
+      { name: 'الألوان', href: '/colors' },
     ],
   },
 ];
 
 export default function SidebarContent({ isExpanded, onLinkClick }: SidebarContentProps) {
   const pathname = usePathname();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['Orders', 'Products']);
+  const [expandedItems, setExpandedItems] = useState<string[]>(['الطلبات', 'المنتجات']);
 
   const toggleExpanded = (itemName: string) => {
     setExpandedItems(prev =>
@@ -227,13 +229,13 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                           onClick={onLinkClick}
                         >
                           <div className='flex items-center space-x-3'>
-                            {child.name === 'All Orders' && <ShoppingBag className='w-4 h-4' />}
-                            {child.name === 'Products List' && <List className='w-4 h-4' />}
-                            {child.name === 'New Product' && <Plus className='w-4 h-4' />}
-                            {child.name === 'Categories' && <Tag className='w-4 h-4' />}
-                            {child.name === 'Sizes' && <Tag className='w-4 h-4' />}
-                            {child.name === 'Colors' && <Palette className='w-4 h-4' />}
-                            {child.name === 'Brands' && <Building className='w-4 h-4' />}
+                            {child.name === 'جميع الطلبات' && <ShoppingBag className='w-4 h-4' />}
+                            {child.name === 'قائمة المنتجات' && <List className='w-4 h-4' />}
+                            {child.name === 'منتج جديد' && <Plus className='w-4 h-4' />}
+                            {child.name === 'الفئات' && <Tag className='w-4 h-4' />}
+                            {child.name === 'المقاسات' && <Tag className='w-4 h-4' />}
+                            {child.name === 'الألوان' && <Palette className='w-4 h-4' />}
+                            {child.name === 'العلامات التجارية' && <Building className='w-4 h-4' />}
                             <span className='font-medium'>{child.name}</span>
                           </div>
                           {child.count && (

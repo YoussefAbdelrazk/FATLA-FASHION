@@ -12,10 +12,10 @@ export default function DailyOrdersChart() {
         <div className='flex items-center justify-between'>
           <div>
             <CardTitle className='text-xl font-bold text-black dark:text-white'>
-              Daily Orders
+              الطلبات اليومية
             </CardTitle>
             <CardDescription className='text-gray-600 dark:text-gray-400'>
-              Orders count for the last 7 days
+              عدد الطلبات خلال آخر 7 أيام
             </CardDescription>
           </div>
           <Button variant='outline' size='sm' className='border-gray-200 dark:border-gray-700'>
@@ -26,8 +26,8 @@ export default function DailyOrdersChart() {
       <CardContent>
         <div className='space-y-4'>
           <div className='flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4'>
-            <span>Orders Count</span>
-            <span>Max: {dailyOrdersData.maxOrders} orders</span>
+            <span>عدد الطلبات</span>
+            <span>الحد الأقصى: {dailyOrdersData.maxOrders} طلب</span>
           </div>
           <div className='h-64'>
             <ResponsiveContainer width='100%' height='100%'>
@@ -55,7 +55,7 @@ export default function DailyOrdersChart() {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   }}
                   labelStyle={{ color: '#374151', fontWeight: '600' }}
-                  formatter={(value: number) => [`${value} orders`, 'Orders']}
+                  formatter={(value: number) => [`${value} طلب`, 'الطلبات']}
                 />
                 <Bar
                   dataKey='orders'

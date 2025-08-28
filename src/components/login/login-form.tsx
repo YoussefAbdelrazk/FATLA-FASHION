@@ -23,8 +23,8 @@ const formSchema = z.object({
   mobileNumber: z
     .string()
 
-    .nonempty('Phone number is required'),
-  password: z.string().nonempty('Password is required'),
+    .nonempty('رقم الهاتف مطلوب'),
+  password: z.string().nonempty('كلمة المرور مطلوبة'),
 });
 const defaultValues = {
   mobileNumber: '',
@@ -46,9 +46,9 @@ export function LoginForm() {
       await toast.promise(
         loginMutation({ mobileNumber: data.mobileNumber, password: data.password }),
         {
-          loading: 'Logging in...',
-          success: 'Logged in successfully',
-          error: 'incorrect mobile number or password',
+          loading: 'جاري تسجيل الدخول...',
+          success: 'تم تسجيل الدخول بنجاح',
+          error: 'رقم الهاتف أو كلمة المرور غير صحيحة',
         },
       );
     } catch (error) {
@@ -64,11 +64,11 @@ export function LoginForm() {
           name='mobileNumber'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mobile number</FormLabel>
+              <FormLabel>رقم الهاتف</FormLabel>
               <FormControl>
-                <Input placeholder='Mobile number' {...field} />
+                <Input placeholder='رقم الهاتف' {...field} />
               </FormControl>
-              <FormDescription>This is your phone number.</FormDescription>
+              <FormDescription>هذا هو رقم هاتفك.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -79,17 +79,17 @@ export function LoginForm() {
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>كلمة المرور</FormLabel>
               <FormControl>
-                <Input type='password' placeholder='Enter your Password' {...field} />
+                <Input type='password' placeholder='أدخل كلمة المرور' {...field} />
               </FormControl>
-              <FormDescription>This is your password</FormDescription>
+              <FormDescription>هذه هي كلمة المرور الخاصة بك</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type='submit' className='w-full' disabled={isPending}>
-          Sign In
+          تسجيل الدخول
         </Button>
 
         <div className='text-center'>
@@ -97,7 +97,7 @@ export function LoginForm() {
             href='/forgot-password'
             className='text-sm text-blue-600 hover:text-blue-800 font-medium'
           >
-            Forgot your password?
+            نسيت كلمة المرور؟
           </Link>
         </div>
       </form>
