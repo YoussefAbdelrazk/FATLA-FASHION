@@ -4,10 +4,8 @@ export default function ColorsPage() {
   return (
     <div className='space-y-6'>
       <div>
-        <h1 className='text-3xl font-bold tracking-tight'>Colors Management</h1>
-        <p className='text-muted-foreground'>
-          Manage product colors and their associated products.
-        </p>
+        <h1 className='text-3xl font-bold dark:text-black tracking-tight'>إدارة الألوان</h1>
+        <p className='text-muted-foreground'>إدارة ألوان المنتجات والمنتجات المرتبطة بها.</p>
       </div>
       <ColorsTable />
     </div>

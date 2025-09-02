@@ -120,15 +120,15 @@ export default function EditBrandForm() {
       <div className='space-y-6'>
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
-            <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Brands
+            <ArrowLeft className='w-4 h-4 ml-2' />
+            العودة للعلامات التجارية
           </Button>
         </div>
         <Card>
           <CardContent className='flex items-center justify-center py-8'>
             <div className='text-center'>
               <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-              <p className='text-muted-foreground'>Loading brand...</p>
+              <p className='text-muted-foreground'>جاري تحميل العلامة التجارية...</p>
             </div>
           </CardContent>
         </Card>
@@ -141,16 +141,16 @@ export default function EditBrandForm() {
       <div className='space-y-6'>
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
-            <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Brands
+            <ArrowLeft className='w-4 h-4 ml-2' />
+            العودة للعلامات التجارية
           </Button>
         </div>
         <Card>
           <CardContent className='flex items-center justify-center py-8'>
             <div className='text-center'>
-              <p className='text-destructive mb-2'>Error loading brand</p>
+              <p className='text-destructive mb-2'>خطأ في تحميل العلامة التجارية</p>
               <p className='text-muted-foreground text-sm'>
-                {error instanceof Error ? error.message : 'Brand not found'}
+                {error instanceof Error ? error.message : 'العلامة التجارية غير موجودة'}
               </p>
             </div>
           </CardContent>
@@ -172,7 +172,7 @@ export default function EditBrandForm() {
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
             <Upload className='w-5 h-5' />
-            Brand Information
+            معلومات العلامة التجارية
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -182,7 +182,7 @@ export default function EditBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Brand Details</h3>
+                  <h3 className='text-xl font-semibold'>تفاصيل العلامة التجارية</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -190,10 +190,10 @@ export default function EditBrandForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Brand Name Arabic <span className='text-red-500'>*</span>
+                        اسم العلامة التجارية العربية <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter brand name' {...field} />
+                        <Input placeholder='أدخل اسم العلامة التجارية' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -204,7 +204,7 @@ export default function EditBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>English Brand Details</h3>
+                  <h3 className='text-xl font-semibold'>تفاصيل العلامة التجارية الإنجليزية</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -212,10 +212,10 @@ export default function EditBrandForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Brand Name English <span className='text-red-500'>*</span>
+                        اسم العلامة التجارية الإنجليزية <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter brand name' {...field} />
+                        <Input placeholder='أدخل اسم العلامة التجارية' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -227,7 +227,7 @@ export default function EditBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Brand Image</h3>
+                  <h3 className='text-xl font-semibold'>صورة العلامة التجارية</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -235,7 +235,7 @@ export default function EditBrandForm() {
                   render={() => (
                     <FormItem>
                       <FormLabel>
-                        Brand Image <span className='text-red-500'>*</span>
+                        صورة العلامة التجارية <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <div className='space-y-3'>
@@ -267,8 +267,8 @@ export default function EditBrandForm() {
                           )}
                           <p className='text-sm text-muted-foreground'>
                             {selectedFile
-                              ? 'New image selected. Will update image.'
-                              : 'No new image selected. Will keep existing image.'}
+                              ? 'تم اختيار صورة جديدة. سيتم تحديث الصورة.'
+                              : 'لم يتم اختيار صورة جديدة. سيتم الاحتفاظ بالصورة الموجودة.'}
                           </p>
                         </div>
                       </FormControl>
@@ -282,7 +282,7 @@ export default function EditBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Visibility Settings</h3>
+                  <h3 className='text-xl font-semibold'>إعدادات الظهور</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -290,13 +290,13 @@ export default function EditBrandForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Visibility Order <span className='text-red-500'>*</span>
+                        ترتيب الظهور <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type='number'
                           min={1}
-                          placeholder='Enter visibility order (1, 2, 3...)'
+                          placeholder='أدخل ترتيب الظهور (1، 2، 3...)'
                           {...field}
                           onChange={e => field.onChange(parseInt(e.target.value) || 1)}
                         />
@@ -308,13 +308,13 @@ export default function EditBrandForm() {
               </div>
 
               {/* Save Button */}
-              <div className='flex justify-end space-x-4 pt-8 border-t'>
+              <div className='flex justify-end space-x-4 space-x-reverse pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
-                  Cancel
+                  إلغاء
                 </Button>
                 <Button type='submit' disabled={isUpdating}>
-                  <Save className='w-4 h-4 mr-2' />
-                  {isUpdating ? 'Updating...' : 'Update Brand'}
+                  <Save className='w-4 h-4 ml-2' />
+                  {isUpdating ? 'جاري التحديث...' : 'تحديث العلامة التجارية'}
                 </Button>
               </div>
             </form>

@@ -195,12 +195,12 @@ export default function BrandsTable() {
           {/* Search and Page Size Controls */}
           <div className='mb-4 flex flex-col sm:flex-row gap-4'>
             <div className='relative flex-1'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+              <Search className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
                 placeholder='البحث في العلامات التجارية...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className='pl-10'
+                className='pr-10 text-right'
               />
             </div>
             <div className='flex items-center gap-2'>
@@ -221,23 +221,25 @@ export default function BrandsTable() {
           {/* Table */}
           <div className='rounded-md border'>
             <Table>
-              <TableHeader>
+              <TableHeader className=' text-center'>
                 <TableRow>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('id')}
                   >
                     المعرف {sortField === 'id' && (sortDirection === 'asc' ? '↑' : '↓')}
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('name')}
                   >
-                    الاسم {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    <div className='flex items-center justify-end'>
+                      الاسم {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
+                    </div>
                   </TableHead>
-                  <TableHead>الصورة</TableHead>
+                  <TableHead className='text-center'>الصورة</TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('visibilityOrder')}
                   >
                     ترتيب الظهور{' '}
@@ -247,7 +249,7 @@ export default function BrandsTable() {
                   <TableHead className='text-right'>الإجراءات</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className=' '>
                 {filteredBrands.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className='text-center py-8'>
@@ -260,11 +262,13 @@ export default function BrandsTable() {
                     const hasFailed = failedImages.has(imageUrl);
 
                     return (
-                      <TableRow key={brand.id}>
-                        <TableCell className='font-medium'>{brand.id}</TableCell>
-                        <TableCell>{brand.name}</TableCell>
-                        <TableCell>
-                          <div className='w-12 h-12 bg-muted rounded-lg overflow-hidden flex items-center justify-center'>
+                      <TableRow key={brand.id} className=' text-center'>
+                        <TableCell className='font-medium text-center'>{brand.id}</TableCell>
+                        <TableCell className='text-right'>
+                          <div className='flex justify-end'>{brand.name}</div>
+                        </TableCell>
+                        <TableCell className='text-center'>
+                          <div className='w-12 h-12 bg-muted rounded-lg overflow-hidden flex items-center justify-center mx-auto'>
                             {hasFailed ? (
                               <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
                                 <span className='text-xs text-gray-500'>لا توجد صورة</span>
@@ -281,7 +285,7 @@ export default function BrandsTable() {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>{brand.visibilityOrder}</TableCell>
+                        <TableCell className='text-center'>{brand.visibilityOrder}</TableCell>
 
                         <TableCell className='text-right'>
                           <DropdownMenu>
@@ -293,18 +297,18 @@ export default function BrandsTable() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align='end'>
                               <DropdownMenuItem onClick={() => handleViewDetails(brand)}>
-                                <Eye className='mr-2 h-4 w-4' />
+                                <Eye className='ml-2 h-4 w-4' />
                                 عرض التفاصيل
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleEdit(brand)}>
-                                <Pencil className='mr-2 h-4 w-4' />
+                                <Pencil className='ml-2 h-4 w-4' />
                                 تعديل
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleDelete(brand)}
                                 className='text-destructive'
                               >
-                                <Trash2 className='mr-2 h-4 w-4' />
+                                <Trash2 className='ml-2 h-4 w-4' />
                                 حذف
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -333,8 +337,8 @@ export default function BrandsTable() {
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage <= 1}
                 >
-                  <ChevronLeft className='h-4 w-4' />
                   السابق
+                  <ChevronLeft className='h-4 w-4' />
                 </Button>
                 <div className='flex items-center space-x-1'>
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -368,8 +372,8 @@ export default function BrandsTable() {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage >= totalPages}
                 >
-                  التالي
                   <ChevronRight className='h-4 w-4' />
+                  التالي
                 </Button>
               </div>
             </div>

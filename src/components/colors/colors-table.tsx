@@ -139,7 +139,7 @@ export default function ColorsTable() {
                 placeholder='البحث في الألوان بالاسم...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className='pr-10'
+                className='pr-10 text-right'
               />
             </div>
           </div>
@@ -150,38 +150,38 @@ export default function ColorsTable() {
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('id')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                       المعرف
                       <SortIcon field='id' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('arName')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-end'>
                       الاسم العربي
                       <SortIcon field='arName' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('enName')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-end'>
                       الاسم الإنجليزي
                       <SortIcon field='enName' />
                     </div>
                   </TableHead>
-                  <TableHead>اللون</TableHead>
+                  <TableHead className='text-center'>اللون</TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('productsCount')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                       عدد المنتجات
                       <SortIcon field='productsCount' />
                     </div>
@@ -192,19 +192,19 @@ export default function ColorsTable() {
               <TableBody>
                 {filteredAndSortedColors.map(color => (
                   <TableRow key={color.id} className='hover:bg-muted/50'>
-                    <TableCell className='font-mono text-sm'>{color.id}</TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={color.arName}>
+                    <TableCell className='font-mono text-sm text-center'>{color.id}</TableCell>
+                    <TableCell className='text-right'>
+                      <div className='max-w-[150px] truncate flex justify-end' title={color.arName}>
                         {color.arName}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={color.enName}>
+                    <TableCell className='text-right'>
+                      <div className='max-w-[150px] truncate flex justify-end' title={color.enName}>
                         {color.enName}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className='flex items-center gap-3'>
+                    <TableCell className='text-center'>
+                      <div className='flex items-center justify-center gap-3'>
                         <div
                           className='w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm'
                           style={{ backgroundColor: color.color }}
@@ -215,7 +215,7 @@ export default function ColorsTable() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className='text-center'>
                       <Badge variant='secondary' className='font-normal'>
                         {color.productsCount} منتج
                       </Badge>

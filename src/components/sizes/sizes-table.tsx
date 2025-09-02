@@ -133,12 +133,12 @@ export default function SizesTable() {
           {/* Search Bar */}
           <div className='mb-6'>
             <div className='relative'>
-              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+              <Search className='absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground' />
               <Input
                 placeholder='البحث في المقاسات بالاسم...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className='pl-10'
+                className='pr-10 text-right'
               />
             </div>
           </div>
@@ -149,37 +149,37 @@ export default function SizesTable() {
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('id')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                       المعرف
                       <SortIcon field='id' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('arName')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-end'>
                       الاسم العربي
                       <SortIcon field='arName' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('enName')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-end'>
                       الاسم الإنجليزي
                       <SortIcon field='enName' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('productsCount')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                       عدد المنتجات
                       <SortIcon field='productsCount' />
                     </div>
@@ -190,18 +190,18 @@ export default function SizesTable() {
               <TableBody>
                 {filteredAndSortedSizes.map(size => (
                   <TableRow key={size.id} className='hover:bg-muted/50'>
-                    <TableCell className='font-mono text-sm'>{size.id}</TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={size.arName}>
+                    <TableCell className='font-mono text-sm text-center'>{size.id}</TableCell>
+                    <TableCell className='text-right'>
+                      <div className='max-w-[150px] truncate flex justify-end' title={size.arName}>
                         {size.arName}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={size.enName}>
+                    <TableCell className='text-right'>
+                      <div className='max-w-[150px] truncate flex justify-end' title={size.enName}>
                         {size.enName}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className='text-center'>
                       <Badge variant='secondary' className='font-normal'>
                         {size.productsCount} منتج
                       </Badge>
@@ -216,11 +216,11 @@ export default function SizesTable() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align='end'>
                           <DropdownMenuItem onClick={() => handleShowDetails(size)}>
-                            <Eye className='mr-2 h-4 w-4' />
+                            <Eye className='ml-2 h-4 w-4' />
                             عرض التفاصيل
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(size)}>
-                            <Edit className='mr-2 h-4 w-4' />
+                            <Edit className='ml-2 h-4 w-4' />
                             تعديل المقاس
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
@@ -228,7 +228,7 @@ export default function SizesTable() {
                             onClick={() => handleDelete(size)}
                             className='text-red-600 focus:text-red-600'
                           >
-                            <Trash2 className='mr-2 h-4 w-4' />
+                            <Trash2 className='ml-2 h-4 w-4' />
                             حذف المقاس
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -252,7 +252,7 @@ export default function SizesTable() {
               </p>
               {!searchTerm && (
                 <Button onClick={() => router.push('/sizes/add')}>
-                  <Plus className='w-4 h-4 mr-2' />
+                  <Plus className='w-4 h-4 ml-2' />
                   إنشاء أول مقاس
                 </Button>
               )}
@@ -311,13 +311,13 @@ export default function SizesTable() {
                 </div>
               </div>
 
-              <div className='flex space-x-2 pt-4'>
+              <div className='flex space-x-2 space-x-reverse pt-4'>
                 <Button onClick={() => handleEdit(selectedSize)} className='flex-1'>
-                  <Edit className='w-4 h-4 mr-2' />
+                  <Edit className='w-4 h-4 ml-2' />
                   تعديل المقاس
                 </Button>
                 <Button variant='outline' className='flex-1'>
-                  <Eye className='w-4 h-4 mr-2' />
+                  <Eye className='w-4 h-4 ml-2' />
                   عرض المنتجات
                 </Button>
               </div>
@@ -336,7 +336,7 @@ export default function SizesTable() {
               الإجراء لا يمكن التراجع عنه.
             </DialogDescription>
           </DialogHeader>
-          <div className='flex justify-end space-x-2'>
+          <div className='flex justify-end space-x-2 space-x-reverse'>
             <Button variant='outline' onClick={() => setIsDeleteModalOpen(false)}>
               إلغاء
             </Button>

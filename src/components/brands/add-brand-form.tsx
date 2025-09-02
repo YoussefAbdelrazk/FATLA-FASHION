@@ -98,8 +98,8 @@ export default function AddBrandForm() {
       <div className='flex items-center justify-between'>
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
-            <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Brands
+            <ArrowLeft className='w-4 h-4 ml-2' />
+            العودة للعلامات التجارية
           </Button>
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function AddBrandForm() {
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
             <Upload className='w-5 h-5' />
-            Brand Information
+            معلومات العلامة التجارية
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -119,7 +119,7 @@ export default function AddBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Arabic Brand Details</h3>
+                  <h3 className='text-xl font-semibold'>تفاصيل العلامة التجارية العربية</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -127,7 +127,7 @@ export default function AddBrandForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Brand Name Arabic <span className='text-red-500'>*</span>
+                        اسم العلامة التجارية العربية <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <Input placeholder='أدخل اسم العلامة التجارية' {...field} />
@@ -142,7 +142,7 @@ export default function AddBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>English Brand Details</h3>
+                  <h3 className='text-xl font-semibold'>تفاصيل العلامة التجارية الإنجليزية</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -150,10 +150,10 @@ export default function AddBrandForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Brand Name English <span className='text-red-500'>*</span>
+                        اسم العلامة التجارية الإنجليزية <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter brand name' {...field} />
+                        <Input placeholder='أدخل اسم العلامة التجارية' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -165,7 +165,7 @@ export default function AddBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-purple-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Brand Image</h3>
+                  <h3 className='text-xl font-semibold'>صورة العلامة التجارية</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -173,7 +173,7 @@ export default function AddBrandForm() {
                   render={() => (
                     <FormItem>
                       <FormLabel>
-                        Brand Image <span className='text-red-500'>*</span>
+                        صورة العلامة التجارية <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <div className='space-y-3'>
@@ -215,7 +215,7 @@ export default function AddBrandForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-orange-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Visibility Settings</h3>
+                  <h3 className='text-xl font-semibold'>إعدادات الظهور</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -223,13 +223,13 @@ export default function AddBrandForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Visibility Order <span className='text-red-500'>*</span>
+                        ترتيب الظهور <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type='number'
                           min={1}
-                          placeholder='Enter visibility order (1, 2, 3...)'
+                          placeholder='أدخل ترتيب الظهور (1، 2، 3...)'
                           {...field}
                           onChange={e => field.onChange(parseInt(e.target.value) || 1)}
                         />
@@ -241,13 +241,13 @@ export default function AddBrandForm() {
               </div>
 
               {/* Save Button */}
-              <div className='flex justify-end space-x-4 pt-8 border-t'>
+              <div className='flex justify-end space-x-4 space-x-reverse pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
-                  Cancel
+                  إلغاء
                 </Button>
                 <Button type='submit' disabled={createBrandMutation.isPending}>
-                  <Save className='w-4 h-4 mr-2' />
-                  {createBrandMutation.isPending ? 'Creating...' : 'Create Brand'}
+                  <Save className='w-4 h-4 ml-2' />
+                  {createBrandMutation.isPending ? 'جاري الإنشاء...' : 'إنشاء علامة تجارية'}
                 </Button>
               </div>
             </form>

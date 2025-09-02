@@ -181,7 +181,7 @@ export default function CategoriesTable() {
                 placeholder='البحث في الفئات بالاسم...'
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className='pr-10'
+                className='pr-10 text-right'
               />
             </div>
           </div>
@@ -192,38 +192,38 @@ export default function CategoriesTable() {
               <TableHeader>
                 <TableRow>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('id')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                       المعرف
                       <SortIcon field='id' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('arName')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-end'>
                       الاسم العربي
                       <SortIcon field='arName' />
                     </div>
                   </TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-right'
                     onClick={() => handleSort('enName')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-end'>
                       الاسم الإنجليزي
                       <SortIcon field='enName' />
                     </div>
                   </TableHead>
-                  <TableHead>الصورة</TableHead>
+                  <TableHead className='text-center'>الصورة</TableHead>
                   <TableHead
-                    className='cursor-pointer hover:bg-muted/50'
+                    className='cursor-pointer hover:bg-muted/50 text-center'
                     onClick={() => handleSort('productsCount')}
                   >
-                    <div className='flex items-center'>
+                    <div className='flex items-center justify-center'>
                       عدد المنتجات
                       <SortIcon field='productsCount' />
                     </div>
@@ -234,19 +234,25 @@ export default function CategoriesTable() {
               <TableBody>
                 {filteredAndSortedCategories.map(category => (
                   <TableRow key={category.id} className='hover:bg-muted/50'>
-                    <TableCell className='font-mono text-sm'>{category.id}</TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={category.arName}>
+                    <TableCell className='font-mono text-sm text-center'>{category.id}</TableCell>
+                    <TableCell className='text-right'>
+                      <div
+                        className='max-w-[150px] truncate flex justify-end'
+                        title={category.arName}
+                      >
                         {category.arName}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={category.enName}>
+                    <TableCell className='text-right'>
+                      <div
+                        className='max-w-[150px] truncate flex justify-end'
+                        title={category.enName}
+                      >
                         {category.enName}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
+                    <TableCell className='text-center'>
+                      <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden mx-auto'>
                         {category.image ? (
                           <Image
                             src={category.image}
@@ -260,7 +266,7 @@ export default function CategoriesTable() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className='text-center'>
                       <Badge variant='secondary' className='font-normal'>
                         {category.productsCount} منتج
                       </Badge>

@@ -206,14 +206,14 @@ export default function EditSliderForm() {
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
             <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Sliders
+            العودة للسلايدرز
           </Button>
         </div>
         <Card>
           <CardContent className='flex items-center justify-center py-8'>
             <div className='text-center'>
               <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-              <p className='text-muted-foreground'>Loading slider...</p>
+              <p className='text-muted-foreground'>جاري تحميل السلايدر...</p>
             </div>
           </CardContent>
         </Card>
@@ -227,15 +227,15 @@ export default function EditSliderForm() {
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
             <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Sliders
+            العودة للسلايدرز
           </Button>
         </div>
         <Card>
           <CardContent className='flex items-center justify-center py-8'>
             <div className='text-center'>
-              <p className='text-destructive mb-2'>Error loading slider</p>
+              <p className='text-destructive mb-2'>خطأ في تحميل السلايدر</p>
               <p className='text-muted-foreground text-sm'>
-                {error instanceof Error ? error.message : 'Slider not found'}
+                {error instanceof Error ? error.message : 'السلايدر غير موجود'}
               </p>
             </div>
           </CardContent>
@@ -251,7 +251,7 @@ export default function EditSliderForm() {
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
             <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Sliders
+            العودة للسلايدرز
           </Button>
         </div>
         <div className='flex items-center space-x-3'>
@@ -265,7 +265,7 @@ export default function EditSliderForm() {
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
             <Upload className='w-5 h-5' />
-            Slider Information
+            معلومات السلايدر
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -275,7 +275,7 @@ export default function EditSliderForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Arabic Content</h3>
+                  <h3 className='text-xl font-semibold'>المحتوى العربي</h3>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
@@ -356,7 +356,7 @@ export default function EditSliderForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>English Content</h3>
+                  <h3 className='text-xl font-semibold'>المحتوى الإنجليزي</h3>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
@@ -569,13 +569,13 @@ export default function EditSliderForm() {
               </div>
 
               {/* Save Button */}
-              <div className='flex justify-end space-x-4 pt-8 border-t'>
+              <div className='flex justify-end space-x-4 space-x-reverse pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
-                  Cancel
+                  إلغاء
                 </Button>
                 <Button type='submit' disabled={isUpdating}>
-                  <Save className='w-4 h-4 mr-2' />
-                  {isUpdating ? 'Updating...' : 'Update Slider'}
+                  <Save className='w-4 h-4 ml-2' />
+                  {isUpdating ? 'جاري التحديث...' : 'تحديث السلايدر'}
                 </Button>
               </div>
             </form>

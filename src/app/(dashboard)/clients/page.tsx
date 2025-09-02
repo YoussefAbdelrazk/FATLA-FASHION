@@ -5,8 +5,8 @@ export default function ClientsPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Clients Management</h1>
-          <p className='text-muted-foreground'>Manage your clients and their account status</p>
+          <h1 className='text-3xl dark:text-black font-bold tracking-tight'>إدارة العملاء</h1>
+          <p className='text-muted-foreground'>إدارة عملائك وحالة حساباتهم</p>
         </div>
       </div>
 

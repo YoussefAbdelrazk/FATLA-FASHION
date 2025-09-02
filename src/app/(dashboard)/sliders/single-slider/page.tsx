@@ -5,10 +5,8 @@ export default function AddSliderPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Add New Slider</h1>
-          <p className='text-muted-foreground'>
-            Create a new slider with Arabic and English content
-          </p>
+          <h1 className='text-3xl font-bold tracking-tight'>إضافة سلايدر جديد</h1>
+          <p className='text-muted-foreground'>إنشاء سلايدر جديد مع المحتوى العربي والإنجليزي</p>
         </div>
       </div>
 

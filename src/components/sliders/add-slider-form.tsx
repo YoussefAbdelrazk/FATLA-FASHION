@@ -178,7 +178,7 @@ export default function AddSliderForm() {
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
             <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Sliders
+            العودة للسلايدرز
           </Button>
         </div>
       </div>
@@ -188,7 +188,7 @@ export default function AddSliderForm() {
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
             <Upload className='w-5 h-5' />
-            Slider Information
+            معلومات السلايدر
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -198,7 +198,7 @@ export default function AddSliderForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Arabic Content</h3>
+                  <h3 className='text-xl font-semibold'>المحتوى العربي</h3>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
@@ -269,7 +269,7 @@ export default function AddSliderForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-green-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>English Content</h3>
+                  <h3 className='text-xl font-semibold'>المحتوى الإنجليزي</h3>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <FormField
@@ -473,13 +473,13 @@ export default function AddSliderForm() {
                 />
               </div>
               {/* Save Button */}
-              <div className='flex justify-end space-x-4 pt-8 border-t'>
+              <div className='flex justify-end space-x-4 space-x-reverse pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
-                  Cancel
+                  إلغاء
                 </Button>
                 <Button type='submit' disabled={createSliderMutation.isPending}>
-                  <Save className='w-4 h-4 mr-2' />
-                  {createSliderMutation.isPending ? 'Creating...' : 'Create Slider'}
+                  <Save className='w-4 h-4 ml-2' />
+                  {createSliderMutation.isPending ? 'جاري الإنشاء...' : 'إنشاء سلايدر'}
                 </Button>
               </div>
             </form>

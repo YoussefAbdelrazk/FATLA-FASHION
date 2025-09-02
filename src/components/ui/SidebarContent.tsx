@@ -5,6 +5,7 @@ import {
   Bell,
   Building,
   ChevronDown,
+  ChevronLeft,
   Home,
   Image,
   List,
@@ -103,10 +104,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
       {/* Logo */}
       <div className='flex items-center justify-between h-14 lg:h-16 px-4 border-b border-gray-200 dark:border-gray-700'>
         {isExpanded ? (
-          <div className='flex items-center space-x-3'>
-            <div className='w-8 h-8 lg:w-10 lg:h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center'>
-              <Shield className='w-4 h-4 lg:w-5 lg:h-5 text-white dark:text-black' />
-            </div>
+          <div className='flex items-center justify-center w-full space-x-3'>
             <span className='text-lg lg:text-xl font-bold text-black dark:text-white'>FATLA</span>
           </div>
         ) : (
@@ -139,7 +137,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                 <Link
                   href={item.href}
                   className={cn(
-                    'flex items-center space-x-3 px-3 lg:px-4 py-3 lg:py-3 rounded-lg transition-all duration-200 group relative',
+                    'flex flex-row-reverse items-center justify-between space-x-3 px-3 lg:px-4 py-3 lg:py-3 rounded-lg transition-all duration-200 group relative',
                     isActive
                       ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg'
                       : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white',
@@ -148,7 +146,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                 >
                   <item.icon
                     className={cn(
-                      'w-5 h-5 lg:w-5 lg:h-5 transition-transform duration-200 flex-shrink-0',
+                      'w-5 h-5 lg:w-5 lg:h-5 transition-transform duration-200 flex-shrink-0 mr-2',
                       isActive ? 'scale-110' : 'group-hover:scale-110',
                     )}
                   />
@@ -178,25 +176,21 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                         : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white',
                     )}
                   >
-                    <div className='flex items-center space-x-3'>
+                    <div className='flex flex-row-reverse justify-between items-center space-x-3'>
                       <item.icon
                         className={cn(
                           'w-5 h-5 lg:w-5 lg:h-5 transition-transform duration-200 flex-shrink-0',
                           hasActiveChild ? 'scale-110' : 'group-hover:scale-110',
                         )}
                       />
-                      {isExpanded && (
-                        <span className='font-medium text-sm lg:text-base'>{item.name}</span>
-                      )}
+                      <span className='font-medium text-sm lg:text-base'>{item.name}</span>
                     </div>
-                    {isExpanded && (
-                      <ChevronDown
-                        className={cn(
-                          'w-4 h-4 transition-transform duration-200',
-                          !isExpanded && 'rotate-180',
-                        )}
-                      />
-                    )}
+                    {isExpanded &&
+                      (expandedItems.includes(item.name) ? (
+                        <ChevronDown className='w-4 h-4 transition-transform duration-200' />
+                      ) : (
+                        <ChevronLeft className='w-4 h-4 transition-transform duration-200' />
+                      ))}
                     {!isExpanded && hasActiveChild && (
                       <div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-white dark:bg-black rounded-r-full'></div>
                     )}
@@ -212,7 +206,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                 </div>
 
                 {/* Nested items */}
-                {isExpanded && item.children && (
+                {expandedItems.includes(item.name) && item.children && (
                   <div className='ml-4 mt-1 space-y-1'>
                     {item.children.map(child => {
                       const isChildActive = isActive(child.href);
@@ -221,14 +215,14 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                           key={child.name}
                           href={child.href}
                           className={cn(
-                            'flex items-center justify-between px-3 lg:px-4 py-2 lg:py-2 rounded-lg transition-all duration-200 group relative text-sm',
+                            'flex flex-row-reverse justify-between items-center space-x-3 px-3 lg:px-4 py-2 lg:py-2 rounded-lg transition-all duration-200 group relative text-sm',
                             isChildActive
                               ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                               : 'text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white',
                           )}
                           onClick={onLinkClick}
                         >
-                          <div className='flex items-center space-x-3'>
+                          <div className='flex flex-row-reverse items-center space-x-3'>
                             {child.name === 'جميع الطلبات' && <ShoppingBag className='w-4 h-4' />}
                             {child.name === 'قائمة المنتجات' && <List className='w-4 h-4' />}
                             {child.name === 'منتج جديد' && <Plus className='w-4 h-4' />}

@@ -10,20 +10,20 @@ export default function ProductsPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Products</h1>
-          <p className='text-muted-foreground'>Manage your product catalog and inventory</p>
+          <h1 className='text-3xl font-bold tracking-tight'>إدارة المنتجات</h1>
+          <p className='text-muted-foreground'>إدارة كتالوج المنتجات والمخزون</p>
         </div>
         <Link href='/products/add'>
           <Button>
-            <Plus className='mr-2 h-4 w-4' />
-            Add Product
+            <Plus className='ml-2 h-4 w-4' />
+            إضافة منتج
           </Button>
         </Link>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Products</CardTitle>
+          <CardTitle>جميع المنتجات</CardTitle>
         </CardHeader>
         <CardContent>
           <ProductsTable products={products} />

@@ -80,8 +80,8 @@ export default function AddCategoryForm() {
       <div className='flex items-center justify-between'>
         <div className='flex items-center space-x-4'>
           <Button variant='outline' onClick={handleBack}>
-            <ArrowLeft className='w-4 h-4 mr-2' />
-            Back to Categories
+            <ArrowLeft className='w-4 h-4 ml-2' />
+            العودة للفئات
           </Button>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function AddCategoryForm() {
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
             <Upload className='w-5 h-5' />
-            Category Information
+            معلومات الفئة
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -101,7 +101,7 @@ export default function AddCategoryForm() {
               <div className='space-y-6'>
                 <div className='flex items-center space-x-2'>
                   <div className='w-2 h-2 bg-blue-500 rounded-full'></div>
-                  <h3 className='text-xl font-semibold'>Arabic Content</h3>
+                  <h3 className='text-xl font-semibold'>المحتوى العربي</h3>
                 </div>
                 <FormField
                   control={form.control}
@@ -200,11 +200,11 @@ export default function AddCategoryForm() {
               {/* Save Button */}
               <div className='flex justify-end space-x-4 pt-8 border-t'>
                 <Button type='button' variant='outline' onClick={handleBack}>
-                  Cancel
+                  إلغاء
                 </Button>
                 <Button type='submit' disabled={createCategoryMutation.isPending}>
-                  <Save className='w-4 h-4 mr-2' />
-                  {createCategoryMutation.isPending ? 'Creating...' : 'Create Category'}
+                  <Save className='w-4 h-4 ml-2' />
+                  {createCategoryMutation.isPending ? 'جاري الإنشاء...' : 'إنشاء فئة'}
                 </Button>
               </div>
             </form>

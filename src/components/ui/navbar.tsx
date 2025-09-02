@@ -39,21 +39,11 @@ export function Navbar() {
 
             {/* Brand Logo and Name */}
             <Link href='/' className='flex items-center space-x-2 lg:space-x-3 group'>
-              <div className='relative'>
-                <div className='w-8 h-8 lg:w-10 lg:h-10 bg-black dark:bg-white rounded-lg lg:rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105'>
-                  <Shield className='w-4 h-4 lg:w-5 lg:h-5 text-white dark:text-black' />
-                </div>
-                <div className='absolute -top-0.5 -right-0.5 w-2 h-2 lg:w-3 lg:h-3 bg-yellow-500 dark:bg-yellow-400 rounded-full flex items-center justify-center'>
-                  <Crown className='w-1 h-1 lg:w-1.5 lg:h-1.5 text-white' />
-                </div>
-              </div>
+              <div className='relative'></div>
               <div className='hidden sm:block'>
-                <h1 className='text-lg lg:text-2xl font-bold text-black dark:text-white'>
-                  FATLA Admin
+                <h1 className='text-xl lg:text-2xl font-bold text-black dark:text-white'>
+                  لوحة التحكم
                 </h1>
-                <p className='text-xs text-gray-500 dark:text-gray-400 -mt-0.5 font-medium hidden lg:block'>
-                  Fashion Management Dashboard
-                </p>
               </div>
             </Link>
           </div>
@@ -78,7 +68,7 @@ export function Navbar() {
             </Button> */}
 
             {/* Admin Avatar Dropdown */}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='ghost'
@@ -132,7 +122,7 @@ export function Navbar() {
                   <span className='font-medium text-red-600 dark:text-red-400'>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
         </div>
       </div>

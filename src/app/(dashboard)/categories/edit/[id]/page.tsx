@@ -5,8 +5,8 @@ export default function EditCategoryPage() {
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
         <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Edit Category</h1>
-          <p className='text-muted-foreground'>Update category information and content</p>
+          <h1 className='text-3xl font-bold tracking-tight'>تعديل الفئة</h1>
+          <p className='text-muted-foreground'>تعديل معلومات الفئة والمحتوى</p>
         </div>
       </div>
 

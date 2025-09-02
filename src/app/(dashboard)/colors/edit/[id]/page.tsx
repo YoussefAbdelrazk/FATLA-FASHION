@@ -10,8 +10,8 @@ export default function EditColorPage({ params }: EditColorPageProps) {
   return (
     <div className='space-y-6'>
       <div>
-        <h1 className='text-3xl font-bold tracking-tight'>Edit Color</h1>
-        <p className='text-muted-foreground'>Update color information.</p>
+        <h1 className='text-3xl font-bold tracking-tight'>تعديل اللون</h1>
+        <p className='text-muted-foreground'>تعديل معلومات اللون</p>
       </div>
       <EditColorForm colorId={params.id} />
     </div>
