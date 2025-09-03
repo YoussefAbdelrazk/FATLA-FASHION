@@ -60,13 +60,18 @@ export default function OrderSummaryModern({ order }: OrderSummaryModernProps) {
 
           <div className='space-y-3'>
             <div className='flex justify-between items-center py-2 border-b border-gray-100'>
-              <span className='text-sm text-gray-600'>Subtotal</span>
+              <span className='text-sm text-gray-600'>Total Qty</span>
+              <span className='text-sm font-medium'>{order.totalQuantity}</span>
+            </div>
+
+            <div className='flex justify-between items-center py-2 border-b border-gray-100'>
+              <span className='text-sm text-gray-600'>Total Price</span>
               <span className='text-sm font-medium'>{formatCurrency(order.subTotal)}</span>
             </div>
 
             {order.discountTotal > 0 && (
               <div className='flex justify-between items-center py-2 border-b border-gray-100'>
-                <span className='text-sm text-gray-600'>Product Discount</span>
+                <span className='text-sm text-gray-600'>Total Discount</span>
                 <span className='text-sm font-medium text-red-600'>
                   -{formatCurrency(order.discountTotal)}
                 </span>
@@ -75,7 +80,7 @@ export default function OrderSummaryModern({ order }: OrderSummaryModernProps) {
 
             {order.couponDiscount > 0 && (
               <div className='flex justify-between items-center py-2 border-b border-gray-100'>
-                <span className='text-sm text-gray-600'>Coupon Discount</span>
+                <span className='text-sm text-gray-600'>Coupon</span>
                 <span className='text-sm font-medium text-red-600'>
                   -{formatCurrency(order.couponDiscount)}
                 </span>
@@ -85,6 +90,11 @@ export default function OrderSummaryModern({ order }: OrderSummaryModernProps) {
             <div className='flex justify-between items-center py-2 border-b border-gray-100'>
               <span className='text-sm text-gray-600'>Delivery Fees</span>
               <span className='text-sm font-medium'>{formatCurrency(order.deliveryTotal)}</span>
+            </div>
+
+            <div className='flex justify-between items-center py-2 border-b border-gray-100'>
+              <span className='text-sm text-gray-600'>Payment Method</span>
+              <span className='text-sm font-medium'>{order.paymentMethod}</span>
             </div>
 
             <div className='flex justify-between items-center pt-3'>
