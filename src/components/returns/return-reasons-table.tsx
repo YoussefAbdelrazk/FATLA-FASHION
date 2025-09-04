@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ReturnReason } from '@/types/return';
 import { ReturnReasonFormData } from '@/lib/schemas/return-reason-schema';
+import { ReturnReason } from '@/types/return';
 import { Edit, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import AddReturnReasonForm from './add-return-reason-form';
