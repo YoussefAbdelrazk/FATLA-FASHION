@@ -1,4 +1,4 @@
-import { OrderReturn } from '@/types/return';
+import { OrderReturn, ReturnReason } from '@/types/return';
 
 export const mockReturns: OrderReturn[] = [
   {
@@ -139,3 +139,68 @@ export const getReturnById = async (id: string): Promise<OrderReturn | null> => 
   });
 };
 
+export const mockReturnReasons: ReturnReason[] = [
+  {
+    id: '1',
+    arReason: 'حجم غير مناسب',
+    enReason: 'Wrong Size',
+    createdBy: 'أحمد محمد',
+    createdAt: '2024-01-15T10:00:00Z',
+    isVisible: true,
+    visibilityOrder: 1,
+  },
+  {
+    id: '2',
+    arReason: 'عيب في الصنع',
+    enReason: 'Manufacturing Defect',
+    createdBy: 'فاطمة علي',
+    createdAt: '2024-01-14T14:30:00Z',
+    isVisible: true,
+    visibilityOrder: 2,
+  },
+  {
+    id: '3',
+    arReason: 'تغيير في الطلب',
+    enReason: 'Change of Mind',
+    createdBy: 'محمد حسن',
+    createdAt: '2024-01-13T09:15:00Z',
+    isVisible: true,
+    visibilityOrder: 3,
+  },
+  {
+    id: '4',
+    arReason: 'لون مختلف عن المطلوب',
+    enReason: 'Color Mismatch',
+    createdBy: 'سارة أحمد',
+    createdAt: '2024-01-12T16:00:00Z',
+    isVisible: false,
+    visibilityOrder: 4,
+  },
+  {
+    id: '5',
+    arReason: 'تلف أثناء الشحن',
+    enReason: 'Damaged During Shipping',
+    createdBy: 'علي محمود',
+    createdAt: '2024-01-11T11:20:00Z',
+    isVisible: true,
+    visibilityOrder: 5,
+  },
+  {
+    id: '6',
+    arReason: 'وصول متأخر',
+    enReason: 'Late Delivery',
+    createdBy: 'نور الدين',
+    createdAt: '2024-01-10T08:45:00Z',
+    isVisible: true,
+    visibilityOrder: 6,
+  },
+];
+
+export const getReturnReasons = async (): Promise<ReturnReason[]> => {
+  // Simulate API call
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(mockReturnReasons);
+    }, 500);
+  });
+};

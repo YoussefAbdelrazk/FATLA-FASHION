@@ -165,7 +165,7 @@ export default function NotificationModal({ onNotificationSent }: NotificationMo
               <Label htmlFor='send-to-all' className='text-base font-semibold'>
                 اختيار المستخدمين
               </Label>
-              <div className='flex items-center space-x-3'>
+              <div className='flex items-center justify-between'>
                 <span className='text-sm text-muted-foreground'>
                   {sendToAll ? 'إرسال للجميع' : 'إرسال لمستخدمين محددين'}
                 </span>

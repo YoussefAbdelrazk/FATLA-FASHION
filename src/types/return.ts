@@ -32,3 +32,17 @@ export interface OrderReturn {
 export interface ReturnTableProps {
   returns: OrderReturn[];
 }
+
+export interface ReturnReason {
+  id: string;
+  arReason: string;
+  enReason: string;
+  createdBy: string;
+  createdAt: string;
+  isVisible: boolean;
+  visibilityOrder: number;
+}
+
+export interface ReturnReasonTableProps {
+  returnReasons: ReturnReason[];
+}

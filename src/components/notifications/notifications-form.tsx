@@ -126,10 +126,10 @@ export default function NotificationsForm() {
   };
 
   return (
-    <div className='max-w-4xl mx-auto p-6'>
+    <div className='max-w-6xl mx-auto p-6'>
       <Card>
         <CardHeader>
-          <CardTitle className='flex items-center gap-2 text-2xl'>
+          <CardTitle className='flex items-center gap-2 text-2xl '>
             <Send className='w-6 h-6' />
             إرسال إشعار جديد
           </CardTitle>
@@ -142,7 +142,7 @@ export default function NotificationsForm() {
                 <Label htmlFor='send-to-all' className='text-lg font-semibold'>
                   اختيار المستخدمين
                 </Label>
-                <div className='flex items-center space-x-3 space-x-reverse'>
+                <div className='flex flex-row-reverse items-center justify-between'>
                   <span className='text-sm text-muted-foreground'>
                     {sendToAll ? 'إرسال للجميع' : 'إرسال لمستخدمين محددين'}
                   </span>

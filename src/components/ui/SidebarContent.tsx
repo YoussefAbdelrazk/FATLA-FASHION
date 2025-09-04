@@ -63,7 +63,14 @@ const navigation: NavigationItemType[] = [
       { name: 'ملغية', href: '/orders/cancelled', count: 300 },
     ],
   },
-  { name: 'طلبات الإرجاع', href: '/returns', icon: RotateCcw },
+  {
+    name: 'طلبات الإرجاع',
+    icon: RotateCcw,
+    children: [
+      { name: 'جميع طلبات الإرجاع', href: '/returns' },
+      { name: 'أسباب الإرجاع', href: '/return-reasons' },
+    ],
+  },
   { name: 'العملاء', href: '/clients', icon: Users },
   { name: 'السلايدرز', href: '/sliders', icon: Image },
   { name: 'الإشعارات', href: '/notifications', icon: Bell },
@@ -83,7 +90,11 @@ const navigation: NavigationItemType[] = [
 
 export default function SidebarContent({ isExpanded, onLinkClick }: SidebarContentProps) {
   const pathname = usePathname();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['الطلبات', 'المنتجات']);
+  const [expandedItems, setExpandedItems] = useState<string[]>([
+    'الطلبات',
+    'المنتجات',
+    'طلبات الإرجاع',
+  ]);
 
   const toggleExpanded = (itemName: string) => {
     setExpandedItems(prev =>
@@ -232,6 +243,10 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                             {child.name === 'المقاسات' && <Tag className='w-4 h-4' />}
                             {child.name === 'الألوان' && <Palette className='w-4 h-4' />}
                             {child.name === 'العلامات التجارية' && <Building className='w-4 h-4' />}
+                            {child.name === 'جميع طلبات الإرجاع' && (
+                              <RotateCcw className='w-4 h-4' />
+                            )}
+                            {child.name === 'أسباب الإرجاع' && <List className='w-4 h-4' />}
                             <span className='font-medium'>{child.name}</span>
                           </div>
                           {child.count && (

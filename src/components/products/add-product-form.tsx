@@ -338,22 +338,22 @@ export function AddProductForm() {
                       />
                     </div>
 
-                    <div className='flex items-center space-x-2'>
+                    <div className='flex items-center justify-between'>
+                      <Label htmlFor={`bestSeller-${index}`}>Best Seller</Label>
                       <Switch
                         id={`bestSeller-${index}`}
                         checked={variant.bestSeller}
                         onCheckedChange={checked => updateVariant(index, 'bestSeller', checked)}
                       />
-                      <Label htmlFor={`bestSeller-${index}`}>Best Seller</Label>
                     </div>
 
-                    <div className='flex items-center space-x-2'>
+                    <div className='flex items-center justify-between'>
+                      <Label htmlFor={`todayDeals-${index}`}>Today Deals</Label>
                       <Switch
                         id={`todayDeals-${index}`}
                         checked={variant.todayDeals}
                         onCheckedChange={checked => updateVariant(index, 'todayDeals', checked)}
                       />
-                      <Label htmlFor={`todayDeals-${index}`}>Today Deals</Label>
                     </div>
                   </div>
 
