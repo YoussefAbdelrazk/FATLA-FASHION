@@ -347,16 +347,17 @@ export default function SlidersTable() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className='flex items-center justify-between'>
-                        <span className='text-sm text-muted-foreground'>
-                          {slider.isVisible ? 'ظاهر' : 'مخفي'}
-                        </span>
-                        <Switch
-                          checked={slider.isVisible}
-                          onCheckedChange={() => {}}
-                          className='data-[state=checked]:bg-green-600'
-                        />
-                      </div>
+                      <Switch
+                        checked={slider.isVisible}
+                        onCheckedChange={() => {}}
+                        variant={slider.isVisible ? 'success' : 'default'}
+                        size='md'
+                        showIcon
+                        label={slider.isVisible ? 'ظاهر' : 'مخفي'}
+                        description={
+                          slider.isVisible ? 'السلايدر مرئي للعملاء' : 'السلايدر مخفي عن العملاء'
+                        }
+                      />
                     </TableCell>
                     <TableCell className='text-right'>
                       <DropdownMenu>

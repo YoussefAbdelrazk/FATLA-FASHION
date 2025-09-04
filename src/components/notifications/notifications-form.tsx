@@ -143,10 +143,20 @@ export default function NotificationsForm() {
                   اختيار المستخدمين
                 </Label>
                 <div className='flex flex-row-reverse items-center justify-between'>
-                  <span className='text-sm text-muted-foreground'>
-                    {sendToAll ? 'إرسال للجميع' : 'إرسال لمستخدمين محددين'}
-                  </span>
-                  <Switch id='send-to-all' checked={sendToAll} onCheckedChange={setSendToAll} />
+                  <Switch
+                    id='send-to-all'
+                    checked={sendToAll}
+                    onCheckedChange={setSendToAll}
+                    variant='success'
+                    size='lg'
+                    showIcon
+                    label={sendToAll ? 'إرسال للجميع' : 'إرسال لمستخدمين محددين'}
+                    description={
+                      sendToAll
+                        ? 'سيتم إرسال الإشعار لجميع المستخدمين'
+                        : 'اختر المستخدمين المحددين أدناه'
+                    }
+                  />
                 </div>
               </div>
 

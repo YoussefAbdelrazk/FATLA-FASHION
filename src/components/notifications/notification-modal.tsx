@@ -44,7 +44,7 @@ interface NotificationModalProps {
   onNotificationSent?: () => void;
 }
 
-export default function NotificationModal({ onNotificationSent }: NotificationModalProps) {
+export default function NotificationModal({ onNotificationSent }: NotificationModalProps = {}) {
   const [open, setOpen] = useState(false);
   const [sendToAll, setSendToAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
@@ -152,7 +152,7 @@ export default function NotificationModal({ onNotificationSent }: NotificationMo
       </DialogTrigger>
       <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-2 text-xl'>
+          <DialogTitle className='flex items-center gap-2 text-xl mt-6'>
             <Send className='w-5 h-5' />
             إرسال إشعار جديد
           </DialogTitle>
@@ -165,12 +165,20 @@ export default function NotificationModal({ onNotificationSent }: NotificationMo
               <Label htmlFor='send-to-all' className='text-base font-semibold'>
                 اختيار المستخدمين
               </Label>
-              <div className='flex items-center justify-between'>
-                <span className='text-sm text-muted-foreground'>
-                  {sendToAll ? 'إرسال للجميع' : 'إرسال لمستخدمين محددين'}
-                </span>
-                <Switch id='send-to-all' checked={sendToAll} onCheckedChange={setSendToAll} />
-              </div>
+              <Switch
+                id='send-to-all'
+                checked={sendToAll}
+                onCheckedChange={setSendToAll}
+                variant='success'
+                size='md'
+                showIcon
+                label={sendToAll ? 'إرسال للجميع' : 'إرسال لمستخدمين محددين'}
+                description={
+                  sendToAll
+                    ? 'سيتم إرسال الإشعار لجميع المستخدمين'
+                    : 'اختر المستخدمين المحددين أدناه'
+                }
+              />
             </div>
 
             {!sendToAll && (

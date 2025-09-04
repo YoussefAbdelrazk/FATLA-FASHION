@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { deleteNotification, markNotificationAsSeen } from '@/data/notifications';
 import { Notification } from '@/types/notification';
 import {
   Bell,
@@ -42,16 +43,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface NotificationsTableProps {
-  notifications: Notification[];
-  onMarkAsSeen: (id: string) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
+  initialNotifications: Notification[];
 }
 
-export default function NotificationsTable({
-  notifications,
-  onMarkAsSeen,
-  onDelete,
-}: NotificationsTableProps) {
+export default function NotificationsTable({ initialNotifications }: NotificationsTableProps) {
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [searchTerm, setSearchTerm] = useState('');
@@ -180,9 +176,17 @@ export default function NotificationsTable({
   const handleMarkAsSeen = async (id: string) => {
     setLoadingItems(prev => new Set(prev).add(id));
     try {
-      await onMarkAsSeen(id);
+      await markNotificationAsSeen(id);
+      // Update local state
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification.id === id
+            ? { ...notification, seen: true, updatedAt: new Date().toISOString() }
+            : notification,
+        ),
+      );
       toast.success('تم تحديث حالة الإشعار');
-    } catch (error) {
+    } catch {
       toast.error('فشل في تحديث الإشعار');
     } finally {
       setLoadingItems(prev => {
@@ -201,10 +205,14 @@ export default function NotificationsTable({
     if (notificationToDelete) {
       setLoadingItems(prev => new Set(prev).add(notificationToDelete.id));
       try {
-        await onDelete(notificationToDelete.id);
+        await deleteNotification(notificationToDelete.id);
+        // Update local state
+        setNotifications(prev =>
+          prev.filter(notification => notification.id !== notificationToDelete.id),
+        );
         toast.success('تم حذف الإشعار بنجاح');
         setNotificationToDelete(null);
-      } catch (error) {
+      } catch {
         toast.error('فشل في حذف الإشعار');
       } finally {
         setLoadingItems(prev => {

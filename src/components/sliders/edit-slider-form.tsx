@@ -547,20 +547,16 @@ export default function EditSliderForm() {
                   control={form.control}
                   name='isVisible'
                   render={({ field }) => (
-                    <FormItem className='flex flex-row items-center justify-between rounded-lg border p-6'>
-                      <div className='space-y-0.5'>
-                        <FormLabel className='text-base font-semibold'>
-                          Make slider visible
-                        </FormLabel>
-                        <div className='text-sm text-muted-foreground'>
-                          Control whether this slider is visible to users on the frontend
-                        </div>
-                      </div>
+                    <FormItem className='rounded-lg border p-6'>
                       <FormControl>
                         <Switch
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className='data-[state=checked]:bg-green-600'
+                          variant={field.value ? 'success' : 'default'}
+                          size='lg'
+                          showIcon
+                          label='Make slider visible'
+                          description='Control whether this slider is visible to users on the frontend'
                         />
                       </FormControl>
                     </FormItem>

@@ -1,62 +1,11 @@
-'use client';
-
 import NotificationModal from '@/components/notifications/notification-modal';
 import NotificationsTable from '@/components/notifications/notifications-table';
-import { deleteNotification, getNotifications, markNotificationAsSeen } from '@/data/notifications';
-import { Notification } from '@/types/notification';
+import { getNotifications } from '@/data/notifications';
 import { Bell } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
-export default function NotificationsListPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchNotifications = async () => {
-    try {
-      setLoading(true);
-      const data = await getNotifications();
-      setNotifications(data);
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMarkAsSeen = async (id: string) => {
-    try {
-      await markNotificationAsSeen(id);
-      // Update local state
-      setNotifications(prev =>
-        prev.map(notification =>
-          notification.id === id
-            ? { ...notification, seen: true, updatedAt: new Date().toISOString() }
-            : notification,
-        ),
-      );
-    } catch (error) {
-      console.error('Error marking notification as seen:', error);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteNotification(id);
-      // Update local state
-      setNotifications(prev => prev.filter(notification => notification.id !== id));
-    } catch (error) {
-      console.error('Error deleting notification:', error);
-    }
-  };
-
-  const handleNotificationSent = () => {
-    // Refresh notifications after sending a new one
-    fetchNotifications();
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+export default async function NotificationsListPage() {
+  // Fetch notifications on the server
+  const notifications = await getNotifications();
 
   return (
     <div className='space-y-6'>
@@ -72,19 +21,11 @@ export default function NotificationsListPage() {
           </div>
         </div>
 
-        <NotificationModal onNotificationSent={handleNotificationSent} />
+        <NotificationModal />
       </div>
 
       {/* Notifications Table */}
-      {loading ? (
-        <div className='animate-pulse bg-gray-100 rounded-lg h-96'></div>
-      ) : (
-        <NotificationsTable
-          notifications={notifications}
-          onMarkAsSeen={handleMarkAsSeen}
-          onDelete={handleDelete}
-        />
-      )}
+      <NotificationsTable initialNotifications={notifications} />
     </div>
   );
 }

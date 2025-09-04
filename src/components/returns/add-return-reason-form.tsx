@@ -128,18 +128,24 @@ export default function AddReturnReasonForm({
             )}
           </div>
 
-          <div className='flex items-center justify-between rounded-lg border p-3'>
-            <Label htmlFor='isVisible' className='text-base font-medium'>
-              مرئي للعملاء
-            </Label>
+          <div className='rounded-lg border p-3'>
             <Switch
               id='isVisible'
               checked={form.watch('isVisible')}
               onCheckedChange={checked => form.setValue('isVisible', checked)}
+              variant={form.watch('isVisible') ? 'success' : 'default'}
+              size='md'
+              showIcon
+              label='مرئي للعملاء'
+              description={
+                form.watch('isVisible')
+                  ? 'هذا السبب مرئي للعملاء في قائمة أسباب الإرجاع'
+                  : 'هذا السبب مخفي عن العملاء'
+              }
             />
           </div>
 
-          <DialogFooter>
+          <DialogFooter className='gap-3'>
             <Button type='button' variant='outline' onClick={onClose} disabled={isSubmitting}>
               إلغاء
             </Button>
