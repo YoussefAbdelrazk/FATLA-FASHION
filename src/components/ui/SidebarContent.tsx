@@ -6,8 +6,10 @@ import {
   Building,
   ChevronDown,
   ChevronLeft,
+  FileText,
   Home,
   Image,
+  Info,
   List,
   LogOut,
   LucideIcon,
@@ -73,7 +75,18 @@ const navigation: NavigationItemType[] = [
   },
   { name: 'العملاء', href: '/clients', icon: Users },
   { name: 'السلايدرز', href: '/sliders', icon: Image },
+
   { name: 'الإشعارات', href: '/notifications', icon: Bell },
+
+  {
+    name: 'الصفحات القانونية',
+    icon: FileText,
+    children: [
+      { name: 'من نحن', href: '/about-us' },
+      { name: 'سياسة الخصوصية', href: '/privacy-policy' },
+      { name: 'الشروط والأحكام', href: '/terms-conditions' },
+    ],
+  },
 
   {
     name: 'المنتجات',
@@ -94,6 +107,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
     'الطلبات',
     'المنتجات',
     'طلبات الإرجاع',
+    'الصفحات القانونية',
   ]);
 
   const toggleExpanded = (itemName: string) => {
@@ -247,6 +261,9 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
                               <RotateCcw className='w-4 h-4' />
                             )}
                             {child.name === 'أسباب الإرجاع' && <List className='w-4 h-4' />}
+                            {child.name === 'من نحن' && <Info className='w-4 h-4' />}
+                            {child.name === 'سياسة الخصوصية' && <Shield className='w-4 h-4' />}
+                            {child.name === 'الشروط والأحكام' && <FileText className='w-4 h-4' />}
                             <span className='font-medium'>{child.name}</span>
                           </div>
                           {child.count && (
