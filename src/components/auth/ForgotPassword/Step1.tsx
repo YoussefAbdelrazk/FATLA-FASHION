@@ -52,16 +52,16 @@ export function Step1({ onNext }: { onNext: (mobileNumber: string) => void }) {
   return (
     <div className='space-y-6 max-w-[720px]'>
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-        <h2 className='text-2xl font-bold text-gray-800'>Forgot Password</h2>
+        <h2 className='text-2xl font-bold text-gray-800'>نسيت كلمة المرور؟</h2>
         <p className='text-gray-500  max-w-[452px] '>
-          Don’t worry, we will help you recover your account.
+          لا تقلق, سنساعدك في استرجاع حسابك.
         </p>
         <div className='space-y-2'>
-          <Label htmlFor='mobileNumber'>Mobile Number</Label>
+          <Label htmlFor='mobileNumber'>رقم الهاتف</Label>
           <Input
             id='mobileNumber'
             type='text'
-            placeholder='Enter your mobile number'
+            placeholder='أدخل رقم هاتفك'
             {...register('mobileNumber')}
             className={errors.mobileNumber ? 'border-red-500' : ''}
           />
@@ -71,7 +71,7 @@ export function Step1({ onNext }: { onNext: (mobileNumber: string) => void }) {
         </div>
 
         <Button type='submit' className='w-full  text-white'>
-          Send Reset Code
+          إرسال رمز الإسترجاع
           <ArrowRight className='w-4 h-4' />
         </Button>
       </form>

@@ -15,7 +15,7 @@ import { z } from 'zod';
 type FormValues = z.infer<typeof formSchema>;
 
 const formSchema = z.object({
-  otpCode: z.string().min(6, { message: 'Please enter a valid 6-digit code' }),
+  otpCode: z.string().min(6, { message: 'يرجى إدخال رمز 6 أرقام' }),
 });
 
 interface Step2Props {
@@ -58,7 +58,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
     setIsResending(true);
     try {
       await requestOtp(mobileNumber);
-      toast.success('OTP sent again!');
+      toast.success('رمز OTP أرسل مرة أخرى!');
       setTimeLeft(60);
       setCanResend(false);
       setOtpValue('');
@@ -67,8 +67,8 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
       const errorMessage =
         error && typeof error === 'object' && 'response' in error
           ? (error.response as { data?: { message?: string } })?.data?.message ||
-            'Failed to resend code'
-          : 'Failed to resend code';
+            'فشل إعادة الإرسال'
+          : 'فشل إعادة الإرسال';
       toast.error(errorMessage);
     } finally {
       setIsResending(false);
@@ -77,7 +77,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
 
   const onSubmit = async (data: FormValues) => {
     if (data.otpCode.length !== 6) {
-      toast.error('Please enter a valid 6-digit code');
+      toast.error('يرجى إدخال رمز 6 أرقام');
       return;
     }
     console.log(data, 'data');
@@ -85,14 +85,14 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
 
     try {
       await verifyOtp(mobileNumber, data.otpCode);
-      toast.success('Code verified successfully!');
+      toast.success('رمز التحقق تم التحقق منه بنجاح!');
       onNext();
     } catch (error: unknown) {
       const errorMessage =
         error && typeof error === 'object' && 'response' in error
           ? (error.response as { data?: { message?: string } })?.data?.message ||
-            'Invalid verification code'
-          : 'Invalid verification code';
+            'رمز التحقق غير صالح'
+          : 'رمز التحقق غير صالح';
       toast.error(errorMessage);
     }
   };
@@ -103,13 +103,13 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
         <Button variant='outline' className='' onClick={onBack}>
           <ArrowLeft className='w-4 h-4' />
         </Button>
-        <h2 className='text-2xl font-bold text-gray-800'>Verify OTP</h2>
+        <h2 className='text-2xl font-bold text-gray-800'>التحقق من رمز OTP</h2>
         <p className='text-gray-500 mt-2'>
-          We&apos;ve sent a 6-digit code to <strong>{mobileNumber}</strong>
+          لقد أرسلنا رمز 6 أرقام إلى <strong>{mobileNumber}</strong>
         </p>
         <div className='space-y-4'>
           <Label htmlFor='otp' className='text-center block'>
-            Enter Verification Code
+            أدخل رمز التحقق
           </Label>
           <div className='flex justify-center'>
             <InputOTP maxLength={6} value={otpValue} onChange={handleOtpChange}>
@@ -126,7 +126,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
           <div className='text-center mt-4'>
             {!canResend ? (
               <p className='text-sm text-gray-500'>
-                You can request another code in: <span className='font-semibold '>{timeLeft}s</span>
+                يمكنك طلب رمز آخر في: <span className='font-semibold '>{timeLeft}s</span>
               </p>
             ) : (
               <Button
@@ -136,7 +136,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
                 disabled={isResending}
                 className='text-blue-600  hover:bg-blue-50'
               >
-                {isResending ? 'Sending...' : 'Resend Code'}
+                {isResending ? 'جاري الإرسال...' : 'إعادة الإرسال'}
               </Button>
             )}
           </div>
@@ -147,7 +147,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
 
         <div className='space-y-3'>
           <Button type='submit' className='w-full    text-white'>
-            Verify Code
+            التحقق من رمز
           </Button>
         </div>
       </form>

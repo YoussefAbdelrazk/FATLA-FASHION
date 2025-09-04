@@ -15,8 +15,8 @@ import { z } from 'zod';
 type FormValues = z.infer<typeof formSchema>;
 
 const formSchema = z.object({
-  newPassword: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
-  confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
+  newPassword: z.string().min(8, { message: 'كلمة المرور يجب أن تكون على الأقل 8 أحرف' }),
+  confirmPassword: z.string().min(8, { message: 'كلمة المرور يجب أن تكون على الأقل 8 أحرف' }),
 });
 interface Step3Props {
   mobileNumber: string;
@@ -46,21 +46,21 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
 
   const onSubmit = async (data: FormValues) => {
     if (data.confirmPassword && data.newPassword !== data.confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error('كلمات المرور لا تطابق');
       return;
     }
 
     setIsLoading(true);
     try {
       await resetPassword(mobileNumber, data.newPassword, data.confirmPassword);
-      toast.success('Password reset successfully!');
+      toast.success('تم إعادة تعيين كلمة المرور بنجاح!');
       onSuccess();
     } catch (error: unknown) {
       const errorMessage =
         error && typeof error === 'object' && 'response' in error
           ? (error.response as { data?: { message?: string } })?.data?.message ||
-            'Failed to reset password'
-          : 'Failed to reset password';
+            'فشل إعادة تعيين كلمة المرور'
+          : 'فشل إعادة تعيين كلمة المرور';
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -74,16 +74,16 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
       </Button>
 
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-        <h2 className='text-2xl font-bold text-gray-800'>Create a new password</h2>
-        <p>Create a new strong password for your account.</p>
+        <h2 className='text-2xl font-bold text-gray-800'>إنشاء كلمة مرور جديدة</h2>
+        <p>إنشاء كلمة مرور جديدة قوية لحسابك.</p>
 
         <div className='space-y-2'>
-          <Label htmlFor='newPassword'>New Password</Label>
+          <Label htmlFor='newPassword'>كلمة مرور جديدة</Label>
           <div className='relative'>
             <Input
               id='newPassword'
               type={showPassword ? 'text' : 'password'}
-              placeholder='Enter new password'
+              placeholder='أدخل كلمة مرور جديدة'
               {...register('newPassword')}
               className={errors.newPassword ? 'border-red-500 pr-10' : 'pr-10'}
             />
@@ -105,14 +105,14 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
         </div>
 
         <div className='space-y-2'>
-          <Label htmlFor='confirmPassword'>Confirm New Password</Label>
+          <Label htmlFor='confirmPassword'>تأكيد كلمة مرور جديدة</Label>
           <div className='relative'>
             <Input
               id='confirmPassword'
               type={showConfirmPassword ? 'text' : 'password'}
-              placeholder='Confirm new password'
+              placeholder='تأكيد كلمة مرور جديدة'
               {...register('confirmPassword', {
-                validate: value => value === newPassword || 'Passwords do not match',
+                validate: value => value === newPassword || 'كلمات المرور لا تطابق',
               })}
               className={errors.confirmPassword ? 'border-red-500 pr-10' : 'pr-10'}
             />
@@ -144,7 +144,7 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
 
         <div className='space-y-3'>
           <Button type='submit' className='w-full text-white' disabled={isLoading}>
-            {isLoading ? 'Resetting...' : 'Reset Password'}
+            {isLoading ? 'جاري الإعادة تعيين...' : 'إعادة تعيين كلمة المرور'}
           </Button>
         </div>
       </form>
