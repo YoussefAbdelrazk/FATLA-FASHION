@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 
 import { requestOtp, verifyOtp } from '@/services/auth/AuthService';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -29,7 +29,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
   const [otpValue, setOtpValue] = useState('');
   const [timeLeft, setTimeLeft] = useState(60);
   const [canResend, setCanResend] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const {
     handleSubmit,
     setValue,
@@ -55,6 +55,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
   };
 
   const handleResendCode = async () => {
+    setIsLoading(true);
     setIsResending(true);
     try {
       await requestOtp(mobileNumber);
@@ -72,6 +73,7 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
       toast.error(errorMessage);
     } finally {
       setIsResending(false);
+      setIsLoading(false);
     }
   };
 
@@ -100,9 +102,11 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
   return (
     <div className='space-y-6'>
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
-        <Button variant='outline' className='' onClick={onBack}>
-          <ArrowLeft className='w-4 h-4' />
-        </Button>
+        <div className='flex justify-end'>
+          <Button variant='outline' className='' onClick={onBack}>
+            <ArrowLeft className='w-4 h-4' />
+          </Button>
+        </div>
         <h2 className='text-2xl font-bold text-gray-800'>التحقق من رمز OTP</h2>
         <p className='text-gray-500 mt-2'>
           لقد أرسلنا رمز 6 أرقام إلى <strong>{mobileNumber}</strong>
@@ -114,12 +118,12 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
           <div className='flex justify-center'>
             <InputOTP maxLength={6} value={otpValue} onChange={handleOtpChange}>
               <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
                 <InputOTPSlot index={5} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={0} />
               </InputOTPGroup>
             </InputOTP>
           </div>
@@ -146,8 +150,9 @@ export default function Step2({ mobileNumber, onNext, onBack }: Step2Props) {
         </div>
 
         <div className='space-y-3'>
-          <Button type='submit' className='w-full    text-white'>
+          <Button type='submit' className='w-full    text-white' disabled={isLoading}>
             التحقق من رمز
+            {isLoading ? <Loader2 className='w-4 h-4' /> : <ArrowRight className='w-4 h-4' />}
           </Button>
         </div>
       </form>

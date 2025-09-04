@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { resetPassword } from '@/services/auth/AuthService';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -69,9 +69,11 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
 
   return (
     <div className='space-y-6'>
-      <Button variant='outline' className='' onClick={onBack}>
-        <ArrowLeft className='w-4 h-4' />
-      </Button>
+      <div className='flex justify-end'>
+        <Button variant='outline' className='' onClick={onBack}>
+          <ArrowLeft className='w-4 h-4' />
+        </Button>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
         <h2 className='text-2xl font-bold text-gray-800'>إنشاء كلمة مرور جديدة</h2>
@@ -144,6 +146,7 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
 
         <div className='space-y-3'>
           <Button type='submit' className='w-full text-white' disabled={isLoading}>
+            {isLoading ? <Loader2 className='w-4 h-4' /> : <ArrowRight className='w-4 h-4' />}
             {isLoading ? 'جاري الإعادة تعيين...' : 'إعادة تعيين كلمة المرور'}
           </Button>
         </div>
