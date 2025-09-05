@@ -23,7 +23,7 @@ export default function ReturnItemsModern({ items }: ReturnItemsModernProps) {
           key={item.id}
           className='group relative p-6 rounded-lg border border-orange-200 bg-orange-50 hover:shadow-sm transition-all duration-200'
         >
-          <div className='flex items-start gap-4'>
+          <div className='flex flex-col lg:flex-row items-start gap-4'>
             {/* Product Image */}
             <div className='relative w-20 h-20 flex-shrink-0'>
               <Image

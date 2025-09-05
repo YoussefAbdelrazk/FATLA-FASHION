@@ -68,7 +68,9 @@ export default function ReturnActions({ returnItem, onApprove, onReject }: Retur
       <CardContent className='space-y-6 flex-1 overflow-y-auto'>
         {/* Refund Method Selection */}
         <div className='space-y-3'>
-          <Label htmlFor='refund-method' className='text-sm font-bold text-gray-700'>طريقة الاسترداد</Label>
+          <Label htmlFor='refund-method' className='text-sm font-bold text-gray-700'>
+            طريقة الاسترداد
+          </Label>
           <Select
             value={selectedRefundMethod}
             onValueChange={(value: 'credit_card' | 'wallet') => setSelectedRefundMethod(value)}
@@ -85,19 +87,21 @@ export default function ReturnActions({ returnItem, onApprove, onReject }: Retur
 
         {/* Reject Reason Input */}
         <div className='space-y-3'>
-          <Label htmlFor='reject-reason' className='text-sm font-bold text-gray-700'>سبب الرفض (في حالة الرفض)</Label>
+          <Label htmlFor='reject-reason' className='text-sm font-bold text-gray-700'>
+            سبب الرفض (في حالة الرفض)
+          </Label>
           <Textarea
             id='reject-reason'
             placeholder='أدخل سبب رفض طلب الإرجاع...'
             value={rejectReason}
-            onChange={(e) => setRejectReason(e.target.value)}
+            onChange={e => setRejectReason(e.target.value)}
             rows={3}
             className='rounded-xl border-2 border-gray-200 focus:border-red-400'
           />
         </div>
 
         {/* Action Buttons */}
-        <div className='flex flex-col sm:flex-row gap-4'>
+        <div className='flex flex-col  gap-4'>
           <Button
             onClick={handleApprove}
             disabled={isLoading}
@@ -136,4 +140,3 @@ export default function ReturnActions({ returnItem, onApprove, onReject }: Retur
     </Card>
   );
 }
-

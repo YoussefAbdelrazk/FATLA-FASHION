@@ -58,7 +58,7 @@ export default async function SingleReturnPage({ params }: SingleReturnPageProps
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-orange-50 to-red-50'>
       {/* Modern Header - Similar to the image */}
       <div className='bg-white border-b border-gray-200 shadow-sm'>
-        <div className='container mx-auto px-6 py-6'>
+        <div className='container mx-auto px-4 py-4'>
           {/* Navigation */}
           <div className='flex items-center gap-4 mb-6'>
             <Link href='/returns'>
@@ -78,7 +78,7 @@ export default async function SingleReturnPage({ params }: SingleReturnPageProps
             <div className='flex-1'>
               <div className='flex items-center gap-4 mb-4'>
                 <h1 className='text-3xl font-bold text-gray-900'>Return #{returnItem.returnNo}</h1>
-                <div className='flex items-center gap-2'>
+                <div className='flex  items-center gap-2'>
                   <span
                     className={`px-3 py-1 text-sm font-medium rounded-full border ${
                       returnItem.returnStatus === 'pending'
@@ -120,7 +120,7 @@ export default async function SingleReturnPage({ params }: SingleReturnPageProps
             </div>
 
             {/* Header Actions */}
-            <div className='flex items-center gap-3'>
+            {/* <div className='flex items-center gap-3'>
               <Button variant='outline' size='sm'>
                 <ChevronLeft className='w-4 h-4' />
               </Button>
@@ -133,7 +133,7 @@ export default async function SingleReturnPage({ params }: SingleReturnPageProps
               <Button className='bg-orange-600 hover:bg-orange-700 text-white'>
                 Process Return
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -288,10 +288,10 @@ export default async function SingleReturnPage({ params }: SingleReturnPageProps
 
             {/* Contact Info */}
             <div className='bg-white rounded-lg shadow-sm border border-gray-200'>
-              <div className='p-6 border-b border-gray-200'>
+              <div className='px-6 py-4 border-b border-gray-200'>
                 <h2 className='text-lg font-semibold text-gray-900'>Contact info</h2>
               </div>
-              <div className='p-6 space-y-4'>
+              <div className='px-2 py-4 space-y-4'>
                 <div className='flex items-center gap-3'>
                   <div className='w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center'>
                     <span className='text-gray-600 text-sm'>@</span>
