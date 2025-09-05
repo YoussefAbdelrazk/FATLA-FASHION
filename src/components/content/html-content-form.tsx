@@ -9,7 +9,7 @@ import { Edit, Eye, Save } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { HTMLEditor } from '../about-us/html-editor';
+import { TipTapEditor } from '../ui/tiptap-editor';
 
 interface HTMLContentFormProps {
   initialData?: {
@@ -65,7 +65,7 @@ export function HTMLContentForm({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <HTMLEditor
+                    <TipTapEditor
                       value={field.value}
                       onChange={field.onChange}
                       label='المحتوى العربي'
@@ -84,7 +84,7 @@ export function HTMLContentForm({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <HTMLEditor
+                    <TipTapEditor
                       value={field.value}
                       onChange={field.onChange}
                       label='المحتوى الإنجليزي'
