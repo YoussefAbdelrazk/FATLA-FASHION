@@ -89,3 +89,89 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Arabic Font Support */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* RTL Support for TipTap Editor */
+.ProseMirror.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.ProseMirror.rtl p,
+.ProseMirror.rtl h1,
+.ProseMirror.rtl h2,
+.ProseMirror.rtl h3,
+.ProseMirror.rtl h4,
+.ProseMirror.rtl h5,
+.ProseMirror.rtl h6 {
+  text-align: right;
+}
+
+.ProseMirror.rtl ul,
+.ProseMirror.rtl ol {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+.ProseMirror.rtl blockquote {
+  border-right: 3px solid #e5e7eb;
+  border-left: none;
+  padding-right: 1rem;
+  padding-left: 0;
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+/* Arabic Typography */
+.ProseMirror.rtl {
+  font-family: 'Noto Sans Arabic', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif;
+  line-height: 1.8;
+  letter-spacing: 0.025em;
+}
+
+/* Better Arabic text rendering */
+.ProseMirror.rtl * {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL Table Support */
+.ProseMirror.rtl table {
+  direction: rtl;
+}
+
+.ProseMirror.rtl th,
+.ProseMirror.rtl td {
+  text-align: right;
+}
+
+/* RTL List Support */
+.ProseMirror.rtl li {
+  text-align: right;
+}
+
+/* RTL Link Support */
+.ProseMirror.rtl a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* RTL Image Support */
+.ProseMirror.rtl img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* RTL Code Block Support */
+.ProseMirror.rtl pre {
+  direction: ltr;
+  text-align: left;
+}
+
+.ProseMirror.rtl code {
+  direction: ltr;
+  text-align: left;
+}

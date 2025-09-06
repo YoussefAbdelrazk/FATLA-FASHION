@@ -70,6 +70,8 @@ export function HTMLContentForm({
                       onChange={field.onChange}
                       label='المحتوى العربي'
                       placeholder='أدخل المحتوى العربي هنا...'
+                      isRTL={true}
+                      language='ar'
                     />
                   </FormControl>
                   <FormMessage />
@@ -89,6 +91,8 @@ export function HTMLContentForm({
                       onChange={field.onChange}
                       label='المحتوى الإنجليزي'
                       placeholder='Enter English content here...'
+                      isRTL={false}
+                      language='en'
                     />
                   </FormControl>
                   <FormMessage />
