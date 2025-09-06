@@ -2,16 +2,7 @@ import ReturnActions from '@/components/returns/return-actions';
 import ReturnItemsModern from '@/components/returns/return-items-modern';
 import { Button } from '@/components/ui/button';
 import { getReturnById } from '@/data/returns';
-import {
-  ArrowLeft,
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  CreditCard,
-  MoreVertical,
-  RotateCcw,
-  XCircle,
-} from 'lucide-react';
+import { ArrowLeft, Calendar, CreditCard, RotateCcw, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';

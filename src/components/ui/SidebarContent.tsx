@@ -15,6 +15,7 @@ import {
   LucideIcon,
   Package,
   Palette,
+  Phone,
   Plus,
   RotateCcw,
   Shield,
@@ -75,7 +76,7 @@ const navigation: NavigationItemType[] = [
   },
   { name: 'العملاء', href: '/clients', icon: Users },
   { name: 'السلايدرز', href: '/sliders', icon: Image },
-
+  { name: 'معلومات التواصل', href: '/contact', icon: Phone },
   { name: 'الإشعارات', href: '/notifications', icon: Bell },
 
   {
