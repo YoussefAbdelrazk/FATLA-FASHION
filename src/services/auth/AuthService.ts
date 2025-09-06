@@ -1,13 +1,12 @@
 'use server';
 
 import baseAPI from '@/lib/config';
-import { removeToken, setRefreshToken, setToken } from '@/lib/Cookie';
+import { removeRefreshToken, removeToken, setRefreshToken, setToken } from '@/lib/Cookie';
 
 interface LoginResponse {
   token: string;
   refreshToken: string;
 }
-
 
 export const login = async (mobileNumber: string, password: string): Promise<LoginResponse> => {
   const api = await baseAPI();
@@ -22,14 +21,9 @@ export const login = async (mobileNumber: string, password: string): Promise<Log
 };
 
 export const logout = async (): Promise<void> => {
-  try {
-    const api = await baseAPI();
-    await api.post(`/api/en/AdminAuth/logout`);
-  } catch (error) {
-    console.error('Logout API call failed:', error);
-  } finally {
-    removeToken();
-  }
+  // Clear tokens from cookies
+  removeToken();
+  removeRefreshToken();
 };
 
 // Request OTP for password reset

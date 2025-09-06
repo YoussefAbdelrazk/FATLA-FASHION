@@ -27,3 +27,15 @@ export const removeAuthToken = () => {
 export const isAuthenticated = () => {
   return !!getAuthToken();
 };
+
+export const logout = () => {
+  // Clear all client-side storage
+  if (typeof window !== 'undefined') {
+    localStorage.clear();
+    sessionStorage.clear();
+  }
+  // Force page refresh and redirect to login
+  if (typeof window !== 'undefined') {
+    window.location.href = '/login';
+  }
+};

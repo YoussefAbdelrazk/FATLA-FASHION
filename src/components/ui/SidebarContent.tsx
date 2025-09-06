@@ -285,7 +285,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
       </nav>
 
       {/* Bottom section */}
-      <div className='p-3 lg:p-4 border-t border-gray-200 dark:border-gray-700'>
+      {/* <div className='p-3 lg:p-4 border-t border-gray-200 dark:border-gray-700'>
         <Button
           variant='ghost'
           className={cn(
@@ -296,7 +296,7 @@ export default function SidebarContent({ isExpanded, onLinkClick }: SidebarConte
           <LogOut className={cn('w-5 h-5 flex-shrink-0', isExpanded ? 'mr-3' : '')} />
           {isExpanded && 'Logout'}
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { login, requestOtp, resetPassword, verifyOtp } from '@/services/auth/AuthService';
+import { login, logout, requestOtp, resetPassword, verifyOtp } from '@/services/auth/AuthService';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
@@ -40,6 +40,20 @@ export const useAuthHook = () => {
       router.push('/login');
     },
   });
+
+  const { mutateAsync: logoutMutation, isPending: isLogoutPending } = useMutation({
+    mutationFn: () => logout(),
+    onSuccess: () => {
+      // Clear any client-side storage
+      if (typeof window !== 'undefined') {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+      // Force page refresh and redirect to login
+      window.location.href = '/login';
+    },
+  });
+
   return {
     loginMutation,
     isPending,
@@ -49,5 +63,7 @@ export const useAuthHook = () => {
     isVerifyOtpPending,
     resetPasswordMutation,
     isResetPasswordPending,
+    logoutMutation,
+    isLogoutPending,
   };
 };

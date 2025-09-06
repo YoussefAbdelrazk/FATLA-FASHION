@@ -1,7 +1,6 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -12,14 +11,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useSidebar } from '@/context/sidebar';
-import { Bell, Crown, LogOut, Menu, Settings, Shield, ShoppingBag, User } from 'lucide-react';
+import { useAuthHook } from '@/hooks/useAuthHook';
+import { LogOut, Menu, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ThemeToggle } from './theme-toggle';
+import { LogoutButton } from '../auth/logout-button';
 
 export function Navbar() {
   const [notificationCount] = useState(8);
   const { openMobileSidebar } = useSidebar();
+  const { logoutMutation, isLogoutPending } = useAuthHook();
+
+  const handleLogout = () => {
+    logoutMutation();
+  };
 
   return (
     <nav className='sticky top-0 z-50 backdrop-blur-xl bg-white/95 dark:bg-black/95 border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm'>
@@ -49,7 +55,7 @@ export function Navbar() {
           </div>
 
           {/* Right Section - Quick Access Icons */}
-          <div className='flex items-center space-x-1 lg:space-x-2'>
+          <div className='flex items-center space-x-2 lg:space-x-4'>
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -117,12 +123,19 @@ export function Navbar() {
                   <span className='font-medium text-black dark:text-white'>System Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className='bg-gray-200 dark:bg-gray-700' />
-                <DropdownMenuItem className='p-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200'>
+                <DropdownMenuItem
+                  className='p-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200'
+                  onClick={handleLogout}
+                  disabled={isLogoutPending}
+                >
                   <LogOut className='mr-3 h-4 w-4 text-red-500' />
-                  <span className='font-medium text-red-600 dark:text-red-400'>Log out</span>
+                  <span className='font-medium text-red-600 dark:text-red-400'>
+                    {isLogoutPending ? 'جاري تسجيل الخروج...' : 'تسجيل الخروج'}
+                  </span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu> */}
+            <LogoutButton />
           </div>
         </div>
       </div>
