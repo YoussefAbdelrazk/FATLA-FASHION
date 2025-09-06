@@ -2,47 +2,41 @@
 
 import { ContactDisplay } from '@/components/contact/contact-display';
 import { ContactForm } from '@/components/contact/contact-form';
-import { useContact } from '@/hooks/useContact';
+import { useCreateContactInfo, useGetContactInfo, useUpdateContactInfo } from '@/hooks/useContact';
 import { ContactFormData } from '@/lib/schemas/contact-schema';
-import { getContactInfo } from '@/services/contact/ContactService';
-import { ContactInfo } from '@/types/contact';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export function ContactClient() {
-  const { saveContactInfo, updateContact, isLoading } = useContact();
-  const [contactData, setContactData] = useState<ContactInfo | null>(null);
-  const [isLoadingData, setIsLoadingData] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getContactInfo('en');
-        setContactData(data);
-      } catch (error) {
-        console.error('Error fetching contact data:', error);
-      } finally {
-        setIsLoadingData(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  // React Query hooks
+  const { data: contactData, isLoading: isLoadingData, error } = useGetContactInfo('en');
+  const createMutation = useCreateContactInfo();
+  const updateMutation = useUpdateContactInfo();
 
   const handleSubmit = async (data: ContactFormData) => {
     try {
       if (contactData) {
         // Update existing contact
-        await updateContact(contactData.id, data, 'en');
+        updateMutation.mutate(
+          { data, lang: 'en' },
+          {
+            onSuccess: () => {
+              setIsEditing(false);
+            },
+          },
+        );
       } else {
         // Create new contact
-        await saveContactInfo(data, 'en');
+        createMutation.mutate(
+          { data, lang: 'en' },
+          {
+            onSuccess: () => {
+              setIsEditing(false);
+            },
+          },
+        );
       }
-
-      // Refresh data after successful save
-      const updatedData = await getContactInfo('en');
-      setContactData(updatedData);
-      setIsEditing(false);
     } catch (error) {
       console.error('Error saving contact data:', error);
     }
@@ -56,10 +50,29 @@ export function ContactClient() {
     setIsEditing(false);
   };
 
+  // Show error state if there's an error
+  if (error) {
+    return (
+      <div className='space-y-6'>
+        <div className='text-center text-red-600'>
+          فشل في جلب معلومات التواصل. يرجى المحاولة مرة أخرى.
+        </div>
+        <div className='flex justify-center'>
+          <button
+            onClick={handleEdit}
+            className='px-6 py-3 bg-black text-white rounded-lg transition-colors'
+          >
+            إضافة معلومات تواصل
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='space-y-6'>
       {/* Contact Display Component */}
-      <ContactDisplay contactData={contactData} isLoading={isLoadingData} />
+      <ContactDisplay contactData={contactData || null} isLoading={isLoadingData} />
 
       {/* Contact Form Component */}
       {isEditing ? (
@@ -75,7 +88,11 @@ export function ContactClient() {
               إلغاء
             </button>
           </div>
-          <ContactForm onSubmit={handleSubmit} isLoading={isLoading} initialData={contactData} />
+          <ContactForm
+            onSubmit={handleSubmit}
+            isLoading={createMutation.isPending || updateMutation.isPending}
+            initialData={contactData}
+          />
         </div>
       ) : (
         <div className='flex justify-center'>

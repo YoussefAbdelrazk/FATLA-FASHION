@@ -3,72 +3,93 @@
 import { ContactFormData } from '@/lib/schemas/contact-schema';
 import { createContactInfo, updateContactInfo } from '@/services/contact/ContactActions';
 import { getContactInfo } from '@/services/contact/ContactService';
-import { ContactInfo } from '@/types/contact';
-import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-export function useContact() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const saveContactInfo = async (data: ContactFormData, lang: string = 'en'): Promise<void> => {
-    setIsLoading(true);
-
-    try {
-      const response = await createContactInfo(data, lang);
-
-      if (response.success) {
-        toast.success('تم حفظ معلومات التواصل بنجاح!');
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (error) {
-      console.error('Error saving contact information:', error);
-      toast.error('فشل في حفظ معلومات التواصل. يرجى المحاولة مرة أخرى.');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+// Define error type for API responses
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
   };
+}
 
-  const updateContact = async (
-    id: number,
-    data: ContactFormData,
-    lang: string = 'en',
-  ): Promise<void> => {
-    setIsLoading(true);
+// Query keys
+export const contactKeys = {
+  all: ['contact'] as const,
+  info: (lang: string) => [...contactKeys.all, 'info', lang] as const,
+};
 
-    try {
-      const response = await updateContactInfo(id, data, lang);
-
-      if (response.success) {
-        toast.success('تم تحديث معلومات التواصل بنجاح!');
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (error) {
-      console.error('Error updating contact information:', error);
-      toast.error('فشل في تحديث معلومات التواصل. يرجى المحاولة مرة أخرى.');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchContactInfo = async (lang: string = 'en'): Promise<ContactInfo | null> => {
-    try {
+// Get contact info
+export const useGetContactInfo = (lang: string = 'en') => {
+  return useQuery({
+    queryKey: contactKeys.info(lang),
+    queryFn: async () => {
       const response = await getContactInfo(lang);
       return response;
-    } catch (error) {
-      console.error('Error fetching contact information:', error);
-      toast.error('فشل في جلب معلومات التواصل');
-      return null;
-    }
-  };
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
+};
+
+// Create contact info
+export const useCreateContactInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ data, lang = 'en' }: { data: ContactFormData; lang?: string }) => {
+      const response = await createContactInfo(data, lang);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: contactKeys.all });
+      toast.success('تم حفظ معلومات التواصل بنجاح!');
+    },
+    onError: (error: Error) => {
+      const apiError = error as unknown as ApiError;
+      console.error('Error saving contact information:', error);
+      toast.error(
+        apiError?.response?.data?.message || 'فشل في حفظ معلومات التواصل. يرجى المحاولة مرة أخرى.',
+      );
+    },
+  });
+};
+
+// Update contact info
+export const useUpdateContactInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ data, lang = 'en' }: { data: ContactFormData; lang?: string }) => {
+      const response = await updateContactInfo(data, lang);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: contactKeys.all });
+      toast.success('تم تحديث معلومات التواصل بنجاح!');
+    },
+    onError: (error: Error) => {
+      const apiError = error as unknown as ApiError;
+      console.error('Error updating contact information:', error);
+      toast.error(
+        apiError?.response?.data?.message ||
+          'فشل في تحديث معلومات التواصل. يرجى المحاولة مرة أخرى.',
+      );
+    },
+  });
+};
+
+// Legacy hook for backward compatibility (deprecated)
+export function useContact() {
+  const createMutation = useCreateContactInfo();
+  const updateMutation = useUpdateContactInfo();
 
   return {
-    saveContactInfo,
-    updateContact,
-    fetchContactInfo,
-    isLoading,
+    saveContactInfo: createMutation.mutate,
+    updateContact: updateMutation.mutate,
+
+    isLoading: createMutation.isPending || updateMutation.isPending,
   };
 }

@@ -13,10 +13,10 @@ export const createContactInfo = async (data: ContactFormData, lang: string = 'e
   }
 };
 
-export const updateContactInfo = async (id: number, data: ContactFormData, lang: string = 'en') => {
+export const updateContactInfo = async (data: ContactFormData, lang: string = 'en') => {
   try {
     const api = await baseAPI();
-    const response = await api.post(`/api/${lang}/ContactUs/EditContactUs?id=${id}`, data);
+    const response = await api.post(`/api/${lang}/ContactUs/update-contact-us`, data);
     return response.data;
   } catch (error) {
     throw error;
