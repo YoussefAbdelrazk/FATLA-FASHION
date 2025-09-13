@@ -4,7 +4,7 @@ import { TermsConditions, TermsConditionsFormData } from '@/types/terms-conditio
 export const getTermsConditions = async (lang: string = 'en'): Promise<TermsConditions> => {
   try {
     const api = await baseAPI();
-    const response = await api.get(`/api/${lang}/TermsConditions`);
+    const response = await api.get(`/api/${lang}/TermsAndConditions`);
     return response.data;
   } catch (error) {
     console.error('Error fetching terms and conditions:', error);
@@ -18,7 +18,10 @@ export const createOrUpdateTermsConditions = async (
 ): Promise<TermsConditions> => {
   try {
     const api = await baseAPI();
-    const response = await api.post(`/api/${lang}/TermsConditions`, data);
+    const response = await api.post(
+      `/api/${lang}/TermsAndConditions/update-terms-and-conditions`,
+      data,
+    );
     return response.data;
   } catch (error) {
     console.error('Error saving terms and conditions:', error);

@@ -16,7 +16,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useAuthHook } from '@/hooks/useAuthHook';
+import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 const formSchema = z.object({
@@ -35,6 +37,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function LoginForm() {
   const { loginMutation, isPending } = useAuthHook();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -81,7 +84,24 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>كلمة المرور</FormLabel>
               <FormControl>
-                <Input type='password' placeholder='أدخل كلمة المرور' {...field} />
+                <div className='relative'>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder='أدخل كلمة المرور'
+                    {...field}
+                  />
+                  <button
+                    type='button'
+                    className='absolute inset-y-0 left-3 flex items-center'
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className='h-4 w-4 text-gray-400' />
+                    ) : (
+                      <Eye className='h-4 w-4 text-gray-400' />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormDescription>هذه هي كلمة المرور الخاصة بك</FormDescription>
               <FormMessage />

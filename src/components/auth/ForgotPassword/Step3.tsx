@@ -91,7 +91,7 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
             />
             <button
               type='button'
-              className='absolute inset-y-0 right-0 pr-3 flex items-center'
+              className='absolute inset-y-0 left-3 pr-3 flex items-center'
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? (
@@ -120,7 +120,7 @@ export default function Step3({ mobileNumber, onSuccess, onBack }: Step3Props) {
             />
             <button
               type='button'
-              className='absolute inset-y-0 right-0 pr-3 flex items-center'
+              className='absolute inset-y-0 left-3 pr-3 flex items-center'
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? (
