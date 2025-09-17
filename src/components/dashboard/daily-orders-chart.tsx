@@ -1,11 +1,68 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { dailyOrdersData } from '@/data';
+import { useGetDashboardData } from '@/hooks/useDashboard';
 import { MoreHorizontal } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export default function DailyOrdersChart() {
+  const { data: dashboardData, isLoading, error } = useGetDashboardData();
+
+  if (isLoading) {
+    return (
+      <Card className='border-0 shadow-lg bg-white dark:bg-black'>
+        <CardHeader>
+          <div className='flex items-center justify-between'>
+            <div>
+              <CardTitle className='text-xl font-bold text-black dark:text-white'>
+                الطلبات اليومية
+              </CardTitle>
+              <CardDescription className='text-gray-600 dark:text-gray-400'>
+                عدد الطلبات خلال آخر 30 يوم
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className='h-64 flex items-center justify-center'>
+            <div className='animate-pulse text-gray-500'>جاري التحميل...</div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className='border-0 shadow-lg bg-white dark:bg-black'>
+        <CardHeader>
+          <div className='flex items-center justify-between'>
+            <div>
+              <CardTitle className='text-xl font-bold text-black dark:text-white'>
+                الطلبات اليومية
+              </CardTitle>
+              <CardDescription className='text-gray-600 dark:text-gray-400'>
+                عدد الطلبات خلال آخر 30 يوم
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className='h-64 flex items-center justify-center text-red-500'>
+            خطأ في تحميل البيانات
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!dashboardData) {
+    return null;
+  }
+
+  const { barChart } = dashboardData;
+  const maxOrders = Math.max(...barChart.data.map(item => item.ordersCount));
+
   return (
     <Card className='border-0 shadow-lg bg-white dark:bg-black'>
       <CardHeader>
@@ -15,7 +72,7 @@ export default function DailyOrdersChart() {
               الطلبات اليومية
             </CardTitle>
             <CardDescription className='text-gray-600 dark:text-gray-400'>
-              عدد الطلبات خلال آخر 7 أيام
+              عدد الطلبات خلال آخر 30 يوم
             </CardDescription>
           </div>
           <Button variant='outline' size='sm' className='border-gray-200 dark:border-gray-700'>
@@ -26,15 +83,15 @@ export default function DailyOrdersChart() {
       <CardContent>
         <div className='space-y-4'>
           <div className='flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4'>
-            <span>عدد الطلبات</span>
-            <span>الحد الأقصى: {dailyOrdersData.maxOrders} طلب</span>
+            <span>{barChart.yAxisLabel}</span>
+            <span>الحد الأقصى: {maxOrders} طلب</span>
           </div>
           <div className='h-64'>
             <ResponsiveContainer width='100%' height='100%'>
-              <BarChart data={dailyOrdersData.data}>
+              <BarChart data={barChart.data}>
                 <CartesianGrid strokeDasharray='3 3' stroke='#374151' opacity={0.1} />
                 <XAxis
-                  dataKey='day'
+                  dataKey='date'
                   stroke='#6B7280'
                   fontSize={12}
                   tickLine={false}
@@ -58,7 +115,7 @@ export default function DailyOrdersChart() {
                   formatter={(value: number) => [`${value} طلب`, 'الطلبات']}
                 />
                 <Bar
-                  dataKey='orders'
+                  dataKey='ordersCount'
                   fill='#000000'
                   radius={[4, 4, 0, 0]}
                   className='dark:fill-white'

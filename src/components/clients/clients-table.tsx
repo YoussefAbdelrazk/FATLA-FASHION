@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Pagination } from '@/components/ui/pagination';
 import {
   Table,
   TableBody,
@@ -26,7 +27,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { clientsData } from '@/data/clients';
+import {
+  useBlockClient,
+  useDeleteClient,
+  useGetAllClients,
+  useUnblockClient,
+} from '@/hooks/useClients';
 import { Client } from '@/types/client';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
@@ -35,6 +41,7 @@ import {
   ChevronUp,
   Edit,
   Eye,
+  Loader2,
   MoreHorizontal,
   Search,
   Shield,
@@ -56,13 +63,34 @@ export default function ClientsTable() {
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [clientToBlock, setClientToBlock] = useState<Client | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+
+  // Use React Query hooks
+  const {
+    data: clientsData,
+    isLoading,
+    error,
+  } = useGetAllClients('ar', currentPage, pageSize);
+  const blockClientMutation = useBlockClient();
+  const unblockClientMutation = useUnblockClient();
+  const deleteClientMutation = useDeleteClient();
+
+  const clients = clientsData?.clients || [];
+  const pagination = clientsData?.pagination || {
+    currentPage: 1,
+    pageSize: 20,
+    totalCount: 0,
+    totalPages: 0,
+  };
+  const loading = isLoading;
 
   // Filter and sort clients
-  const filteredClients = clientsData.filter(
+  const filteredClients = clients.filter(
     client =>
       `${client.firstName} ${client.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.mobile.includes(searchTerm) ||
-      client.status.toLowerCase().includes(searchTerm.toLowerCase()),
+      client.mobileNumber.includes(searchTerm) ||
+      (client.isBlocked ? 'محظور' : 'نشط').toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const sortedClients = [...filteredClients].sort((a, b) => {
@@ -75,6 +103,10 @@ export default function ClientsTable() {
 
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+    }
+
+    if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+      return sortDirection === 'asc' ? (aValue ? 1 : -1) : bValue ? 1 : -1;
     }
 
     return 0;
@@ -108,18 +140,42 @@ export default function ClientsTable() {
     setIsBlockModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    // In a real app, this would call an API
-    console.log('Deleting client:', clientToDelete?.id);
-    setIsDeleteModalOpen(false);
-    setClientToDelete(null);
+  // Pagination handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const confirmBlock = () => {
-    // In a real app, this would call an API
-    console.log('Blocking client:', clientToBlock?.id);
-    setIsBlockModalOpen(false);
-    setClientToBlock(null);
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
+
+  const confirmDelete = async () => {
+    if (!clientToDelete) return;
+
+    try {
+      await deleteClientMutation.mutateAsync({ id: clientToDelete.id });
+      setIsDeleteModalOpen(false);
+      setClientToDelete(null);
+    } catch (error) {
+      console.error('Error deleting client:', error);
+    }
+  };
+
+  const confirmBlock = async () => {
+    if (!clientToBlock) return;
+
+    try {
+      if (clientToBlock.isBlocked) {
+        await unblockClientMutation.mutateAsync({ id: clientToBlock.id });
+      } else {
+        await blockClientMutation.mutateAsync({ id: clientToBlock.id });
+      }
+      setIsBlockModalOpen(false);
+      setClientToBlock(null);
+    } catch (error) {
+      console.error('Error updating client status:', error);
+    }
   };
 
   const SortIcon = ({ field }: { field: keyof Client }) => {
@@ -190,31 +246,31 @@ export default function ClientsTable() {
                   <TableHead>
                     <Button
                       variant='ghost'
-                      onClick={() => handleSort('mobile')}
+                      onClick={() => handleSort('mobileNumber')}
                       className='h-auto p-0 font-semibold'
                     >
                       رقم الهاتف
-                      <SortIcon field='mobile' />
+                      <SortIcon field='mobileNumber' />
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant='ghost'
-                      onClick={() => handleSort('status')}
+                      onClick={() => handleSort('isBlocked')}
                       className='h-auto p-0 font-semibold'
                     >
                       الحالة
-                      <SortIcon field='status' />
+                      <SortIcon field='isBlocked' />
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant='ghost'
-                      onClick={() => handleSort('lastActivity')}
+                      onClick={() => handleSort('lastLogin')}
                       className='h-auto p-0 font-semibold'
                     >
-                      آخر نشاط
-                      <SortIcon field='lastActivity' />
+                      آخر تسجيل دخول
+                      <SortIcon field='lastLogin' />
                     </Button>
                   </TableHead>
                   <TableHead>
@@ -251,80 +307,114 @@ export default function ClientsTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedClients.map(client => (
-                  <TableRow key={client.id}>
-                    <TableCell className='font-medium'>{client.id}</TableCell>
-                    <TableCell>{client.firstName}</TableCell>
-                    <TableCell>{client.lastName}</TableCell>
-                    <TableCell>{client.mobile}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={client.status === 'Active' ? 'default' : 'destructive'}
-                        className='capitalize'
-                      >
-                        {client.status === 'Active' ? 'نشط' : 'محظور'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {format(new Date(client.lastActivity), 'MMM dd, yyyy HH:mm', { locale: ar })}
-                    </TableCell>
-                    <TableCell>{client.ordersCount}</TableCell>
-                    <TableCell>{client.ordersTotal.toLocaleString()} جنيه</TableCell>
-                    <TableCell>
-                      {format(new Date(client.createdAt), 'MMM dd, yyyy', { locale: ar })}
-                    </TableCell>
-                    <TableCell className='text-right'>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'>فتح القائمة</span>
-                            <MoreHorizontal className='h-4 w-4' />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align='end'>
-                          <DropdownMenuItem onClick={() => handleShowDetails(client)}>
-                            <Eye className='ml-2 h-4 w-4' />
-                            عرض التفاصيل
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEdit(client)}>
-                            <Edit className='ml-2 h-4 w-4' />
-                            تعديل
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleBlock(client)}
-                            className={
-                              client.status === 'Active' ? 'text-destructive' : 'text-green-600'
-                            }
-                          >
-                            {client.status === 'Active' ? (
-                              <>
-                                <ShieldOff className='ml-2 h-4 w-4' />
-                                حظر
-                              </>
-                            ) : (
-                              <>
-                                <Shield className='ml-2 h-4 w-4' />
-                                إلغاء الحظر
-                              </>
-                            )}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(client)}
-                            className='text-destructive'
-                          >
-                            <Trash2 className='ml-2 h-4 w-4' />
-                            حذف
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className='text-center py-8'>
+                      <div className='flex items-center justify-center space-x-2 space-x-reverse'>
+                        <Loader2 className='h-4 w-4 animate-spin' />
+                        <span>جاري التحميل...</span>
+                      </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className='text-center py-8 text-destructive'>
+                      خطأ في تحميل البيانات:{' '}
+                      {error instanceof Error ? error.message : 'حدث خطأ غير متوقع'}
+                    </TableCell>
+                  </TableRow>
+                ) : sortedClients.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className='text-center py-8 text-muted-foreground'>
+                      لا توجد عملاء
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  sortedClients.map(client => (
+                    <TableRow key={client.id}>
+                      <TableCell className='font-medium'>{client.id}</TableCell>
+                      <TableCell>{client.firstName}</TableCell>
+                      <TableCell>{client.lastName}</TableCell>
+                      <TableCell>{client.mobileNumber}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={!client.isBlocked ? 'default' : 'destructive'}
+                          className='capitalize'
+                        >
+                          {!client.isBlocked ? 'نشط' : 'محظور'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {format(new Date(client.lastLogin), 'MMM dd, yyyy HH:mm', { locale: ar })}
+                      </TableCell>
+                      <TableCell>{client.ordersCount}</TableCell>
+                      <TableCell>{client.ordersTotal.toLocaleString()} جنيه</TableCell>
+                      <TableCell>
+                        {format(new Date(client.createdAt), 'MMM dd, yyyy', { locale: ar })}
+                      </TableCell>
+                      <TableCell className='text-right'>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant='ghost' className='h-8 w-8 p-0'>
+                              <span className='sr-only'>فتح القائمة</span>
+                              <MoreHorizontal className='h-4 w-4' />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align='end'>
+                            <DropdownMenuItem onClick={() => handleShowDetails(client)}>
+                              <Eye className='ml-2 h-4 w-4' />
+                              عرض التفاصيل
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEdit(client)}>
+                              <Edit className='ml-2 h-4 w-4' />
+                              تعديل
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleBlock(client)}
+                              className={!client.isBlocked ? 'text-destructive' : 'text-green-600'}
+                            >
+                              {!client.isBlocked ? (
+                                <>
+                                  <ShieldOff className='ml-2 h-4 w-4' />
+                                  حظر
+                                </>
+                              ) : (
+                                <>
+                                  <Shield className='ml-2 h-4 w-4' />
+                                  إلغاء الحظر
+                                </>
+                              )}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(client)}
+                              className='text-destructive'
+                            >
+                              <Trash2 className='ml-2 h-4 w-4' />
+                              حذف
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          {!loading && !error && sortedClients.length > 0 && (
+            <div className='mt-4'>
+              <Pagination
+                pagination={pagination}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+                loading={loading}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -352,15 +442,15 @@ export default function ClientsTable() {
               <div className='grid grid-cols-2 gap-4'>
                 <div>
                   <label className='text-sm font-medium text-muted-foreground'>رقم الهاتف</label>
-                  <p className='text-sm'>{selectedClient.mobile}</p>
+                  <p className='text-sm'>{selectedClient.mobileNumber}</p>
                 </div>
                 <div>
                   <label className='text-sm font-medium text-muted-foreground'>الحالة</label>
                   <Badge
-                    variant={selectedClient.status === 'Active' ? 'default' : 'destructive'}
+                    variant={!selectedClient.isBlocked ? 'default' : 'destructive'}
                     className='capitalize'
                   >
-                    {selectedClient.status === 'Active' ? 'نشط' : 'محظور'}
+                    {!selectedClient.isBlocked ? 'نشط' : 'محظور'}
                   </Badge>
                 </div>
                 <div>
@@ -374,9 +464,11 @@ export default function ClientsTable() {
                   <p className='text-sm'>{selectedClient.ordersTotal.toLocaleString()} جنيه</p>
                 </div>
                 <div>
-                  <label className='text-sm font-medium text-muted-foreground'>آخر نشاط</label>
+                  <label className='text-sm font-medium text-muted-foreground'>
+                    آخر تسجيل دخول
+                  </label>
                   <p className='text-sm'>
-                    {format(new Date(selectedClient.lastActivity), 'MMM dd, yyyy HH:mm', {
+                    {format(new Date(selectedClient.lastLogin), 'MMM dd, yyyy HH:mm', {
                       locale: ar,
                     })}
                   </p>
@@ -418,10 +510,10 @@ export default function ClientsTable() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {clientToBlock?.status === 'Active' ? 'حظر العميل' : 'إلغاء حظر العميل'}
+              {!clientToBlock?.isBlocked ? 'حظر العميل' : 'إلغاء حظر العميل'}
             </DialogTitle>
             <DialogDescription>
-              {clientToBlock?.status === 'Active'
+              {!clientToBlock?.isBlocked
                 ? 'هل أنت متأكد من حظر هذا العميل؟ لن يتمكن من الوصول إلى حسابه.'
                 : 'هل أنت متأكد من إلغاء حظر هذا العميل؟ سيتمكن من الوصول إلى حسابه مرة أخرى.'}
             </DialogDescription>
@@ -431,10 +523,10 @@ export default function ClientsTable() {
               إلغاء
             </Button>
             <Button
-              variant={clientToBlock?.status === 'Active' ? 'destructive' : 'default'}
+              variant={!clientToBlock?.isBlocked ? 'destructive' : 'default'}
               onClick={confirmBlock}
             >
-              {clientToBlock?.status === 'Active' ? 'حظر' : 'إلغاء الحظر'}
+              {!clientToBlock?.isBlocked ? 'حظر' : 'إلغاء الحظر'}
             </Button>
           </div>
         </DialogContent>

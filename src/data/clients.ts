@@ -222,12 +222,12 @@ const generateClientData = (id: number): Client => {
   const createdAt = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(); // Last year
 
   return {
-    id: String(id),
+    id: id,
     firstName,
     lastName,
-    mobile,
-    status,
-    lastActivity,
+    mobileNumber: mobile,
+    isBlocked: status === 'Blocked',
+    lastLogin: lastActivity,
     ordersCount,
     ordersTotal,
     createdAt,
