@@ -27,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useLanguage } from '@/context/language';
 import { useDeleteSlider, useGetAllSliders } from '@/hooks/useSliders';
 import { Slider } from '@/types/slider';
 import { format } from 'date-fns';
@@ -36,6 +37,7 @@ import {
   Edit,
   Eye,
   Image as ImageIcon,
+  Loader2,
   MoreHorizontal,
   Plus,
   Search,
@@ -47,6 +49,7 @@ import { useState } from 'react';
 
 export default function SlidersTable() {
   const router = useRouter();
+  const { language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<keyof Slider>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -56,7 +59,7 @@ export default function SlidersTable() {
   const [sliderToDelete, setSliderToDelete] = useState<Slider | null>(null);
 
   // React Query hooks
-  const { data: sliders = [], isLoading, error } = useGetAllSliders('en');
+  const { data: sliders = [], isLoading, error } = useGetAllSliders(language);
   const deleteSliderMutation = useDeleteSlider();
 
   // Debug logging
@@ -159,43 +162,6 @@ export default function SlidersTable() {
       return 0;
     });
 
-  const SortIcon = ({ field }: { field: keyof Slider }) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' ? (
-      <ChevronUp className='w-4 h-4 ml-1' />
-    ) : (
-      <ChevronDown className='w-4 h-4 ml-1' />
-    );
-  };
-
-  if (isLoading && sliders.length === 0) {
-    return (
-      <Card>
-        <CardContent className='flex items-center justify-center py-12'>
-          <div className='text-center'>
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>Loading sliders...</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error && sliders.length === 0) {
-    return (
-      <Card>
-        <CardContent className='flex items-center justify-center py-12'>
-          <div className='text-center'>
-            <p className='text-destructive mb-2'>Error loading sliders</p>
-            <p className='text-muted-foreground text-sm'>
-              {error instanceof Error ? error.message : 'An error occurred'}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <div className='space-y-6'>
       <Card>
@@ -233,7 +199,12 @@ export default function SlidersTable() {
                   >
                     <div className='flex items-center'>
                       المعرف
-                      <SortIcon field='id' />
+                      {sortField === 'id' &&
+                        (sortDirection === 'asc' ? (
+                          <ChevronUp className='w-4 h-4 ml-1' />
+                        ) : (
+                          <ChevronDown className='w-4 h-4 ml-1' />
+                        ))}
                     </div>
                   </TableHead>
                   <TableHead
@@ -242,7 +213,12 @@ export default function SlidersTable() {
                   >
                     <div className='flex items-center'>
                       الاسم العربي
-                      <SortIcon field='nameAr' />
+                      {sortField === 'nameAr' &&
+                        (sortDirection === 'asc' ? (
+                          <ChevronUp className='w-4 h-4 ml-1' />
+                        ) : (
+                          <ChevronDown className='w-4 h-4 ml-1' />
+                        ))}
                     </div>
                   </TableHead>
                   <TableHead
@@ -251,7 +227,12 @@ export default function SlidersTable() {
                   >
                     <div className='flex items-center'>
                       الاسم الإنجليزي
-                      <SortIcon field='nameEn' />
+                      {sortField === 'nameEn' &&
+                        (sortDirection === 'asc' ? (
+                          <ChevronUp className='w-4 h-4 ml-1' />
+                        ) : (
+                          <ChevronDown className='w-4 h-4 ml-1' />
+                        ))}
                     </div>
                   </TableHead>
                   <TableHead>الصورة العربية</TableHead>
@@ -262,7 +243,12 @@ export default function SlidersTable() {
                   >
                     <div className='flex items-center'>
                       اسم العلامة التجارية
-                      <SortIcon field='brandName' />
+                      {sortField === 'brandName' &&
+                        (sortDirection === 'asc' ? (
+                          <ChevronUp className='w-4 h-4 ml-1' />
+                        ) : (
+                          <ChevronDown className='w-4 h-4 ml-1' />
+                        ))}
                     </div>
                   </TableHead>
                   <TableHead
@@ -271,7 +257,12 @@ export default function SlidersTable() {
                   >
                     <div className='flex items-center'>
                       اسم المنتج
-                      <SortIcon field='variantName' />
+                      {sortField === 'variantName' &&
+                        (sortDirection === 'asc' ? (
+                          <ChevronUp className='w-4 h-4 ml-1' />
+                        ) : (
+                          <ChevronDown className='w-4 h-4 ml-1' />
+                        ))}
                     </div>
                   </TableHead>
                   <TableHead
@@ -280,7 +271,12 @@ export default function SlidersTable() {
                   >
                     <div className='flex items-center'>
                       اسم الفئة
-                      <SortIcon field='categoryName' />
+                      {sortField === 'categoryName' &&
+                        (sortDirection === 'asc' ? (
+                          <ChevronUp className='w-4 h-4 ml-1' />
+                        ) : (
+                          <ChevronDown className='w-4 h-4 ml-1' />
+                        ))}
                     </div>
                   </TableHead>
                   <TableHead>الظهور</TableHead>
@@ -288,113 +284,137 @@ export default function SlidersTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAndSortedSliders.map(slider => (
-                  <TableRow key={slider.id} className='hover:bg-muted/50'>
-                    <TableCell className='font-mono text-sm'>{slider.id}</TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={slider.nameAr}>
-                        {slider.nameAr}
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className='text-center py-8'>
+                      <div className='flex items-center justify-center space-x-2 space-x-reverse'>
+                        <Loader2 className='h-4 w-4 animate-spin' />
+                        <span>جاري التحميل...</span>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='max-w-[150px] truncate' title={slider.nameEn}>
-                        {slider.nameEn}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
-                        {slider.imageUrlAr ? (
-                          <Image
-                            src={slider.imageUrlAr}
-                            alt='الصورة العربية'
-                            width={64}
-                            height={48}
-                            className='object-cover w-full h-full'
-                          />
-                        ) : (
-                          <ImageIcon className='w-6 h-6 text-muted-foreground' />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
-                        {slider.imageUrlEn ? (
-                          <Image
-                            src={slider.imageUrlEn}
-                            alt='الصورة الإنجليزية'
-                            width={64}
-                            height={48}
-                            className='object-cover w-full h-full'
-                          />
-                        ) : (
-                          <ImageIcon className='w-6 h-6 text-muted-foreground' />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant='secondary' className='font-normal'>
-                        {slider.brandName || 'غير محدد'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant='outline' className='font-normal'>
-                        {slider.variantName || 'غير محدد'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant='outline' className='font-normal'>
-                        {slider.categoryName || 'غير محدد'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Switch
-                        checked={slider.isVisible}
-                        onCheckedChange={() => {}}
-                        variant={slider.isVisible ? 'success' : 'default'}
-                        size='md'
-                        showIcon
-                        label={slider.isVisible ? 'ظاهر' : 'مخفي'}
-                        description={
-                          slider.isVisible ? 'السلايدر مرئي للعملاء' : 'السلايدر مخفي عن العملاء'
-                        }
-                      />
-                    </TableCell>
-                    <TableCell className='text-right'>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'>فتح القائمة</span>
-                            <MoreHorizontal className='h-4 w-4' />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align='end'>
-                          <DropdownMenuItem onClick={() => handleShowDetails(slider)}>
-                            <Eye className='mr-2 h-4 w-4' />
-                            عرض التفاصيل
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEdit(slider)}>
-                            <Edit className='mr-2 h-4 w-4' />
-                            تعديل السلايدر
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(slider)}
-                            className='text-red-600 focus:text-red-600'
-                          >
-                            <Trash2 className='mr-2 h-4 w-4' />
-                            حذف السلايدر
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className='text-center py-8 text-destructive'>
+                      خطأ في تحميل البيانات:{' '}
+                      {error instanceof Error ? error.message : 'حدث خطأ غير متوقع'}
+                    </TableCell>
+                  </TableRow>
+                ) : filteredAndSortedSliders.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={10} className='text-center py-8'>
+                      <p className='text-muted-foreground'>لا توجد سلايدرز</p>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredAndSortedSliders.map(slider => (
+                    <TableRow key={slider.id} className='hover:bg-muted/50'>
+                      <TableCell className='font-mono text-sm'>{slider.id}</TableCell>
+                      <TableCell>
+                        <div className='max-w-[150px] truncate' title={slider.nameAr}>
+                          {slider.nameAr}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='max-w-[150px] truncate' title={slider.nameEn}>
+                          {slider.nameEn}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
+                          {slider.imageUrlAr ? (
+                            <Image
+                              src={slider.imageUrlAr}
+                              alt='الصورة العربية'
+                              width={64}
+                              height={48}
+                              className='object-cover w-full h-full'
+                            />
+                          ) : (
+                            <ImageIcon className='w-6 h-6 text-muted-foreground' />
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='w-16 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden'>
+                          {slider.imageUrlEn ? (
+                            <Image
+                              src={slider.imageUrlEn}
+                              alt='الصورة الإنجليزية'
+                              width={64}
+                              height={48}
+                              className='object-cover w-full h-full'
+                            />
+                          ) : (
+                            <ImageIcon className='w-6 h-6 text-muted-foreground' />
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant='secondary' className='font-normal'>
+                          {slider.brandName || 'غير محدد'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant='outline' className='font-normal'>
+                          {slider.variantName || 'غير محدد'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant='outline' className='font-normal'>
+                          {slider.categoryName || 'غير محدد'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={slider.isVisible}
+                          onCheckedChange={() => {}}
+                          variant={slider.isVisible ? 'success' : 'default'}
+                          size='md'
+                          showIcon
+                          label={slider.isVisible ? 'ظاهر' : 'مخفي'}
+                          description={
+                            slider.isVisible ? 'السلايدر مرئي للعملاء' : 'السلايدر مخفي عن العملاء'
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className='text-right'>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant='ghost' className='h-8 w-8 p-0'>
+                              <span className='sr-only'>فتح القائمة</span>
+                              <MoreHorizontal className='h-4 w-4' />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align='end'>
+                            <DropdownMenuItem onClick={() => handleShowDetails(slider)}>
+                              <Eye className='mr-2 h-4 w-4' />
+                              عرض التفاصيل
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleEdit(slider)}>
+                              <Edit className='mr-2 h-4 w-4' />
+                              تعديل السلايدر
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(slider)}
+                              className='text-red-600 focus:text-red-600'
+                            >
+                              <Trash2 className='mr-2 h-4 w-4' />
+                              حذف السلايدر
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
 
           {/* Empty State */}
-          {filteredAndSortedSliders.length === 0 && (
+          {!isLoading && !error && filteredAndSortedSliders.length === 0 && (
             <div className='text-center py-12'>
               <ImageIcon className='w-12 h-12 text-muted-foreground mx-auto mb-4' />
               <h3 className='text-lg font-semibold mb-2'>لم يتم العثور على سلايدرز</h3>

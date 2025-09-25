@@ -27,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useLanguage } from '@/context/language';
 import {
   useBlockClient,
   useDeleteClient,
@@ -54,6 +55,7 @@ import { useState } from 'react';
 
 export default function ClientsTable() {
   const router = useRouter();
+  const { language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<keyof Client>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -67,11 +69,7 @@ export default function ClientsTable() {
   const [pageSize, setPageSize] = useState(20);
 
   // Use React Query hooks
-  const {
-    data: clientsData,
-    isLoading,
-    error,
-  } = useGetAllClients('ar', currentPage, pageSize);
+  const { data: clientsData, isLoading, error } = useGetAllClients(language, currentPage, pageSize);
   const blockClientMutation = useBlockClient();
   const unblockClientMutation = useUnblockClient();
   const deleteClientMutation = useDeleteClient();

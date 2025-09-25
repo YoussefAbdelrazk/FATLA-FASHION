@@ -31,12 +31,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useLanguage } from '@/context/language';
 import { useDeleteBrand, useGetAllBrands } from '@/hooks/useBrands';
 import { BrandforAll } from '@/types/brand';
 import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  Loader2,
   MoreHorizontal,
   Pencil,
   Plus,
@@ -69,9 +71,10 @@ const getValidImageUrl = (imageUrl: string): string => {
 
 export default function BrandsTable() {
   const router = useRouter();
+  const { language } = useLanguage();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const { data, isLoading, error } = useGetAllBrands('en', currentPage, pageSize);
+  const { data, isLoading, error } = useGetAllBrands(language, currentPage, pageSize);
   const deleteBrandMutation = useDeleteBrand();
 
   // Debug logging
@@ -151,34 +154,6 @@ export default function BrandsTable() {
 
   const totalPages = pagination ? Math.ceil(pagination.totalCount / pagination.pageSize) : 0;
 
-  if (isLoading && !data) {
-    return (
-      <Card>
-        <CardContent className='flex items-center justify-center py-8'>
-          <div className='text-center'>
-            <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4'></div>
-            <p className='text-muted-foreground'>جاري تحميل العلامات التجارية...</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error && !data) {
-    return (
-      <Card>
-        <CardContent className='flex items-center justify-center py-8'>
-          <div className='text-center'>
-            <p className='text-destructive mb-2'>خطأ في تحميل العلامات التجارية</p>
-            <p className='text-muted-foreground text-sm'>
-              {error instanceof Error ? error.message : 'فشل في تحميل العلامات التجارية'}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <div className='space-y-4'>
       <Card>
@@ -250,7 +225,23 @@ export default function BrandsTable() {
                 </TableRow>
               </TableHeader>
               <TableBody className=' '>
-                {filteredBrands.length === 0 ? (
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className='text-center py-8'>
+                      <div className='flex items-center justify-center space-x-2 space-x-reverse'>
+                        <Loader2 className='h-4 w-4 animate-spin' />
+                        <span>جاري التحميل...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : error ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className='text-center py-8 text-destructive'>
+                      خطأ في تحميل البيانات:{' '}
+                      {error instanceof Error ? error.message : 'حدث خطأ غير متوقع'}
+                    </TableCell>
+                  </TableRow>
+                ) : filteredBrands.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className='text-center py-8'>
                       <p className='text-muted-foreground'>لم يتم العثور على علامات تجارية</p>
@@ -323,7 +314,7 @@ export default function BrandsTable() {
           </div>
 
           {/* Pagination */}
-          {pagination && totalPages > 1 && (
+          {!isLoading && !error && pagination && totalPages > 1 && (
             <div className='flex items-center justify-between mt-4'>
               <div className='text-sm text-muted-foreground'>
                 عرض {(pagination.currentPage - 1) * pagination.pageSize + 1} إلى{' '}
