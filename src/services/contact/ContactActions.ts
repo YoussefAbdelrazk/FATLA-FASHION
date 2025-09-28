@@ -1,34 +1,16 @@
 'use server';
 
-import { baseAPI } from '@/lib/config';
+import { callAPI } from '@/lib/config';
 import { ContactFormData } from '@/lib/schemas/contact-schema';
 
 export const createContactInfo = async (data: ContactFormData, lang: string = 'en') => {
-  try {
-    const api = await baseAPI();
-    const response = await api.post(`/api/${lang}/ContactUs/update-contact-us`, data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return callAPI('post', `/api/${lang}/ContactUs/update-contact-us`, data);
 };
 
 export const updateContactInfo = async (data: ContactFormData, lang: string = 'en') => {
-  try {
-    const api = await baseAPI();
-    const response = await api.post(`/api/${lang}/ContactUs/update-contact-us`, data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return callAPI('post', `/api/${lang}/ContactUs/update-contact-us`, data);
 };
 
 export const deleteContactInfo = async (id: number, lang: string = 'en') => {
-  try {
-    const api = await baseAPI();
-    const response = await api.post(`/api/${lang}/ContactUs/DeleteContactUs?id=${id}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return callAPI('post', `/api/${lang}/ContactUs/DeleteContactUs?id=${id}`);
 };

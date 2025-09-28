@@ -1,14 +1,25 @@
 export interface Color {
-  id: string;
-  arName: string;
-  enName: string;
-  color: string; // hex color code
-  productsCount: number;
-  isActive: boolean;
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  colorCode: string;
+  isDeleted: boolean;
+  createdBy: number;
   createdAt: string;
-  createdBy: string;
+  updatedAt: string | null;
+  createdByNavigation: unknown | null;
+  productImages: unknown[];
+  productVariants: unknown[];
 }
 
-export interface ColorTableProps {
-  colors: Color[];
+export interface CreateColorRequest {
+  nameAr: string;
+  nameEn: string;
+  colorCode: string;
+}
+
+export interface UpdateColorRequest {
+  nameAr: string;
+  nameEn: string;
+  colorCode: string;
 }

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, Method } from 'axios';
 import { getToken } from './Cookie';
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
@@ -30,6 +30,30 @@ export const baseAPIForm = async () => {
     },
   });
 };
+
+export async function callAPI<T>(
+  method: Method,
+  url: string,
+  data?: unknown,
+  config?: AxiosRequestConfig,
+  isForm: boolean = false
+): Promise<T> {
+  try {
+    const api = isForm ? await baseAPIForm() : await baseAPI();
+
+    const response = await api.request<T>({
+      method,
+      url,
+      data,
+      ...config,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(`API error [${method.toUpperCase()} ${url}]`, error);
+    throw error;
+  }
+}
 
 // Cookie configuration
 

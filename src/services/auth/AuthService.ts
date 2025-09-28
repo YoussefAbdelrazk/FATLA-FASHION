@@ -8,6 +8,7 @@ interface LoginResponse {
   refreshToken: string;
 }
 
+
 export const login = async (mobileNumber: string, password: string): Promise<LoginResponse> => {
   const api = await baseAPI();
   const response = await api.post(`/api/en/AdminAuth/login`, {

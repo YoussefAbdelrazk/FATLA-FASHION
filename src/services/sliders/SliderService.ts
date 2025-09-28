@@ -1,4 +1,4 @@
-import { baseAPI } from '@/lib/config';
+import { callAPI } from '@/lib/config';
 
 export interface CreateSliderData {
   arName: string;
@@ -42,46 +42,10 @@ export interface GetSlidersResponse {
 
 // Get all sliders
 export const getAllSliders = async (lang: string = 'en'): Promise<GetSlidersResponse[]> => {
-  try {
-    const api = await baseAPI();
-    const response = await api.get(`/api/${lang}/Sliders/GetSliders`);
-    console.log('GetSliders response:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching sliders:', error);
-    throw error;
-  }
+  return callAPI('get', `/api/${lang}/Sliders/GetSliders`);
 };
 
 // Get single slider by ID
-export const getSliderById = async (
-  id: string,
-  lang: string = 'en',
-): Promise<GetSlidersResponse> => {
-  try {
-    const api = await baseAPI();
-    const response = await api.get(`/api/${lang}/Sliders/GetSingleSlider?id=${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching slider:', error);
-    throw error;
-  }
+export const getSliderById = async (id: string, lang: string = 'en'): Promise<GetSlidersResponse> => {
+  return callAPI('get', `/api/${lang}/Sliders/GetSingleSlider?id=${id}`);
 };
-
-// Toggle slider visibility
-// export const toggleSliderVisibility = async (
-//   id: string,
-//   isVisible: boolean,
-//   lang: string = 'en',
-// ): Promise<Slider> => {
-//   try {
-//         const api = await baseAPI();
-//         const response = await api.patch(`/api/${lang}/Sliders/ToggleVisibility?id=${id}`, {
-//           isVisible,
-//         });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error toggling slider visibility:', error);
-//     throw error;
-//   }
-// };

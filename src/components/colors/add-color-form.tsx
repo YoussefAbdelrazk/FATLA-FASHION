@@ -1,7 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -11,143 +19,122 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/context/language';
+import { useCreateColor } from '@/hooks/useColors';
+import { CreateColorFormData, createColorSchema } from '@/lib/schemas/color';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Save } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
-const colorSchema = z.object({
-  arName: z.string().min(1, 'Arabic name is required'),
-  enName: z.string().min(1, 'English name is required'),
-  color: z.string().regex(/^#[0-9A-F]{6}$/i, 'Please enter a valid hex color code'),
-});
+interface AddColorFormProps {
+  onSuccess?: () => void;
+}
 
-type ColorFormData = z.infer<typeof colorSchema>;
+export function AddColorForm({ onSuccess }: AddColorFormProps) {
+  const { language } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const createColorMutation = useCreateColor();
 
-export default function AddColorForm() {
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<ColorFormData>({
-    resolver: zodResolver(colorSchema),
+  const form = useForm<CreateColorFormData>({
+    resolver: zodResolver(createColorSchema),
     defaultValues: {
-      arName: '',
-      enName: '',
-      color: '#000000',
+      nameAr: '',
+      nameEn: '',
+      colorCode: '#000000',
     },
   });
 
-  const onSubmit = async (data: ColorFormData) => {
-    setIsSubmitting(true);
-    try {
-      // TODO: Implement API call to create color
-      console.log('Creating color:', data);
-
-      // For now, just redirect to colors page
-      router.push('/colors');
-    } catch (error) {
-      console.error('Error creating color:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit = async (data: CreateColorFormData) => {
+    createColorMutation.mutate(
+      { data, lang: language },
+      {
+        onSuccess: () => {
+          form.reset();
+          setOpen(false);
+          onSuccess?.();
+        },
+      },
+    );
   };
 
   return (
-    <div className='space-y-6'>
-      <Card>
-        <CardHeader>
-          <CardTitle className='flex items-center gap-2'>
-            <Button variant='ghost' size='sm' onClick={() => router.back()} className='p-0 h-auto'>
-              <ArrowLeft className='w-4 h-4' />
-            </Button>
-            Color Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                {/* Arabic Name */}
-                <FormField
-                  control={form.control}
-                  name='arName'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Arabic Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder='أدخل الاسم بالعربية' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* English Name */}
-                <FormField
-                  control={form.control}
-                  name='enName'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>English Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder='Enter name in English' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Color Picker */}
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <Plus className='mr-2 h-4 w-4' />
+          إضافة لون
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='sm:max-w-[600px]'>
+        <DialogHeader>
+          <DialogTitle>إضافة لون جديد</DialogTitle>
+          <DialogDescription>قم بإضافة لون جديد باللغة العربية والانجليزية.</DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name='color'
+                name='nameAr'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Color</FormLabel>
+                    <FormLabel>الاسم (عربي)</FormLabel>
                     <FormControl>
-                      <div className='flex items-center gap-4'>
-                        <Input
-                          type='color'
-                          {...field}
-                          className='w-20 h-12 p-1 border rounded-lg cursor-pointer'
-                        />
-                        <Input placeholder='#000000' {...field} className='flex-1' />
-                      </div>
+                      <Input placeholder='أدخل الاسم بالعربية' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
-              {/* Color Preview */}
-              <div className='space-y-2'>
-                <label className='text-sm font-medium'>Color Preview</label>
-                <div className='flex items-center gap-4'>
-                  <div
-                    className='w-16 h-16 rounded-lg border-2 border-gray-200 shadow-sm'
-                    style={{ backgroundColor: form.watch('color') }}
-                  />
-                  <div className='text-sm text-muted-foreground'>{form.watch('color')}</div>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className='flex justify-end gap-4'>
-                <Button type='button' variant='outline' onClick={() => router.back()}>
-                  Cancel
-                </Button>
-                <Button type='submit' disabled={isSubmitting}>
-                  <Save className='w-4 h-4 mr-2' />
-                  {isSubmitting ? 'Creating...' : 'Create Color'}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+              <FormField
+                control={form.control}
+                name='nameEn'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>الاسم (إنجليزي)</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Enter name in English' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name='colorCode'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>كود اللون</FormLabel>
+                  <FormControl>
+                    <div className='flex items-center gap-2'>
+                      <Input
+                        type='color'
+                        className='w-16 h-10 p-1 border rounded'
+                        {...field}
+                        onChange={e => {
+                          field.onChange(e.target.value);
+                        }}
+                      />
+                      <Input placeholder='#000000' {...field} className='flex-1' />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter className='gap-3'>
+              <Button type='button' variant='outline' onClick={() => setOpen(false)}>
+                الغاء
+              </Button>
+              <Button type='submit' disabled={createColorMutation.isPending}>
+                {createColorMutation.isPending ? 'جاري الانشاء...' : 'إضافة لون'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

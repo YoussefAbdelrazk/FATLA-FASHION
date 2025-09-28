@@ -19,19 +19,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useLanguage } from '@/context/language';
-import { Color } from '@/types/color';
+import { FAQ } from '@/types/faq';
 import { format } from 'date-fns';
 import { Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
 
-interface ColorsTableProps {
-  colors: Color[];
-  onEdit: (color: Color) => void;
+interface FAQTableProps {
+  faqs: FAQ[];
+  onEdit: (faq: FAQ) => void;
   onDelete: (id: number) => void;
   onView: (id: number) => void;
   loading?: boolean;
 }
 
-export function ColorsTable({ colors, onEdit, onDelete, onView, loading }: ColorsTableProps) {
+export function FAQTable({ faqs, onEdit, onDelete, onView, loading }: FAQTableProps) {
   const { language } = useLanguage();
 
   const handleDelete = (id: number) => {
@@ -39,14 +39,16 @@ export function ColorsTable({ colors, onEdit, onDelete, onView, loading }: Color
   };
 
   // Helper function to get the appropriate content based on language
-  const getLocalizedContent = (color: Color) => {
+  const getLocalizedContent = (faq: FAQ) => {
     if (language === 'ar') {
       return {
-        name: color.nameAr,
+        question: faq.questionAr || faq.question,
+        answer: faq.answearAr || faq.answear,
       };
     } else {
       return {
-        name: color.nameEn,
+        question: faq.questionEn || faq.question,
+        answer: faq.answearEn || faq.answear,
       };
     }
   };
@@ -59,10 +61,10 @@ export function ColorsTable({ colors, onEdit, onDelete, onView, loading }: Color
     );
   }
 
-  if (!Array.isArray(colors) || colors.length === 0) {
+  if (!Array.isArray(faqs) || faqs.length === 0) {
     return (
       <div className='text-center py-8'>
-        <p className='text-gray-500'>No colors found</p>
+        <p className='text-gray-500'>No FAQs found</p>
       </div>
     );
   }
@@ -73,39 +75,31 @@ export function ColorsTable({ colors, onEdit, onDelete, onView, loading }: Color
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
-            <TableHead>الاسم</TableHead>
-            <TableHead>كود اللون</TableHead>
-            <TableHead>معاينة اللون</TableHead>
+            <TableHead>اسئلة شائعة</TableHead>
+            <TableHead>اجابة</TableHead>
             <TableHead>تاريخ الانشاء</TableHead>
             <TableHead className='text-right'>الاجراءات</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {colors.map(color => {
-            const localizedContent = getLocalizedContent(color);
+          {faqs.map(faq => {
+            const localizedContent = getLocalizedContent(faq);
             return (
-              <TableRow key={color.id}>
+              <TableRow key={faq.id}>
                 <TableCell className='font-medium'>
-                  <Badge variant='secondary'>#{color.id}</Badge>
+                  <Badge variant='secondary'>#{faq.id}</Badge>
                 </TableCell>
                 <TableCell className='max-w-xs'>
-                  <div className='truncate' title={localizedContent.name}>
-                    {localizedContent.name}
+                  <div className='truncate' title={localizedContent.question}>
+                    {localizedContent.question}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <code className='text-sm bg-gray-100 px-2 py-1 rounded'>{color.colorCode}</code>
-                </TableCell>
-                <TableCell>
-                  <div className='flex items-center gap-2'>
-                    <div
-                      className='w-6 h-6 rounded-full border border-gray-300'
-                      style={{ backgroundColor: color.colorCode }}
-                    />
-                    <span className='text-sm text-gray-600'>{color.colorCode}</span>
+                <TableCell className='max-w-xs'>
+                  <div className='truncate' title={localizedContent.answer}>
+                    {localizedContent.answer}
                   </div>
                 </TableCell>
-                <TableCell>{format(new Date(color.createdAt), 'MMM dd, yyyy')}</TableCell>
+                <TableCell>{format(new Date(faq.createdAt), 'MMM dd, yyyy')}</TableCell>
                 <TableCell className='text-right'>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -116,17 +110,17 @@ export function ColorsTable({ colors, onEdit, onDelete, onView, loading }: Color
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align='end'>
                       <DropdownMenuLabel>الاجراءات</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => onView(color.id)}>
+                      <DropdownMenuItem onClick={() => onView(faq.id)}>
                         <Eye className='mr-2 h-4 w-4' />
                         عرض التفاصيل
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => onEdit(color)}>
+                      <DropdownMenuItem onClick={() => onEdit(faq)}>
                         <Edit className='mr-2 h-4 w-4' />
                         تعديل
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        onClick={() => handleDelete(color.id)}
+                        onClick={() => handleDelete(faq.id)}
                         className='text-red-600'
                       >
                         <Trash2 className='mr-2 h-4 w-4' />
